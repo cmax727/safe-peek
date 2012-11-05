@@ -1,4 +1,5 @@
 from django.conf.urls.defaults import patterns, include, url
+#from django import settings
 #from app.panel.forms import UserRegistrationForm
 #from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
@@ -10,7 +11,7 @@ urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'nutrition.views.home', name='home'),
     # url(r'^nutrition/', include('nutrition.foo.urls')),
-
+    (r'^messages/', include('postman.urls')),
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
@@ -30,4 +31,8 @@ urlpatterns = patterns('',
     (r'^accounts/password/reset/(?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)/$', 'django.contrib.auth.views.password_reset_confirm',
         {'post_reset_redirect': '/accounts/password/done/'}),
     (r'^accounts/password/done/$', 'django.contrib.auth.views.password_reset_complete'),
+
 )
+
+#('^' + settings.MEDIA_URL.strip('/') + r'/(?P<path>postman/.*)$', 'django.views.static.serve',
+#   {'document_root': os.path.join(imp.find_module('postman')[1], 'medias')}),
