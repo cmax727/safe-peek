@@ -1,7 +1,13 @@
 from django.conf.urls.defaults import patterns, include, url
+<<<<<<< HEAD
 #from django import settings
 #from app.panel.forms import UserRegistrationForm
 #from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+=======
+from django.conf import settings
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from app.panel.forms import UserRegistrationForm
+>>>>>>> 34b2ae1e3edd20dd91f7efe01ed7c4e5116febaf
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -19,12 +25,11 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'', include('app.panel.urls', namespace='panel')),
     url(r'', include('app.friendships.urls', namespace='friendships')),
+    url(r'^accounts/register/$', 'registration.views.register', {
+        'backend': 'registration.backends.default.DefaultBackend',
+        'form_class': UserRegistrationForm}, name='registration_register'),
 
-    #url(r'^accounts/register/$', 'registration.views.register', {
-    #    'backend': 'registration.backends.default.DefaultBackend',
-    #    'form_class': UserRegistrationForm}, name='registration_register'),
-
-     url(r'^accounts/', include('registration.backends.default.urls')),
+    url(r'^accounts/', include('registration.backends.default.urls')),
     (r'^accounts/password/reset/$', 'django.contrib.auth.views.password_reset',
         {'post_reset_redirect': '/accounts/password/reset/done/'}),
     (r'^accounts/password/reset/done/$', 'django.contrib.auth.views.password_reset_done'),
@@ -34,5 +39,14 @@ urlpatterns = patterns('',
 
 )
 
+<<<<<<< HEAD
 #('^' + settings.MEDIA_URL.strip('/') + r'/(?P<path>postman/.*)$', 'django.views.static.serve',
 #   {'document_root': os.path.join(imp.find_module('postman')[1], 'medias')}),
+=======
+if settings.DEBUG:
+    urlpatterns += staticfiles_urlpatterns()
+    urlpatterns += patterns('',
+    url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {
+        'document_root': settings.MEDIA_ROOT,
+    }))
+>>>>>>> 34b2ae1e3edd20dd91f7efe01ed7c4e5116febaf
