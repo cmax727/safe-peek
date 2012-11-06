@@ -29,6 +29,9 @@
           <!-- user register-->
           {% if not user.is_authenticated %}
             <li><a href="{% url registration_register %}">Signup</a></li>
+            <li><a href="{% url auth_password_reset %}">Forgot Password</a></li>
+          {% else %}
+            <li><a href="{% url auth_password_change %}">Change Password</a></li>
           {% endif %}
 
           <!-- here comes the important part -->
