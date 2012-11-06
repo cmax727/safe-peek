@@ -2,3 +2,4 @@ django==1.4.2
 south
 django-registration
 django-postman
+django-pagination
