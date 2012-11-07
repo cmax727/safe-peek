@@ -134,25 +134,6 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
 )
 
-POSTMAN_DISALLOW_ANONYMOUS = True  # default is False
-# POSTMAN_DISALLOW_MULTIRECIPIENTS = True # default is False
-# POSTMAN_DISALLOW_COPIES_ON_REPLY = True # default is False
-# POSTMAN_DISABLE_USER_EMAILING = True # default is False
-# POSTMAN_AUTO_MODERATE_AS = True # default is None
-POSTMAN_NOTIFIER_APP = 'Notification'  # default is 'notification'
-POSTMAN_MAILER_APP = None  # default is 'mailer'
-# POSTMAN_AUTOCOMPLETER_APP = {
-    # 'name': '', # default is 'ajax_select'
-    # 'field': '', # default is 'AutoCompleteField'
-    # 'arg_name': '', # default is 'channel'
-    # 'arg_default': 'postman_friends', # no default, mandatory to enable the feature
-# } # default is {}
-
-# A sample logging configuration. The only tangible logging
-# performed by this configuration is to send an email to
-# the site admins on every HTTP 500 error when DEBUG=False.
-# See http://docs.djangoproject.com/en/dev/topics/logging for
-# more details on how to customize your logging configuration.
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
