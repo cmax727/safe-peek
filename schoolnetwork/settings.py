@@ -1,8 +1,6 @@
 # Django settings for schoolnetwork project.
 import os
 
-
-
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 DIRNAME = os.path.abspath(os.path.dirname(__file__))
@@ -136,13 +134,13 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
 )
 
-POSTMAN_DISALLOW_ANONYMOUS = True # default is False
+POSTMAN_DISALLOW_ANONYMOUS = True  # default is False
 # POSTMAN_DISALLOW_MULTIRECIPIENTS = True # default is False
 # POSTMAN_DISALLOW_COPIES_ON_REPLY = True # default is False
 # POSTMAN_DISABLE_USER_EMAILING = True # default is False
 # POSTMAN_AUTO_MODERATE_AS = True # default is None
-POSTMAN_NOTIFIER_APP = 'Notification' # default is 'notification'
-POSTMAN_MAILER_APP = None # default is 'mailer'
+POSTMAN_NOTIFIER_APP = 'Notification'  # default is 'notification'
+POSTMAN_MAILER_APP = None  # default is 'mailer'
 # POSTMAN_AUTOCOMPLETER_APP = {
     # 'name': '', # default is 'ajax_select'
     # 'field': '', # default is 'AutoCompleteField'

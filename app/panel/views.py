@@ -3,6 +3,5 @@ from django.template import RequestContext
 
 
 def main(request):
-    print request
     variables = RequestContext(request)
     return render_to_response('panel/index.html', variables)

@@ -1,11 +1,7 @@
 from django.conf.urls.defaults import patterns, include, url
-#from django import settings
-#from app.panel.forms import UserRegistrationForm
-#from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf import settings
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from app.panel.forms import UserRegistrationForm
-
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
@@ -14,11 +10,14 @@ urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'nutrition.views.home', name='home'),
     # url(r'^nutrition/', include('nutrition.foo.urls')),
-    (r'^messages/', include('postman.urls')),
+
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     # Uncomment the next line to enable the admin:
+    url(r'^admin/', include(admin.site.urls)),
+    url(r'^friendships/', include('app.friendships.urls', namespace='friendships')),
+    url(r'', include('app.panel.urls', namespace='panel')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'', include('app.panel.urls', namespace='panel')),
     url(r'', include('app.friendships.urls', namespace='friendships')),
@@ -33,7 +32,6 @@ urlpatterns = patterns('',
     (r'^accounts/password/reset/(?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)/$', 'django.contrib.auth.views.password_reset_confirm',
         {'post_reset_redirect': '/accounts/password/done/'}),
     (r'^accounts/password/done/$', 'django.contrib.auth.views.password_reset_complete'),
-
 )
 
 if settings.DEBUG:
