@@ -15,6 +15,8 @@ urlpatterns = patterns('',
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     # Uncomment the next line to enable the admin:
+    url(r'^messages/', include('postman.urls')),
+    url(r'^relationships/', include('relationships.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'', include('app.panel.urls', namespace='panel')),
     url(r'', include('app.friendships.urls', namespace='friendships')),
