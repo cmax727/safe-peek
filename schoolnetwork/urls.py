@@ -16,9 +16,6 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^friendships/', include('app.friendships.urls', namespace='friendships')),
-    url(r'', include('app.panel.urls', namespace='panel')),
-    url(r'^admin/', include(admin.site.urls)),
     url(r'', include('app.panel.urls', namespace='panel')),
     url(r'', include('app.friendships.urls', namespace='friendships')),
     url(r'^accounts/register/$', 'registration.views.register', {
