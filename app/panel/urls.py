@@ -7,4 +7,5 @@ from django.conf.urls import patterns, url
 
 urlpatterns = patterns('app.panel.views',
     url(r'^$', 'main', name='main_page'),
+    url(r"followers/", include("followers.urls")),
 )

@@ -3,3 +3,4 @@ south
 django-registration
 django-postman
 django-pagination
+git+https://github.com/mkai/django-followers.git

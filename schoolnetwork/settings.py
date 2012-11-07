@@ -127,6 +127,7 @@ INSTALLED_APPS = (
     'south',
     'registration',
     'postman',
+    'followers',
     'pagination'
     # Uncomment the next line to enable the admin:
     # 'django.contrib.admin',
