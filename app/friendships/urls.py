@@ -6,6 +6,5 @@ from django.conf.urls import patterns, url
 
 
 urlpatterns = patterns('app.friendships.views',
-    url(r'^$', 'main', name='main_page'),
-    url(r'^messages/', 'messages', include('postman.urls')),
+    url(r'^messages/', include('postman.urls')),
 )
