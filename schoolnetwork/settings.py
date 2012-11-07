@@ -146,6 +146,21 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
 )
 
+POSTMAN_DISALLOW_ANONYMOUS = True # default is False
+# POSTMAN_DISALLOW_MULTIRECIPIENTS = True # default is False
+# POSTMAN_DISALLOW_COPIES_ON_REPLY = True # default is False
+# POSTMAN_DISABLE_USER_EMAILING = True # default is False
+POSTMAN_AUTO_MODERATE_AS = True # default is None
+POSTMAN_NOTIFIER_APP = 'notification' # default is 'notification'
+POSTMAN_MAILER_APP = 'mailer' # default is 'mailer'
+POSTMAN_AUTOCOMPLETER_APP = {
+     'name': '', # default is 'ajax_select'
+    # 'field': '', # default is 'AutoCompleteField'
+    # 'arg_name': '', # default is 'channel'
+    # 'arg_default': 'postman_friends', # no default, mandatory to enable the feature
+ } # default is {}
+
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -173,6 +188,12 @@ LOGGING = {
 LOGIN_REDIRECT_URL = '/'
 
 ACCOUNT_ACTIVATION_DAYS = 7
+
+DEFAULT_FROM_EMAIL = 'SOCIAL KID SYSTEM <benhardrisando@gmail.com>'
+
+DEFAULT_CONTENT_EMAIL = "Thank you for your submitted questions. Our staff has received your questions and will be replied shortly"
+
+
 
 try:
     from local_settings import *
