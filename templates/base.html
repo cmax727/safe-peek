@@ -28,10 +28,10 @@
           <li><a href="#">Menu3</a></li>
           <!-- user register-->
           {% if not user.is_authenticated %}
-            <li><a href="{% url registration_register %}">Signup</a></li>
-            <li><a href="{% url auth_password_reset %}">Forgot Password</a></li>
+            <li><a href="{% url account_signup %}">Signup</a></li>
+            <li><a href="{% url account_reset_password %}">Forgot Password</a></li>
           {% else %}
-            <li><a href="{% url auth_password_change %}">Change Password</a></li>
+            <li><a href="{% url account_change_password %}">Change Password</a></li>
           {% endif %}
 
           <!-- here comes the important part -->
@@ -46,27 +46,11 @@
                       <b class="caret"></b>
                    </a>
                    <div class="dropdown-menu">
-                     <a href="{% url auth_logout %}">Logout</a>
+                     <a href="{% url account_logout %}">Logout</a>
                    </div>
                  </li>
            {% else %}
-                 <li class="dropdown" id="menu1">
-                   <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
-                     Login
-                      <b class="caret"></b>
-                   </a>
-                   <div class="dropdown-menu">
-                     <form style="margin: 0px" accept-charset="UTF-8" action="{% url auth_login %}" method="post">
-                      <div style="margin:0;padding:0;display:inline">{% csrf_token %}</div>
-                       <fieldset class='textbox' style="padding:10px">
-                         <input style="margin-top: 8px" type="text" placeholder="Username" name="username" />
-                         <input style="margin-top: 8px" type="password" placeholder="Password" name="password" />
-                         <input type="hidden" name="next" value="{{ next }}" />
-                         <input class="btn-primary" name="commit" type="submit" value="Log In" />
-                       </fieldset>
-                     </form>
-                   </div>
-                 </li>
+                 <li><a href="{% url account_login %}">Sign in</a></li>
             {% endif %}
         </ul>
       </div>
