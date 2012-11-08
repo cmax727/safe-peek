@@ -8,14 +8,18 @@
 <br />
 
 
-{% for look in looks %}
-{{ look.username}}
-{% endfor %}
-
 <fieldset class='textbox' style="padding:10px">
                          <input style="margin-top: 8px" type="text" placeholder="Type you looking for" name="searchbox" />
                          <input type="hidden" name="next" value="{{ next }}" />
                          <input class="btn-primary" name="commit" type="submit" value="search" />
                        </fieldset>
+{% for look in looks %}
+<div>
+        <h2>{{look.username}}</h2>
+        <br>
+        <p>{{look.get_full_name}}</p>
+</div>
+{% endfor %}
 
 {% endblock %}
+
