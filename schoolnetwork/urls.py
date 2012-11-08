@@ -15,11 +15,12 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     url(r'^messages/', include('postman.urls')),
-    url(r'^relationships/', include('relationships.urls')),
+    url(r'^relationships/', include('friendship.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'', include('app.panel.urls', namespace='panel')),
     url(r'', include('app.friendships.urls', namespace='friendships')),
        (r'^accounts/', include('allauth.urls')),
+
     # url(r'^accounts/signup/$', 'registration.views.register', {
     #     'backend': 'registration.backends.default.DefaultBackend',
     #     'form_class': UserRegistrationForm}, name='registration_register'),

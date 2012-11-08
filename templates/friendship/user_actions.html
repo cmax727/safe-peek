@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %} 
+<ul>
+{% for list_user in users %}
+        {% if user %}
+             {% if user.username != list_user.username %}
+                <li>
+                    {{ list_user.username }} | <a href="{% url friendship_add_friend list_user.username %}">add as friend</a>
+                </li>
+            {% endif %}
+        {% endif %}    
+{% endfor %}
+</ul>
+{% endblock %}

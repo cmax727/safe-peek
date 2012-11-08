@@ -158,27 +158,32 @@ INSTALLED_APPS = (
     #'allauth.socialaccount.providers.persona',
     #'allauth.socialaccount.providers.soundcloud',
     'postman',
+<<<<<<< HEAD
     'relationships',
     'pagination',
+=======
+    'friendship',
+    'pagination'
+>>>>>>> 70492648d7e8a70ff4df07b52aababcb029b2986
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )
 
-POSTMAN_DISALLOW_ANONYMOUS = True # default is False
+POSTMAN_DISALLOW_ANONYMOUS = True  # default is False
 # POSTMAN_DISALLOW_MULTIRECIPIENTS = True # default is False
 # POSTMAN_DISALLOW_COPIES_ON_REPLY = True # default is False
 # POSTMAN_DISABLE_USER_EMAILING = True # default is False
-POSTMAN_AUTO_MODERATE_AS = True # default is None
-POSTMAN_NOTIFIER_APP = 'notification' # default is 'notification'
-POSTMAN_MAILER_APP = 'mailer' # default is 'mailer'
+POSTMAN_AUTO_MODERATE_AS = True  # default is None
+POSTMAN_NOTIFIER_APP = 'notification'  # default is 'notification'
+POSTMAN_MAILER_APP = 'mailer'  # default is 'mailer'
 POSTMAN_AUTOCOMPLETER_APP = {
-     'name': '', # default is 'ajax_select'
+     'name': '',  # default is 'ajax_select'
     # 'field': '', # default is 'AutoCompleteField'
     # 'arg_name': '', # default is 'channel'
     # 'arg_default': 'postman_friends', # no default, mandatory to enable the feature
- } # default is {}
+ }  # default is {}
 
 
 LOGGING = {
@@ -215,8 +220,6 @@ ACCOUNT_ACTIVATION_DAYS = 7
 DEFAULT_FROM_EMAIL = 'SOCIAL KID SYSTEM <benhardrisando@gmail.com>'
 
 DEFAULT_CONTENT_EMAIL = "Thank you for your submitted questions. Our staff has received your questions and will be replied shortly"
-
-
 
 try:
     from local_settings import *

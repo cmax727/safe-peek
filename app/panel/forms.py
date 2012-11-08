@@ -1,14 +1,20 @@
 from django import forms
+from app.panel.models import UserProfile
+
 #from registration.signals import user_registered
 
 
 class SignupForm(forms.Form):
     first_name = forms.CharField(max_length=200)
     last_name = forms.CharField(max_length=200)
+    #avatar = forms.ImageField()
+
+    class Meta:
+        model = UserProfile
 
     def __init__(self, *args, **kwargs):
         super(SignupForm, self).__init__(*args, **kwargs)
-        self.fields.keyOrder = ['first_name', 'last_name', 'username', 'email', 'password1', 'password2']
+        #self.fields.keyOrder = ['first_name', 'last_name', 'username', 'email', 'password1', 'password2']
 
     def save(self, user):
         user.first_name = self.cleaned_data['first_name']
