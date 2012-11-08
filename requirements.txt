@@ -3,5 +3,6 @@ south
 django-allauth
 django-postman
 django-pagination
-django-relationships
-git+https://github.com/mkai/django-followers.git
+django-friendship
+PIL
+django-imagekit
