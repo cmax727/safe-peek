@@ -1,4 +1,4 @@
-from django.contrib import admin 
+from django.contrib import admin
 from app.friendships.models import User
 
 
