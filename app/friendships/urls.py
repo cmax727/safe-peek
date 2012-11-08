@@ -6,4 +6,5 @@ from django.conf.urls.defaults import *
 
 
 urlpatterns = patterns('app.friendships.views',
+    url(r'^search$', 'search', name='search_page'),
 )
