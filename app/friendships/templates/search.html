@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %} Search Page{% endblock %}
+
+{% block content %}
+
+<h1>Search Box</h2>
+<br />
+
+
+{% for look in looks %}
+{{ look.username}}
+{% endfor %}
+
+<fieldset class='textbox' style="padding:10px">
+                         <input style="margin-top: 8px" type="text" placeholder="Type you looking for" name="searchbox" />
+                         <input type="hidden" name="next" value="{{ next }}" />
+                         <input class="btn-primary" name="commit" type="submit" value="search" />
+                       </fieldset>
+
+{% endblock %}
