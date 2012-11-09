@@ -6,21 +6,23 @@
 
 <h1>Search Box</h2>
 <br />
-{% load socialaccount %}
-<a href="{% provider_login_url "facebook" method="js_sdk" %}">Facebook Connect</a>
 
+<form action="" method="post">
+{% csrf_token %}{{ formset.management_form }}
 <fieldset class='textbox' style="padding:10px">
-                         <input style="margin-top: 8px" type="text" placeholder="Type you looking for" name="searchbox" />
-                         <input type="hidden" name="next" value="{{ next }}" />
-                         <input class="btn-primary" name="commit" type="submit" value="search" />
-                       </fieldset>
+    <input style="margin-top: 8px" type="text" placeholder="Type you looking for" name="searchbox" value="{{search}}" />
+    <input class="btn-primary" name="commit" type="submit" value="search" />
+</fieldset>
+</form>
 {% for look in looks %}
+{% if user.username != look.username %}
 <div>
         <h2>{{look.username}}</h2>
         <br>
         <p>{{look.get_full_name}}</p>
+        <a href="{% url friendship_add_friend look.username %}">add as friend</a>
 </div>
+{% endif %}
 {% endfor %}
 
 {% endblock %}
-
