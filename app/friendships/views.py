@@ -21,3 +21,9 @@ def search(request):
         'looks': looks
         })
     return render_to_response('search.html', variables)
+
+
+def profile(request):
+    variables = RequestContext(request)
+    return render_to_response('profile.html', variables)
+
