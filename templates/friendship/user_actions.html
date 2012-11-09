@@ -1,5 +1,13 @@
 {% extends "base.html" %}
 {% block content %} 
+<form action="" method="post">
+{% csrf_token %}{{ formset.management_form }}
+<fieldset class='textbox' style="padding:10px">
+    <input style="margin-top: 8px" type="text" placeholder="Type you looking for" name="searchbox" />
+    <input class="btn-primary" name="commit" type="submit" value="search" />
+</fieldset>
+</form>
+
 <ul>
 {% for list_user in users %}
         {% if user %}

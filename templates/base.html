@@ -25,7 +25,7 @@
           <li class="active"><a href="/">Home</a></li>
           <li><a href="{% url postman_inbox %}">Inbox</a></li>
           <li><a href="{% url postman_write %}">Write Message</a></li>
-          <li><a href="{% url friendship_view_users %}">Search</a></li>
+          <li><a href="{% url friendships:search_page %}">Search</a></li>
           <!-- user register-->
           {% if not user.is_authenticated %}
             <li><a href="{% url account_signup %}">Signup</a></li>

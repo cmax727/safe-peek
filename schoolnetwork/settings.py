@@ -158,13 +158,9 @@ INSTALLED_APPS = (
     #'allauth.socialaccount.providers.persona',
     #'allauth.socialaccount.providers.soundcloud',
     'postman',
-<<<<<<< HEAD
-    'relationships',
     'pagination',
-=======
     'friendship',
-    'pagination'
->>>>>>> 70492648d7e8a70ff4df07b52aababcb029b2986
+    'pagination',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:

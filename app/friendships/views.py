@@ -1,11 +1,17 @@
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.contrib.auth.models import User
-from django.core.paginator import PageNotAnInteger
+#from django.core.paginator import PageNotAnInteger
 
 
 def search(request):
-    looks = User.objects.all()
+    if request.method == 'POST':
+        search = request.POST.get('searchbox', '')
+        looks = User.objects.filter(username__contains=request.POST.get('searchbox', ''))
+    else:
+        search = ""
+        looks = User.objects.all()
+
     # paginator = Paginator(look, 2)
 
     # page = request.GET.get('page')
@@ -18,6 +24,7 @@ def search(request):
     #     # If page is out of range (e.g. 9999), deliver last page of results.
     #     look_for = paginator.page(paginator.num_pages)
     variables = RequestContext(request, {
-        'looks': looks
+        'looks': looks,
+        'search': search
         })
     return render_to_response('search.html', variables)
