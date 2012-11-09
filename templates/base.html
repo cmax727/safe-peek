@@ -25,14 +25,15 @@
           <li class="active"><a href="/">Home</a></li>
           <li><a href="{% url postman_inbox %}">Inbox</a></li>
           <li><a href="{% url postman_write %}">Write Message</a></li>
-          <li><a href="{% url friendship_view_users %}">Search</a></li>
+          <li><a href="{% url friendships:search_page %}">Search</a></li>
           <!-- user register-->
           {% if not user.is_authenticated %}
             <li><a href="{% url account_signup %}">Signup</a></li>
             <li><a href="{% url account_reset_password %}">Forgot Password</a></li>
           {% else %}
-            <li><a href="{% url account_change_password %}">Change Password</a></li>
             <li><a href="{% url friendship_view_friends user.username %}">List Friends</a></li>
+            <li><a href="{% url friendship_request_list %}">List Request</a></li>
+            <li><a href="{% url account_change_password %}">Change Password</a></li>
           {% endif %}
 
           <!-- here comes the important part -->
@@ -48,7 +49,7 @@
                    </a>
                    <div class="dropdown-menu">
                     <ul>
-                      <li><a href="{% url postman_inbox %}">Edit Profile</a></li>
+                      <li><a href="{% url avatar_change %}">Edit Profile</a></li>
                       <li><a href="{% url account_logout %}">Logout</a></li>
                     </ul>
                    </div>

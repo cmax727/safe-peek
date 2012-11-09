@@ -146,6 +146,7 @@ INSTALLED_APPS = (
     'app.panel',
     'app.friendships',
     'south',
+    'avatar',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -158,7 +159,6 @@ INSTALLED_APPS = (
     #'allauth.socialaccount.providers.persona',
     #'allauth.socialaccount.providers.soundcloud',
     'postman',
-    'relationships',
     'pagination',
     'friendship',
     'pagination',
@@ -167,6 +167,8 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )
+
+SOCIALACCOUNT_AVATAR_SUPPORT = 'avatar'
 
 POSTMAN_DISALLOW_ANONYMOUS = True  # default is False
 # POSTMAN_DISALLOW_MULTIRECIPIENTS = True # default is False
