@@ -6,3 +6,4 @@ django-pagination
 django-friendship
 PIL
 django-imagekit
+django-avatar

@@ -20,6 +20,8 @@ urlpatterns = patterns('',
     url(r'', include('app.panel.urls', namespace='panel')),
     url(r'', include('app.friendships.urls', namespace='friendships')),
        (r'^accounts/', include('allauth.urls')),
+       (r'^avatar/', include('avatar.urls')),
+
 
     # url(r'^accounts/signup/$', 'registration.views.register', {
     #     'backend': 'registration.backends.default.DefaultBackend',
