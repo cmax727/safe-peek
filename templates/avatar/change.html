@@ -8,6 +8,7 @@
         <p>You do not yet have an avatar.  Please upload one now.</p>
     {% else %}
         <form method="POST" action="">
+        {% csrf_token %}
             <ul>
                 {{ primary_avatar_form.as_ul }}
             </ul>

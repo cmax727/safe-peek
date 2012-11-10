@@ -8,4 +8,5 @@ from django.conf.urls import patterns, url
 urlpatterns = patterns('app.panel.views',
     url(r'^$', 'main', name='main_page'),
     url(r'^removefriend/(?P<uname>\w+)/$', 'remove_friend', name='removefriend_page'),
+    url(r'^signup/$', 'signup', name='signup_page'),
 )
