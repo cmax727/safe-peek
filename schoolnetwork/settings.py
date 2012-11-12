@@ -164,10 +164,9 @@ INSTALLED_APPS = (
     'postman',
     'pagination',
     'friendship',
-
     'app.userprofile',
     'app.connections',
-    'debug_toolbar',
+    #'debug_toolbar',
     # 'app.panel',
     # 'app.friendships',
 )
