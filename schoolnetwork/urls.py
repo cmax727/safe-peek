@@ -16,7 +16,7 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     url(r'^messages/', include('postman.urls')),
-    url(r'^accounts/signup/$', 'app.panel.views.signup', name='account_signup'),
+    #url(r'^accounts/signup/$', 'app.panel.views.signup', name='account_signup'),
     url(r'^relationships/', include('friendship.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'', include('app.panel.urls', namespace='panel')),
