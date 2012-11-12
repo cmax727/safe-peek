@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load url from future %}
+
+{% block title %}Find users{% endblock %}
+
+{% block content %}
+
+<form action="." method="GET">
+<p>
+    <label for="id_find_username">Find by username: </label>
+    <input id="id_find_username" style="margin-top: 8px" type="text" placeholder="Type you looking for" name="q" value="{{search}}" />
+    <input class="btn-primary" name="commit" type="submit" value="search" />
+</p>
+</form>
+
+<div>
+    {% for user in users %}
+    <p><a href="{{ user.get_absolute_url }}">{{ user.display_name }}</a> {% if request.user.is_authenticated %}{% ifnotequal request.user user %}<span><a href="{% url 'connections:add' user %}">Add as your friend</a></span>{% endifnotequal %}{% endif %}</p>
+    {% endfor %}
+</div>
+
+{% if query and not users %}
+<p>Couldn't find the user you were looking for</p>
+{% endif %}
+{% endblock %}

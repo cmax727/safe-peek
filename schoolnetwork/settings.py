@@ -156,16 +156,14 @@ INSTALLED_APPS = (
     #'allauth.socialaccount.providers.openid',
     #'allauth.socialaccount.providers.persona',
     #'allauth.socialaccount.providers.soundcloud',
-    'app.panel',
-    'app.friendships',
     'postman',
     'pagination',
     'friendship',
-    'pagination',
-    # Uncomment the next line to enable the admin:
-    'django.contrib.admin',
-    # Uncomment the next line to enable admin documentation:
-    # 'django.contrib.admindocs',
+
+    'app.userprofile',
+    'app.connections',
+    # 'app.panel',
+    # 'app.friendships',
 )
 
 SOCIALACCOUNT_AVATAR_SUPPORT = 'avatar'
@@ -211,13 +209,12 @@ LOGGING = {
 
 
 ACCOUNT_SIGNUP_FORM_CLASS = 'app.panel.forms.SignupForm'
-
 LOGIN_REDIRECT_URL = '/'
-
+ABSOLUTE_URL_OVERRIDES = {
+    'auth.user': lambda u: "/%s/" % u.username,
+}
 ACCOUNT_ACTIVATION_DAYS = 7
-
 DEFAULT_FROM_EMAIL = 'SOCIAL KID SYSTEM <benhardrisando@gmail.com>'
-
 DEFAULT_CONTENT_EMAIL = "Thank you for your submitted questions. Our staff has received your questions and will be replied shortly"
 
 try:
