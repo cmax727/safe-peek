@@ -25,14 +25,14 @@
           <li class="active"><a href="/">Home</a></li>
           <li><a href="{% url postman_inbox %}">Inbox</a></li>
           <li><a href="{% url postman_write %}">Write Message</a></li>
-          <li><a href="{% url connections:search %}">Browse users</a></li>
+          <li><a href="{% url connections:search %}">Browse All users</a></li>
           <!-- user register-->
           {% if not user.is_authenticated %}
             {# <li><a href="{% url panel:signup_page %}">Signup</a></li> #}
             <li><a href="{% url account_reset_password %}">Forgot Password</a></li>
           {% else %}
             {# <li><a href="{% url friendship_view_friends user.username %}">List Friends</a></li> #}
-            {# <li><a href="{% url friendship_request_list %}">List Request</a></li> #}
+             <li><a href="{% url connections:friends %}">Friends</a></li> 
             <li><a href="{% url account_change_password %}">Change Password</a></li>
           {% endif %}
 
