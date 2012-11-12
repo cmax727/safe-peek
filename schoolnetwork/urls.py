@@ -10,8 +10,8 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^avatar/', include('avatar.urls')),
-    url(r'^(?P<username>[-\.\w]+)/', include('app.userprofile.urls', namespace='userprofile')),
-    url(r'', include('app.connections.urls', namespace='connections')),
+    url(r'^users/', include('app.connections.urls', namespace='connections')),
+    url(r'', include('app.userprofile.urls', namespace='userprofile')),
 )
 
 if settings.DEBUG:
