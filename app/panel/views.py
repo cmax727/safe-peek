@@ -5,12 +5,13 @@ from django.template import RequestContext
 from friendship.models import Friend
 from django.contrib.auth.models import User
 from forms import RegistrationForm
-from models import UserAvatar
+from allauth.account.utils import get_default_redirect, complete_signup
+#from models import UserAvatar
 
 
 def main(request):
     variables = RequestContext(request)
-    return render_to_response('panel/index.html', variables)
+    return render_to_response('index.html', variables)
 
 
 def remove_friend(request, uname):
@@ -28,7 +29,8 @@ def remove_friend(request, uname):
         return render_to_response('friendship/friend/remove.html', variables)
 
 
-def signup(request):
+def signup(request, **kwargs):
+    success_url = kwargs.pop("success_url", None)
     if request.method == 'POST':
         form = RegistrationForm(request.POST or None, request.FILES)
         if form.is_valid():
@@ -41,10 +43,13 @@ def signup(request):
             user.last_name = request.POST['last_name']
             user.save()
 
-            avatar = UserAvatar(User=user, avatar=request.FILES['avatar'])
-            avatar.save()
+            #user = form.save(request=request)
+            return complete_signup(request, user, success_url)
 
-            return HttpResponseRedirect(reverse('account_login'))
+            #avatar = UserAvatar(User=user, avatar=request.FILES['avatar'])
+            #avatar.save()
+
+            #return HttpResponseRedirect(reverse('account_login'))
     else:
         form = RegistrationForm()
 
