@@ -54,7 +54,7 @@ def accept(request, req_id):
     f_request.accept()
     #return redirect('friendship_view_friends', username=request.user.username)
 
-    previous_url = request.META.get('HTTP_REFERER', reverse('connections:requests'))
+    previous_url = request.META.get('HTTP_REFERER', reverse('connections:friends'))
     return HttpResponseRedirect(previous_url)
 
 
@@ -64,5 +64,5 @@ def reject(request, req_id):
     f_request.reject()
     #return redirect('friendship_view_friends', username=request.user.username)
 
-    previous_url = request.META.get('HTTP_REFERER', reverse('connections:requests'))
+    previous_url = request.META.get('HTTP_REFERER', reverse('connections:friends'))
     return HttpResponseRedirect(previous_url)

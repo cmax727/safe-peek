@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %} 
+<h1>Friend Requests</h1>
 <ul>
 {% for friendship_request in requests %}
     {% ifequal user friendship_request.to_user %}
