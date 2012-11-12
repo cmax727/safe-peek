@@ -18,10 +18,3 @@ def profile_detail(request, username, template='userprofiles/detail.html'):
         'user_profile': user
     })
     return render(request, template, variables)
-
-
-def profile(request):
-    #user = get_object_or_404(User, id=1, is_active=True)
-    template = 'userprofiles/detail.html'
-    variables = RequestContext(request)
-    return render(request, template, variables)
