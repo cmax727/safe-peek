@@ -1,6 +1,7 @@
 from django.conf.urls.defaults import patterns, include, url
 from django.conf import settings
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from organizations.backends import invitation_backend
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
@@ -11,11 +12,17 @@ urlpatterns = patterns('',
     url(r'^accounts/', include('allauth.urls')),
     url(r'^avatar/', include('avatar.urls')),
 
-    url(r'^users/', include('app.connections.urls', namespace='connections')),
-    url(r'', include('app.userprofile.urls', namespace='userprofiles')),
     # url(r'^relationships/', include('friendship.urls')),
     # url(r'', include('app.panel.urls', namespace='panel')),
     # url(r'', include('app.friendships.urls', namespace='friendships')),
+
+    url(r'', include('app.panel.urls', namespace='panel')),
+    url(r'', include('app.friendships.urls', namespace='friendships')),
+    url(r'^groups/', include('organizations.urls')),
+    url(r'^invitations/', include(invitation_backend().get_urls())),
+
+    url(r'^users/', include('app.connections.urls', namespace='connections')),
+    url(r'', include('app.userprofile.urls', namespace='userprofiles')),
 
 
     # url(r'^accounts/signup/$', 'registration.views.register', {
