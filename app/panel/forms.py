@@ -29,16 +29,16 @@ class RegistrationForm(forms.Form):
 
     def clean_email(self):
         data = self.cleaned_data
-        # if data['email'].count(".edu") > 0:
-        #     return data['email']
-        # else:
-        #     raise forms.ValidationError('Your email must using .edu')
+        if data['email'].count(".edu") > 0:
+            return data['email']
+        else:
+            raise forms.ValidationError('Your email must using .edu')
 
-        # try:
-        #     User.objects.get(email=data['email'])
-        # except User.DoesNotExist:
-        #     return data['email']
-        # raise forms.ValidationError('This email is already taken.')
+        try:
+            User.objects.get(email=data['email'])
+        except User.DoesNotExist:
+            return data['email']
+        raise forms.ValidationError('This email is already taken.')
 
     def clean(self):
         """

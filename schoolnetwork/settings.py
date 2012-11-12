@@ -1,9 +1,12 @@
 # Django settings for schoolnetwork project.
 import os
+import sys
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 DIRNAME = os.path.abspath(os.path.dirname(__file__))
+LIBPATH = os.path.join(DIRNAME, '..', 'lib')
+sys.path.append(LIBPATH)
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
@@ -99,6 +102,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'pagination.middleware.PaginationMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -163,10 +167,16 @@ INSTALLED_APPS = (
 
     'app.userprofile',
     'app.connections',
+    'debug_toolbar',
     # 'app.panel',
     # 'app.friendships',
 )
 
+INTERNAL_IPS = ('127.0.0.1',)
+
+DEBUG_TOOLBAR_CONFIG={
+    'INTERCEPT_REDIRECTS': False
+}
 SOCIALACCOUNT_AVATAR_SUPPORT = 'avatar'
 
 POSTMAN_DISALLOW_ANONYMOUS = True  # default is False
@@ -209,7 +219,12 @@ LOGGING = {
 }
 
 
-#ACCOUNT_SIGNUP_FORM_CLASS = 'app.panel.forms.SignupForm'
+#ACCOUNT_SIGNUP_FORM_CLASS = 'app.userprofile.forms.SignupForm'
+#ACCOUNT_REQUIRED_EMAIL_DOMAIN = '.edu'
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+
 LOGIN_REDIRECT_URL = '/'
 ABSOLUTE_URL_OVERRIDES = {
     'auth.user': lambda u: "/%s/" % u.username,

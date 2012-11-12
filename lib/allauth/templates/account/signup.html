@@ -15,12 +15,7 @@
         
         <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
             {% csrf_token %}
-            <div>{{ form.first_name.label_tag }} {{ form.first_name }}</div>
-            <div>{{ form.last_name.label_tag }} {{ form.last_name }}</div>
-            <div>{{ form.username.label_tag }} {{ form.username }}</div>
-            <div>{{ form.email.label_tag }} {{ form.email }}</div>
-            <div>{{ form.password1.label_tag }} {{ form.password1 }}</div>
-            <div>{{ form.password2.label_tag }} {{ form.password2 }}</div>
+            {{ form.as_p }}
             {% if redirect_field_value %}
             <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
             {% endif %}
@@ -29,3 +24,5 @@
         
     {% endif %}
 {% endblock %}
+
+
