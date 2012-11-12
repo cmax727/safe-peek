@@ -1,11 +1,11 @@
 from django import forms
 from django.contrib.auth.models import User
-from app.panel.models import UserAvatar
+#from app.panel.models import UserAvatar
 #from registration.signals import user_registered
 attrs_dict = {'class': 'required'}
 
 
-class RegistrationForm(forms.ModelForm):
+class RegistrationForm(forms.Form):
     first_name = forms.CharField()
     last_name = forms.CharField()
     username = forms.CharField()
@@ -15,9 +15,9 @@ class RegistrationForm(forms.ModelForm):
     password2 = forms.CharField(widget=forms.PasswordInput(attrs=attrs_dict, render_value=False),
                                 label=(u'password (again)'))
 
-    class Meta:
-        model = UserAvatar
-        exclude = ('User')
+    # class Meta:
+    #     model = UserAvatar
+    #     exclude = ('User')
 
     def clean_username(self):
         data = self.cleaned_data
@@ -34,11 +34,11 @@ class RegistrationForm(forms.ModelForm):
         # else:
         #     raise forms.ValidationError('Your email must using .edu')
 
-        try:
-            User.objects.get(email=data['email'])
-        except User.DoesNotExist:
-            return data['email']
-        raise forms.ValidationError('This email is already taken.')
+        # try:
+        #     User.objects.get(email=data['email'])
+        # except User.DoesNotExist:
+        #     return data['email']
+        # raise forms.ValidationError('This email is already taken.')
 
     def clean(self):
         """
@@ -57,25 +57,25 @@ class RegistrationForm(forms.ModelForm):
 class SignupForm(forms.Form):
     first_name = forms.CharField(max_length=200)
     last_name = forms.CharField(max_length=200)
-    email = forms.EmailField()
+    #email = forms.EmailField()
     #avatar = forms.ImageField()
 
-    def __init__(self, *args, **kwargs):
-        super(SignupForm, self).__init__(*args, **kwargs)
-        print '######################waks#########################'
-        self.fields.keyOrder = ['first_name', 'last_name', 'username', 'email', 'password1', 'password2']
+    # def __init__(self, *args, **kwargs):
+    #     super(SignupForm, self).__init__(*args, **kwargs)
+    #     print '######################waks#########################'
+    #     self.fields.keyOrder = ['first_name', 'last_name', 'username', 'email', 'password1', 'password2']
 
     def save(self, user):
         user.first_name = self.cleaned_data['first_name']
         user.last_name = self.cleaned_data['last_name']
-        user.email = self.cleaned_data['email']
+        #user.email = self.cleaned_data['email']
         print user.email
         user.save()
 
-    def clean_email(self):
-        print '######################blah#########################'
-        data = self.cleaned_data
-        if data['email'].count(".edu") > 0:
-            return data['email']
-        else:
-            raise forms.ValidationError('Your email must using .edu')
+    # def clean_email(self):
+    #     print '######################blah#########################'
+    #     data = self.cleaned_data
+    #     if data['email'].count(".edu") > 0:
+    #         return data['email']
+    #     else:
+    #         raise forms.ValidationError('Your email must using .edu')

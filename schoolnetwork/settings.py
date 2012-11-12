@@ -209,7 +209,7 @@ LOGGING = {
 }
 
 
-ACCOUNT_SIGNUP_FORM_CLASS = 'app.panel.forms.SignupForm'
+#ACCOUNT_SIGNUP_FORM_CLASS = 'app.panel.forms.SignupForm'
 LOGIN_REDIRECT_URL = '/'
 ABSOLUTE_URL_OVERRIDES = {
     'auth.user': lambda u: "/%s/" % u.username,

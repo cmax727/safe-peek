@@ -7,22 +7,25 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    url(r'^admin/', include(admin.site.urls)),
+    # Examples:
+    # url(r'^$', 'nutrition.views.home', name='home'),
+    # url(r'^nutrition/', include('nutrition.foo.urls')),
+
+    # Uncomment the admin/doc line below to enable admin documentation:
+    # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
+
+    # Uncomment the next line to enable the admin:
     url(r'^messages/', include('postman.urls')),
-    url(r'^accounts/', include('allauth.urls')),
-    url(r'^avatar/', include('avatar.urls')),
-
-    # url(r'^relationships/', include('friendship.urls')),
-    # url(r'', include('app.panel.urls', namespace='panel')),
-    # url(r'', include('app.friendships.urls', namespace='friendships')),
-
+    url(r'^accounts/signup/$', 'app.panel.views.signup', name='account_signup'),
+    url(r'^relationships/', include('friendship.urls')),
+    url(r'^admin/', include(admin.site.urls)),
     url(r'', include('app.panel.urls', namespace='panel')),
+    url(r'', include('app.connections.urls', namespace='connections')),
     url(r'', include('app.friendships.urls', namespace='friendships')),
+       (r'^accounts/', include('allauth.urls')),
+       (r'^avatar/', include('avatar.urls')),
     url(r'^groups/', include('organizations.urls')),
     url(r'^invitations/', include(invitation_backend().get_urls())),
-
-    url(r'^users/', include('app.connections.urls', namespace='connections')),
-    url(r'', include('app.userprofile.urls', namespace='userprofiles')),
 
 
     # url(r'^accounts/signup/$', 'registration.views.register', {
