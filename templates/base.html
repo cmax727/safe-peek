@@ -33,7 +33,7 @@
           {% else %}
             {# <li><a href="{% url friendship_view_friends user.username %}">List Friends</a></li> #}
              <li><a href="{% url connections:friends %}">Friends</a></li> 
-             <li><a href="{% url 'socialaccount_connections' %}">Social Media</a></li> 
+             <li><a href="{% url socialaccount_connections %}">Social Media</a></li> 
             <li><a href="{% url account_change_password %}">Change Password</a></li>
           {% endif %}
 
