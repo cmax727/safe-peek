@@ -1,9 +1,13 @@
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render
 from django.template import RequestContext
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from forms import ProfileForm, NameForm
 from models import Profile
+from postman.models import Message
+from datetime import datetime
 
 # from forms import RegistrationForm
 # from models import UserAvatar
@@ -13,6 +17,16 @@ def main(request, template='userprofiles/index.html'):
     variables = RequestContext(request, {
     })
     return render(request, template, variables)
+
+
+def setread(request, template='postman/base_folder.html'):
+    idm = request.POST.get('tpks', '')
+    msg = Message.objects.get(id=idm)
+    Message.objects.filter(id=idm).update(read_at=datetime.now())
+    #update.save()
+    print msg.subject
+    previous_url = request.META.get('HTTP_REFERER', reverse('postman_inbox'))
+    return HttpResponseRedirect(previous_url)
 
 
 def profile_detail(request, username, template='userprofiles/detail.html'):
