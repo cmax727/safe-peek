@@ -4,7 +4,8 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.template import RequestContext
-
+from forms import GroupForm
+from models import Group
 from friendship.models import Friend, FriendshipRequest
 
 
@@ -66,3 +67,35 @@ def reject(request, req_id):
 
     previous_url = request.META.get('HTTP_REFERER', reverse('connections:friends'))
     return HttpResponseRedirect(previous_url)
+
+
+@login_required
+def create_group(request, template='group/create.html'):
+    if request.method == 'POST':
+        form = GroupForm(request.POST or None)
+        if form.is_valid():
+            #print 'test'
+            name = request.POST.get('name', '')
+            desc = request.POST.get('description', '')
+            privacy = request.POST.get('privacy', '')
+            ins = Group(name=name, description=desc, privacy=privacy, created_by=request.user)
+            ins.save()
+            previous_url = request.META.get('HTTP_REFERER', reverse('connections:group'))
+            return HttpResponseRedirect(previous_url)
+    else:
+        form = GroupForm()
+
+    variables = RequestContext(request, {
+        'form': form
+    })
+    return render(request, template, variables)
+
+
+@login_required
+def group(request, template='group/index.html'):
+    form = Group()
+
+    variables = RequestContext(request, {
+        'form': form
+    })
+    return render(request, template, variables)

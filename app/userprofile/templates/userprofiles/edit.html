@@ -1,1 +1,14 @@
-edit.html
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Profile</h1>
+<form class="signup" id="signup_form" method="post" action="">
+{% csrf_token %}
+<p>{{ form1.first_name.label }}
+{{ form1.first_name }}</p>
+<p>{{ form1.last_name.label }}
+{{ form1.last_name }}</p>
+{{ form2.as_p }}
+</form>
+{% endblock %}

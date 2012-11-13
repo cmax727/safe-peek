@@ -1,6 +1,18 @@
 from django import forms
-from django.contrib.auth.models import User
-from django.utils.translation import ugettext_lazy as _, ugettext
+from models import Profile
+#from django.contrib.auth.models import User
+from django.utils.translation import ugettext_lazy as _
+
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        exclude = ('user')
+
+
+class NameForm(forms.Form):
+    first_name = forms.CharField(label=_('First Name'), max_length=30)
+    last_name = forms.CharField(label=_('Last Name'), max_length=30)
 
 
 class SignupForm(forms.Form):
