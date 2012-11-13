@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from forms import ProfileForm, NameForm
-from models import Profile
+from .models import Profile
 from postman.models import Message
 from datetime import datetime
 
