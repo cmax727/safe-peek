@@ -102,7 +102,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'pagination.middleware.PaginationMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    #'debug_toolbar.middleware.DebugToolbarMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -171,11 +171,11 @@ INSTALLED_APPS = (
     # 'app.friendships',
 )
 
-INTERNAL_IPS = ('127.0.0.1',)
+# INTERNAL_IPS = ('127.0.0.1',)
 
-DEBUG_TOOLBAR_CONFIG={
-    'INTERCEPT_REDIRECTS': False
-}
+# DEBUG_TOOLBAR_CONFIG={
+#     'INTERCEPT_REDIRECTS': False
+# }
 SOCIALACCOUNT_AVATAR_SUPPORT = 'avatar'
 
 POSTMAN_DISALLOW_ANONYMOUS = True  # default is False

@@ -207,9 +207,12 @@ class BaseSignupForm(_base_signup_form_class()):
         value = self.cleaned_data["email"]
         data = self.cleaned_data
         email = data.get("email", "verify")
-        print app_settings.REQUIRED_EMAIL_DOMAIN
-        if app_settings.REQUIRED_EMAIL_DOMAIN:
-            if not email.endswith(app_settings.REQUIRED_EMAIL_DOMAIN):
+        #aa, bb = app_settings.REQUIRED_EMAIL_DOMAIN.rsplit('.', 1)
+        #print app_settings.REQUIRED_EMAIL_DOMAIN
+        #print aa
+        #print bb
+        if not app_settings.REQUIRED_EMAIL_DOMAIN:
+            if not email.endswith('.edu'):
                 raise forms.ValidationError(_('You must use .edu email'))
 
         if app_settings.UNIQUE_EMAIL:
