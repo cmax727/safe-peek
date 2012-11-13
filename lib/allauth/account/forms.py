@@ -23,7 +23,7 @@ from allauth.utils import (email_address_exists, generate_unique_username,
                            get_user_model)
 
 from app_settings import AuthenticationMethod, EmailVerificationMethod
-        
+
 import app_settings
 
 User = get_user_model()
@@ -207,13 +207,11 @@ class BaseSignupForm(_base_signup_form_class()):
         value = self.cleaned_data["email"]
         data = self.cleaned_data
         email = data.get("email", "verify")
-        #aa, bb = app_settings.REQUIRED_EMAIL_DOMAIN.rsplit('.', 1)
-        #print app_settings.REQUIRED_EMAIL_DOMAIN
-        #print aa
-        #print bb
-        if not app_settings.REQUIRED_EMAIL_DOMAIN:
-            if not email.endswith('.edu'):
-                raise forms.ValidationError(_('You must use .edu email'))
+        required_domain = getattr(settings, 'ACCOUNT_REQUIRED_EMAIL_DOMAIN', '')
+
+        if required_domain:
+            if not email.endswith(required_domain):
+                raise forms.ValidationError(_('You need to have a .edu email to sign up'))
 
         if app_settings.UNIQUE_EMAIL:
             if value and email_address_exists(value):

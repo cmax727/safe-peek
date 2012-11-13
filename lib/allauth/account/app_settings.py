@@ -83,8 +83,6 @@ PASSWORD_INPUT_RENDER_VALUE = getattr(settings,
                                       "ACCOUNT_PASSWORD_INPUT_RENDER_VALUE", 
                                       False)
 
-REQUIRED_EMAIL_DOMAIN = getattr(settings, "ACCOUNT_REQUIRED_EMAIL_DOMAIN", None),
-
 # If login is by email, email must be required
 assert (not AUTHENTICATION_METHOD==AuthenticationMethod.EMAIL) or EMAIL_REQUIRED
 # If login includes email, login must be unique
