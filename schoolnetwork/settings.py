@@ -155,6 +155,7 @@ INSTALLED_APPS = (
     'friendship',
     'app.userprofile',
     'app.connections',
+    'app.groups',
 )
 
 SOCIALACCOUNT_AVATAR_SUPPORT = 'avatar'

@@ -10,6 +10,7 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^avatar/', include('avatar.urls')),
+    url(r'^groups/', include('app.groups.urls', namespace='groups')),
     url(r'^users/', include('app.connections.urls', namespace='connections')),
     url(r'', include('app.userprofile.urls', namespace='userprofile')),
 )
