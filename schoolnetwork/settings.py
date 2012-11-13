@@ -229,7 +229,7 @@ ABSOLUTE_URL_OVERRIDES = {
     'auth.user': lambda u: "/%s/" % u.username,
 }
 ACCOUNT_ACTIVATION_DAYS = 7
-DEFAULT_FROM_EMAIL = 'SOCIAL KID SYSTEM <benhardrisando@gmail.com>'
+DEFAULT_FROM_EMAIL = 'SCHOOL NETWORK <schoolnetwork@sixceed.com>'
 DEFAULT_CONTENT_EMAIL = "Thank you for your submitted questions. Our staff has received your questions and will be replied shortly"
 
 try:
