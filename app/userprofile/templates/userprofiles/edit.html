@@ -3,12 +3,11 @@
 {% block content %}
 
 <h1>Profile</h1>
-<form class="signup" id="signup_form" method="post" action="">
+<form class="signup" id="signup_form" method="post" action="" enctype="multipart/form-data">
 {% csrf_token %}
-<p>{{ form1.first_name.label }}
-{{ form1.first_name }}</p>
-<p>{{ form1.last_name.label }}
-{{ form1.last_name }}</p>
+{{ form1.as_p }}
+
 {{ form2.as_p }}
+<input type="submit" value ="Save">
 </form>
 {% endblock %}

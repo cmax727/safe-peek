@@ -56,10 +56,23 @@ def profile_detail(request, username, template='userprofiles/detail.html'):
 
 @login_required
 def profile(request, template='userprofiles/edit.html'):
-    record1 = User.objects.get(username=request.user)
-    #record2 = get_object_or_404(Profile, user=request.user)
-    form1 = NameForm()
-    form2 = ProfileForm()
+    if request.method == 'POST':
+        form1 = NameForm(request.POST or None)
+        form2 = ProfileForm(request.POST or None, request.FILES or None)
+        if form1.is_valid() and form2.is_valid():
+            User.objects.filter(username=request.user).update(first_name=request.POST.get('first_name', ''), last_name=request.POST.get('last_name', ''))
+            Profile.objects.filter(user=request.user).update(picture=request.FILES['picture'], gender=request.POST.get('gender', ''))
+            variables = RequestContext(request, {
+                'form1': form1,
+                'form2': form2,
+            })
+            previous_url = request.META.get('HTTP_REFERER', reverse('userprofile:main_page'))
+            return HttpResponseRedirect(previous_url)
+    else:
+        record1 = User.objects.get(username=request.user)
+        record2 = get_object_or_404(Profile, user=request.user)
+        form1 = NameForm(instance=record1)
+        form2 = ProfileForm(instance=record2)
     #user = get_object_or_404(User, username=request.user, is_active=True)
     variables = RequestContext(request, {
         'form1': form1,
