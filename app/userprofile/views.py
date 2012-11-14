@@ -4,6 +4,7 @@ from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from forms import ProfileForm, NameForm
 from models import Profile
 from postman.models import Message
@@ -20,11 +21,27 @@ def main(request, template='userprofiles/index.html'):
 
 
 def setread(request, template='postman/base_folder.html'):
-    idm = request.POST.get('tpks', '')
-    msg = Message.objects.get(id=idm)
-    Message.objects.filter(id=idm).update(read_at=datetime.now())
+    pks = request.POST.getlist('pks', '')
+    tpks = request.POST.getlist('tpks', '')
+    filter = Q(pk__in=pks) | Q(pk__in=tpks)
+    #idm = request.POST.getlist('tpks', '')
+    #msg = Message.objects.get(id=idm)
+    Message.objects.filter(filter).update(read_at=datetime.now())
+
+    previous_url = request.META.get('HTTP_REFERER', reverse('postman_inbox'))
+    return HttpResponseRedirect(previous_url)
+
+
+def setunread(request, template='postman/base_folder.html'):
+    pks = request.POST.getlist('pks', '')
+    tpks = request.POST.getlist('tpks', '')
+    filter = Q(pk__in=pks) | Q(pk__in=tpks)
+    #idm = request.POST.getlist('tpks', '')
+    #msg = Message.objects.get(id=idm)
+    Message.objects.filter(filter).update(read_at=None)
     #update.save()
-    print msg.subject
+    #print idm
+    #print msg.id
     previous_url = request.META.get('HTTP_REFERER', reverse('postman_inbox'))
     return HttpResponseRedirect(previous_url)
 
