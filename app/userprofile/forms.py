@@ -1,5 +1,5 @@
 from django import forms
-from models import Profile
+from models import Profile, Status
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 
@@ -29,3 +29,8 @@ class SignupForm(forms.Form):
             raise forms.ValidationError(_('You must use .edu email'))
 
         super(SignupForm, self).save(user)
+
+
+class StatusForm(forms.ModelForm):
+    class Meta:
+        model = Status

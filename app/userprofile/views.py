@@ -1,17 +1,57 @@
 from django.contrib.auth.models import User
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, render_to_response
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from forms import ProfileForm, NameForm
-from .models import Profile
+from forms import ProfileForm, NameForm, StatusForm
+from .models import Profile, Status
 from postman.models import Message
 from datetime import datetime
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 
 # from forms import RegistrationForm
 # from models import UserAvatar
+
+def write_status(request):
+    if request.method == 'POST':
+        form = StatusForm(request.POST or None)
+        if form.is_valid():
+            #print 'test'
+            title = form.cleaned_data.get('title')
+            image = form.cleaned_data.get('image')
+            ins = Status(title=title, image=image)
+            ins.save()
+            previous_url = request.META.get('HTTP_REFERER', reverse('userprofile:write_status'))
+            return HttpResponseRedirect(previous_url)
+    else:
+        form = StatusForm()
+
+    variables = RequestContext(request, {
+        'form': form
+    })
+    return render_to_response('write_status.html', variables)
+
+
+def statuses(request):
+    statuses = Status.objects.all()
+    # paginator = Paginator(statuses_list, 2)
+
+    # page = request.GET.get('page')
+    # try:
+    #     status = paginator.page(page)
+    # except PageNotAnInteger:
+    #     # If page is not an integer, deliver first page.
+    #     status = paginator.page(1)
+    # except EmptyPage:
+    #     # If page is out of range (e.g. 9999), deliver last page of results.
+    #     status = paginator.page(paginator.num_pages)
+    variables = RequestContext(request, {
+        'status': statuses
+        })
+    return render_to_response('statuses.html', variables)
 
 
 def main(request, template='userprofiles/index.html'):
