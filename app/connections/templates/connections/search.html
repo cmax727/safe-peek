@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load url from future %}
+{% load connections_tags %}
 
 {% block title %}Find users{% endblock %}
 
@@ -35,9 +36,7 @@
     <p><a href="{{ user.get_absolute_url }}">{{ user.display_name }}</a> 
         {% if user not in friends %}
             {% if request.user.is_authenticated %}
-                {% ifnotequal request.user user %}
-                    <span><a href="{% url 'connections:add' user %}">Add as your friend</a></span>
-                {% endifnotequal %}
+                {% if not request.user|is_friend_with:user %}<span><a href="{% url 'connections:add' user %}">Add as your friend</a></span>{% endif %}
             {% endif %}
         {% endif %}
         </p>

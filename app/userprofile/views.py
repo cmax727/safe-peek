@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from forms import ProfileForm, NameForm
-from models import Profile
+from .models import Profile
 from postman.models import Message
 from datetime import datetime
 
