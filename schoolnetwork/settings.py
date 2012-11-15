@@ -156,12 +156,6 @@ INSTALLED_APPS = (
     'app.userprofile',
     'app.connections',
     'app.groups',
-<<<<<<< HEAD
-=======
-    #'debug_toolbar',
-    # 'app.panel',
-    # 'app.friendships',
->>>>>>> 4a6c0634468ae0d0ad40a5c738e9ead43e2c4ef1
 )
 
 SOCIALACCOUNT_AVATAR_SUPPORT = 'avatar'
