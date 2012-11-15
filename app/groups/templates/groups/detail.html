@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block title %}{{group.name}} Group{% endblock %}
+
+{% block content %}
+<h2>{{group}} group </h2>
+
+{{member.get_status_display }}
+
+{% endblock %}
