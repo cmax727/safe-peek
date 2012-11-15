@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
-# Create your models here.
+#from imagekit.models import ImageSpecField
+## Create your models here.
 
 
 class Profile(models.Model):
@@ -29,3 +30,11 @@ def create_user_profile(sender, instance, created, **kwargs):
         Profile.objects.create(user=instance)
 
 post_save.connect(create_user_profile, sender=User)
+
+
+class Status(models.Model):
+    title = models.TextField()
+    image = models.ImageField(upload_to='statuses/', blank=True, default='')
+
+    def __unicode__(self):
+        return self.title
