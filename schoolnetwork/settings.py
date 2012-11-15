@@ -102,7 +102,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'pagination.middleware.PaginationMiddleware',
-    #'debug_toolbar.middleware.DebugToolbarMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -132,10 +131,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 AUTHENTICATION_BACKENDS = (
-    # Needed to login by username in Django admin, regardless of `allauth`
     "django.contrib.auth.backends.ModelBackend",
-
-    # `allauth` specific authentication methods, such as login by e-mail
     "allauth.account.auth_backends.AuthenticationBackend",
 )
 
@@ -154,28 +150,14 @@ INSTALLED_APPS = (
     'allauth.socialaccount',
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.twitter',
-    #'organizations',
-    #'allauth.socialaccount.providers.google',
-    #'allauth.socialaccount.providers.github',
-    #'allauth.socialaccount.providers.linkedin',
-    #'allauth.socialaccount.providers.openid',
-    #'allauth.socialaccount.providers.persona',
-    #'allauth.socialaccount.providers.soundcloud',
     'postman',
     'pagination',
     'friendship',
     'app.userprofile',
     'app.connections',
-    #'debug_toolbar',
-    # 'app.panel',
-    # 'app.friendships',
+    'app.groups',
 )
 
-# INTERNAL_IPS = ('127.0.0.1',)
-
-# DEBUG_TOOLBAR_CONFIG={
-#     'INTERCEPT_REDIRECTS': False
-# }
 SOCIALACCOUNT_AVATAR_SUPPORT = 'avatar'
 
 POSTMAN_DISALLOW_ANONYMOUS = True  # default is False
@@ -218,7 +200,6 @@ LOGGING = {
 }
 
 AUTH_PROFILE_MODULE = 'accounts.Profile'
-#ACCOUNT_SIGNUP_FORM_CLASS = 'app.userprofile.forms.SignupForm'
 ACCOUNT_REQUIRED_EMAIL_DOMAIN = '.edu'
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 ACCOUNT_EMAIL_REQUIRED = True
@@ -229,7 +210,7 @@ ABSOLUTE_URL_OVERRIDES = {
     'auth.user': lambda u: "/%s/" % u.username,
 }
 ACCOUNT_ACTIVATION_DAYS = 7
-DEFAULT_FROM_EMAIL = 'SOCIAL KID SYSTEM <benhardrisando@gmail.com>'
+DEFAULT_FROM_EMAIL = 'SCHOOL NETWORK <schoolnetwork@sixceed.com>'
 DEFAULT_CONTENT_EMAIL = "Thank you for your submitted questions. Our staff has received your questions and will be replied shortly"
 
 try:
