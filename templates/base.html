@@ -49,6 +49,7 @@
                 <a href="#groups-menu" class="dropdown-toggle" data-toggle="dropdown">Groups <b class="caret"></b></a>
 
                 <ul class="dropdown-menu">
+                    <li><a href="{% url groups:create %}">Create a group</a></li>
                     <li><a href="{% url groups:index %}">All groups</a></li>
                     <li><a href="{% url userprofile:user_groups user %}">My groups</a></li>
                     {# <li><a href="{% url connections:friends %}">Friends</a></li>  #}
