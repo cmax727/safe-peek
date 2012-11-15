@@ -3,8 +3,22 @@
 {% block title %}{{group.name}} Group{% endblock %}
 
 {% block content %}
-<h2>{{group}} group </h2>
+{% if authorize %}
+    <h2>{{group}} group </h2>
+    {% if member.status == 1 %}
+    <form method="post" action="">
+    {% csrf_token %}
+    <input type="submit" name="act" value="accept" />
+    </form>
 
-{{member.get_status_display }}
+    <form method="post" action="">
+    {% csrf_token %}
+    <input type="submit" name="act" value="reject" />
+    </form>
 
+    {% endif %}
+    {{member.get_status_display }}
+{% else %}
+    <h1>You cannot access this Group</h1>
+{% endif %}
 {% endblock %}

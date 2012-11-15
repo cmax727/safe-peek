@@ -166,6 +166,7 @@ INSTALLED_APPS = (
     'friendship',
     'app.userprofile',
     'app.connections',
+    'app.groups',
     #'debug_toolbar',
     # 'app.panel',
     # 'app.friendships',
@@ -219,10 +220,10 @@ LOGGING = {
 
 AUTH_PROFILE_MODULE = 'accounts.Profile'
 #ACCOUNT_SIGNUP_FORM_CLASS = 'app.userprofile.forms.SignupForm'
-ACCOUNT_REQUIRED_EMAIL_DOMAIN = '.edu'
-ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+#ACCOUNT_REQUIRED_EMAIL_DOMAIN = '.edu'
+#ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
+#ACCOUNT_EMAIL_REQUIRED = True
+#ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 
 LOGIN_REDIRECT_URL = '/'
 ABSOLUTE_URL_OVERRIDES = {

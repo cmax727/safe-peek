@@ -42,11 +42,22 @@ def index(request, template='groups/index.html'):
 
 
 @login_required
-def detail(request, group_id, template='groups/detail.html'):
-    group = get_object_or_404(Group, id=group_id)
-    member = get_object_or_404(GroupMembership, user=request.user, group=group)
+def detail(request, groupname, template='groups/detail.html'):
+    group = get_object_or_404(Group, name=groupname)
+    #print group.get_authorize(user=request.user)
+    if request.method == 'POST':
+        if request.POST.get('act', '') == 'accept':
+            GroupMembership.objects.filter(user=request.user, group=group).update(status=2)
+            print request.POST.get('act', '')
+        else:
+            GroupMembership.objects.filter(user=request.user, group=group).update(status=3)
+            print request.POST.get('act', '')
+            print "x"
+
+    member = GroupMembership.objects.filter(user=request.user, group=group)
     variables = RequestContext(request, {
         'group': group,
-        'member': member
+        'member': member,
+        'authorize': group.get_authorize(user=request.user)
     })
     return render(request, template, variables)
