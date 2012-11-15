@@ -3,7 +3,10 @@ from django.conf.urls import patterns, url
 
 
 urlpatterns = patterns('app.groups.views',
-    url(r'^create/$', 'create', name='create'),
-    url(r'^(?P<groupname>[-\.\w]+)/$', 'detail', name='detail'),
     url(r'^$', 'index', name='index'),
+    url(r'^(?P<id>(\d)+)/$', 'detail', name='detail'),
+    url(r'^create/$', 'create', name='create'),
+    url(r'^join/(?P<id>(\d)+)/$', 'join', name='join'),
+    url(r'^manage/(?P<id>(\d)+)/$', 'manage', name='manage'),
+    url(r'^manage/(?P<id>(\d)+)/accept/(?P<user_id>(\d)+)/$', 'accept_membership', name='accept_membership'),
 )

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load url from future %}
+
+{% block content %}
+<h2>Manage "{{ group.name }}"</h2>
+<p><a href="{{ group.get_absolute_url }}">View group page</a></p>
+
+<hr>
+
+<h3>Members</h3>
+<ul>
+    {% for member in memberships %}
+    <li><a href="{{ member.user.get_absolute_url }}">{{ member.user.display_name }}</a> {% if member.status == 1%}<a href="{% url 'groups:accept_membership' group.pk member.user.pk %}" class="btn btn-small btn-inverse">Accept membership</a>{% endif %}</li>
+    {% endfor %}
+</ul>
+{% endblock %}

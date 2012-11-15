@@ -24,41 +24,69 @@
 
       <div class="nav-collapse collapse">
         <ul class="nav">
-          <li class="active"><a href="/">Home</a></li>
-          <li><a href="{% url postman_inbox %}">Inbox</a></li>
-          <li><a href="{% url postman_write %}">Write Message</a></li>
-          <li><a href="{% url connections:search %}">Browse All users</a></li>
-          <!-- user register-->
-          {% if not user.is_authenticated %}
-            {# <li><a href="{% url panel:signup_page %}">Signup</a></li> #}
-            <li><a href="{% url account_reset_password %}">Forgot Password</a></li>
-          {% else %}
-            {# <li><a href="{% url friendship_view_friends user.username %}">List Friends</a></li> #}
-             <li><a href="{% url connections:friends %}">Friends</a></li> 
-             <li><a href="{% url socialaccount_connections %}">Social Media</a></li> 
-            <li><a href="{% url account_change_password %}">Change Password</a></li>
-          {% endif %}
+            <li class="active"><a href="/" class="brand">School Network</a></li>
+            
+            {% if user.is_authenticated %}
+            <li class="dropdown" id="messages-menu">
+                <a href="#messages-menu" class="dropdown-toggle" data-toggle="dropdown">Messages <b class="caret"></b></a>
 
-          <!-- here comes the important part -->
+                <ul class="dropdown-menu">
+                    <li><a href="{% url postman_inbox %}">Inbox</a></li>
+                    <li><a href="{% url postman_write %}">Write Message</a></li>
+                </ul>
+            </li>
+
+            <li class="dropdown" id="users-menu">
+                <a href="#users-menu" class="dropdown-toggle" data-toggle="dropdown">Users <b class="caret"></b></a>
+
+                <ul class="dropdown-menu">
+                    <li><a href="{% url connections:search %}">All users</a></li>
+                    <li><a href="{% url connections:friends %}">Friends</a></li> 
+                </ul>
+            </li>
+
+            <li class="dropdown" id="groups-menu">
+                <a href="#groups-menu" class="dropdown-toggle" data-toggle="dropdown">Groups <b class="caret"></b></a>
+
+                <ul class="dropdown-menu">
+                    <li><a href="{% url groups:index %}">All groups</a></li>
+                    <li><a href="{% url userprofile:user_groups user %}">My groups</a></li>
+                    {# <li><a href="{% url connections:friends %}">Friends</a></li>  #}
+                </ul>
+            </li>
+            {% else %}
+            <li><a href="{% url account_signup %}">Register</a></li>
+            <li><a href="{% url account_login %}">Sign in</a></li>
+            <li><a href="{% url account_reset_password %}">Forgot your Password?</a></li>
+            {% endif %}
+            <!-- user register-->
+            {% if not user.is_authenticated %}
+            {% else %}
+            
+            {% endif %}
+        </ul>
+
+        <ul class="nav pull-right">
+            <!-- here comes the important part -->
            {% if user.is_authenticated %}
-                <li class="dropdown" id="menu1">
-                   <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
-                    {% if user.get_full_name %}
-                      {{ user.get_full_name }}
-                    {% else %}
-                      {{ user.email }}
-                    {% endif %}
-                      <b class="caret"></b>
-                   </a>
-                   <div class="dropdown-menu">
+            <li class="dropdown" id="menu1">
+               <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
+                {% if user.get_full_name %}
+                  {{ user.get_full_name }}
+                {% else %}
+                  {{ user.email }}
+                {% endif %}
+                  <b class="caret"></b>
+               </a>
+               <div class="dropdown-menu">
                     <ul>
-                      <li><a href="{% url userprofile:edit request.user %}">Edit Profile</a></li> 
-                      <li><a href="{% url account_logout %}">Logout</a></li>
+                        <li><a href="{% url userprofile:edit request.user %}">Edit Profile</a></li> 
+                        <li><a href="{% url account_change_password %}">Change Password</a></li>
+                        <li><a href="{% url socialaccount_connections %}">Link account</a></li> 
+                        <li><a href="{% url account_logout %}">Logout</a></li>
                     </ul>
-                   </div>
-                 </li>
-           {% else %}
-                 <li><a href="{% url account_login %}">Sign in</a></li>
+                </div>
+            </li>
             {% endif %}
         </ul>
       </div>

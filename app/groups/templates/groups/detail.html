@@ -1,24 +1,16 @@
 {% extends "base.html" %}
+{% load url from future %}
+{% load groups_tags %}
 
 {% block title %}{{group.name}} Group{% endblock %}
 
 {% block content %}
-{% if authorize %}
-    <h2>{{group}} group </h2>
-    {% if member.status == 1 %}
-    <form method="post" action="">
-    {% csrf_token %}
-    <input type="submit" name="act" value="accept" />
-    </form>
-
-    <form method="post" action="">
-    {% csrf_token %}
-    <input type="submit" name="act" value="reject" />
-    </form>
-
-    {% endif %}
-    {{member.get_status_display }}
-{% else %}
-    <h1>You cannot access this Group</h1>
-{% endif %}
+<h2>"{{group}}" group {% if not user|is_member_of:group %}<a href="{% url 'groups:join' group.pk %}" class="btn">Join this group</a>{% endif %}</h2>
+<hr>
+<h3>Members:</h3>
+<ul>
+    {% for member in members %}
+    <li><a href="{{ member.user.get_aboslute_url }}">{{ member.user.display_name }}</a> {% if member.status != 2 %} - {{ member.get_status_display|lower }}{% endif %}</li>
+    {% endfor %}
+</ul>
 {% endblock %}

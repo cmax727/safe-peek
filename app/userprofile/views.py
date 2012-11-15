@@ -130,3 +130,14 @@ def edit(request, username, template='userprofile/edit.html'):
         'form': form,
     })
     return render(request, template, variables)
+
+
+@login_required
+def user_groups(request, username, template='userprofile/groups.html'):
+    user = get_object_or_404(User, is_active=True, username=username)
+
+    variables = RequestContext(request, {
+        'user': user,
+        'memberships': user.groupmembership_set.all().prefetch_related('user', 'group')
+    })
+    return render(request, template, variables)

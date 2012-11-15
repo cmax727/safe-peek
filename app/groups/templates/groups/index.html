@@ -1,10 +1,15 @@
 {% extends "base.html" %}
+{% load url from future %}
+{% load groups_tags %}
 
-{% block title %}Your Groups{% endblock %}
+{% block title %}All Groups{% endblock %}
 
 {% block content %}
-<h2>Your groups </h2>
+<h2>All groups</h2>
 {% for group in groups %}
-    <p><a href="{% url groups:detail group.id %}">{{ group.name }}</a></p>
+    <p>
+        <a href="{% if user|is_manager_of:group %}{% url 'groups:manage' group.pk %}{% else %}{{ group.get_absolute_url }}{% endif %}">{{ group.name }}</a>
+        {% if user|is_member_of:group %}<i class="icon-ok-circle"></i>{% endif %}
+    </p>
 {% endfor %}
 {% endblock %}

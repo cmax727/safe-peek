@@ -2,6 +2,12 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
+class GroupManager(models.Manager):
+    def open_groups(self):
+        qs = super(GroupManager, self).get_query_set()
+        return qs.filter(privacy=1)
+
+
 class Group(models.Model):
     PRIVACY_CHOICES = (
         (1, 'Open'),
@@ -12,17 +18,20 @@ class Group(models.Model):
     privacy = models.IntegerField(choices=PRIVACY_CHOICES, default=1)
     created_by = models.ForeignKey(User)
     created_at = models.DateTimeField(auto_now_add=True)
-    group_members = models.ManyToManyField(User, through='GroupMembership', related_name='user_groups')
+    members = models.ManyToManyField(User, through='GroupMembership', related_name='user_groups')
+
+    objects = GroupManager()
 
     def __unicode__(self):
         return self.name
 
+    @models.permalink
+    def get_absolute_url(self):
+        return ('groups:detail', [str(self.pk)])
+
     def get_authorize(self, **kwargs):
         tmpBool = False
-        #print self.group
         members = GroupMembership.objects.filter(status__in=[1, 2])
-        print self.group_members.filter()
-        #print members.user
         if kwargs['user'] in members:
             tmpBool = True
         if self.created_by == kwargs['user']:
@@ -36,7 +45,6 @@ class GroupMembership(models.Model):
     MEMBERSHIP_STATUS = (
         (1, 'Pending'),
         (2, 'Accepted'),
-        (3, 'Rejected'),
     )
     user = models.ForeignKey(User)
     group = models.ForeignKey(Group)

@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if membership.status == 1 %}
+<p>You have sent a request to join {{ membership.group.name }}. The owner will be notified to approve your membership</p>
+{% else %}
+<p>You have successfully join {{ membership.group.name }}.
+{% endif %}
+<p>View <a href="{{ membership.group.get_absolute_url }}">group page</a></p>
+{% endblock %}

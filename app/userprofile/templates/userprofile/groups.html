@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>{{ user.display_name}}'s groups</h2>
+
+<ul>
+    {% for membership in memberships %}
+    <li><a href="{{ membership.group.get_absolute_url }}">{{ membership.group.name }}</a> {% if membership.group.created_by == user %}(owner){% endif %}</li>
+    {% endfor %}
+</ul>
+{% endblock %}
