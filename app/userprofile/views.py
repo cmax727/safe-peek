@@ -2,10 +2,10 @@ from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, render_to_response
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from forms import ProfileForm, NameForm, StatusForm
+from .forms import StatusForm, EditProfileForm
 from .models import Profile, Status
 from postman.models import Message
 from datetime import datetime
@@ -95,27 +95,38 @@ def profile_detail(request, username, template='userprofiles/detail.html'):
 
 
 @login_required
-def profile(request, template='userprofiles/edit.html'):
+def edit(request, username, template='userprofiles/edit.html'):
+    user = get_object_or_404(User, is_active=True, username=username)
+    user_profile, created = Profile.objects.get_or_create(user=user)
+
+    if request.user != user:
+        raise Http404('You are not allowed to edit this page')
+
     if request.method == 'POST':
-        form1 = NameForm(request.POST or None)
-        form2 = ProfileForm(request.POST or None, request.FILES or None)
-        if form1.is_valid() and form2.is_valid():
-            User.objects.filter(username=request.user).update(first_name=request.POST.get('first_name', ''), last_name=request.POST.get('last_name', ''))
-            Profile.objects.filter(user=request.user).update(picture=request.FILES['picture'], gender=request.POST.get('gender', ''))
-            variables = RequestContext(request, {
-                'form1': form1,
-                'form2': form2,
-            })
-            previous_url = request.META.get('HTTP_REFERER', reverse('userprofile:main_page'))
-            return HttpResponseRedirect(previous_url)
+        form = EditProfileForm(request.POST, request.FILES, instance=user_profile)
+
+        if form.is_valid():
+            cleaned_data = form.cleaned_data
+
+            # use existing profile instead of creating one
+            profile = form.save()
+
+            profile.user.username = cleaned_data.get('username')
+            profile.user.first_name = cleaned_data.get('first_name')
+            profile.user.last_name = cleaned_data.get('last_name')
+            profile.user.save()
+            return HttpResponseRedirect(reverse('userprofile:detail', args=[profile.user.username]))
+
     else:
-        record1 = User.objects.get(username=request.user)
-        record2 = get_object_or_404(Profile, user=request.user)
-        form1 = NameForm(instance=record1)
-        form2 = ProfileForm(instance=record2)
-    #user = get_object_or_404(User, username=request.user, is_active=True)
+        initial_data = {
+            'user': user,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'username': user.username,
+        }
+        form = EditProfileForm(initial=initial_data, instance=user_profile)
+
     variables = RequestContext(request, {
-        'form1': form1,
-        'form2': form2,
+        'form': form,
     })
     return render(request, template, variables)

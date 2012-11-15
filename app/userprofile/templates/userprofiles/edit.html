@@ -2,12 +2,12 @@
 
 {% block content %}
 
-<h1>Profile</h1>
-<form class="signup" id="signup_form" method="post" action="" enctype="multipart/form-data">
-{% csrf_token %}
-{{ form1.as_p }}
-
-{{ form2.as_p }}
-<input type="submit" value ="Save">
-</form>
+<h1>Edit your account information</h1>
+<div>
+    <form class="signup" id="signup_form" method="post" action="" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value ="Save">
+    </form>
+</div>
 {% endblock %}
