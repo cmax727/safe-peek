@@ -17,12 +17,26 @@ class Group(models.Model):
     def __unicode__(self):
         return self.name
 
+    def get_authorize(self, **kwargs):
+        tmpBool = False
+        #print self.group
+        members = GroupMembership.objects.filter(status__in=[1, 2])
+        print self.group_members.filter()
+        #print members.user
+        if kwargs['user'] in members:
+            tmpBool = True
+        if self.created_by == kwargs['user']:
+            tmpBool = True
+        if self.privacy == 1:
+            tmpBool = True
+        return tmpBool
+
 
 class GroupMembership(models.Model):
     MEMBERSHIP_STATUS = (
         (1, 'Pending'),
         (2, 'Accepted'),
-        (2, 'Rejected'),
+        (3, 'Rejected'),
     )
     user = models.ForeignKey(User)
     group = models.ForeignKey(Group)
