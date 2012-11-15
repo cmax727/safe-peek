@@ -54,7 +54,7 @@ def statuses(request):
     return render_to_response('statuses.html', variables)
 
 
-def main(request, template='userprofiles/index.html'):
+def main(request, template='userprofile/index.html'):
     variables = RequestContext(request, {
     })
     return render(request, template, variables)
@@ -86,7 +86,7 @@ def setunread(request, template='postman/base_folder.html'):
     return HttpResponseRedirect(previous_url)
 
 
-def profile_detail(request, username, template='userprofiles/detail.html'):
+def profile_detail(request, username, template='userprofile/detail.html'):
     user = get_object_or_404(User, username=username, is_active=True)
     variables = RequestContext(request, {
         'user_profile': user
@@ -95,7 +95,7 @@ def profile_detail(request, username, template='userprofiles/detail.html'):
 
 
 @login_required
-def edit(request, username, template='userprofiles/edit.html'):
+def edit(request, username, template='userprofile/edit.html'):
     user = get_object_or_404(User, is_active=True, username=username)
     user_profile, created = Profile.objects.get_or_create(user=user)
 
