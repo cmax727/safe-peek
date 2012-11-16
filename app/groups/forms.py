@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from friendship.models import Friend
 
-from .models import Group
+from .models import Group, GroupMembership
 
 
 class GroupForm(forms.ModelForm):
@@ -31,3 +31,27 @@ class GroupForm(forms.ModelForm):
             raise forms.ValidationError('Group with name %s is already taken. \
                     Please choose another one' % name)
         return name
+
+
+class ChangeOwnershipForm(forms.Form):
+    members = forms.ChoiceField(widget=forms.RadioSelect, label='Change owner to')
+
+    def __init__(self, *args, **kwargs):
+        self.group = kwargs.pop('group')
+        super(ChangeOwnershipForm, self).__init__(*args, **kwargs)
+
+        users_list = self.group.groupmembership_set.exclude(
+                user=self.group.created_by).filter(status=1).values_list('user_id',
+                'user__username')
+
+        self.fields['members'].choices = users_list
+
+    def clean_members(self):
+        user = None
+
+        try:
+            user_id = self.cleaned_data.get('members')
+            user = self.group.groupmembership_set.get(user_id=user_id, status=1).user
+        except:
+            raise forms.ValidationError('User cannot be added as an owner')
+        return user

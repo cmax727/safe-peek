@@ -10,10 +10,13 @@
 <h3>Members</h3>
 <ul>
     {% for member in memberships %}
-    <li><a href="{{ member.user.get_absolute_url }}">{{ member.user.display_name }}</a> {% if member.status != 1 %} - {{ member.get_status_display|lower }}{% endif %} {% if member.status == 2 %}<a href="{% url 'groups:accept_membership' group.pk member.user.pk %}" class="btn btn-small btn-inverse">Accept membership</a>{% endif %} {% if group.created_by != member.user %}<a class="btn btn-danger" href="{% url 'groups:remove_membership' group.pk member.user.pk %}">Remove from group</a>{% endif %}</li>
+    <li><a href="{{ member.user.get_absolute_url }}">{{ member.user.display_name }}</a> {% if member.status != 1 %} - {{ member.get_status_display|lower }}{% endif %} {% if member.status == 2 %}<a href="{% url 'groups:accept_membership' group.pk member.user.pk %}" class="btn btn-small btn-inverse">Accept membership</a>{% endif %} {% if group.created_by != member.user %}<a class="btn btn-small btn-danger" href="{% url 'groups:remove_membership' group.pk member.user.pk %}">Remove from group</a>{% endif %}</li>
     {% endfor %}
 </ul>
 
 <hr>
-<p><a class="btn btn-large btn-danger" href="{% url 'groups:delete' group.pk %}">Delete this group</a></p>
+<p>
+    <a class="btn" href="{% url 'groups:change_ownership' group.pk %}">Change ownership</a>
+    <a class="btn btn-danger" href="{% url 'groups:delete' group.pk %}">Delete this group</a>
+</p>
 {% endblock %}

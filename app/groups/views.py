@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404
 from django.template import RequestContext
 from django.utils.timezone import utc
 
-from .forms import GroupForm
+from .forms import GroupForm, ChangeOwnershipForm
 from .models import Group, GroupMembership
 
 import datetime
@@ -133,6 +133,29 @@ def manage(request, id, template='groups/manage.html'):
     variables = RequestContext(request, {
         'group': group,
         'memberships': memberships,
+    })
+    return render(request, template, variables)
+
+
+@login_required
+def change_ownership(request, id, template='groups/change_ownership.html'):
+    group = get_object_or_404(Group, created_by=request.user, pk=id)
+
+    if request.method == 'POST':
+        form = ChangeOwnershipForm(request.POST, group=group)
+
+        if form.is_valid():
+            data = form.cleaned_data
+            new_owner = data.get('members')
+            group.created_by = new_owner
+            group.save()
+            return HttpResponseRedirect(group.get_absolute_url())
+    else:
+        form = ChangeOwnershipForm(group=group)
+
+    variables = RequestContext(request, {
+        'group': group,
+        'form': form
     })
     return render(request, template, variables)
 

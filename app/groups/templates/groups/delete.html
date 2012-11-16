@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% load url from future %}
+
+{% block content %}
+You have successfully deleted the group
+<p>View <a href="{% url 'groups:index' %}">group list</a>, or <a href="{% url 'groups:create' %}">create a new one</a></p>
+{% endblock %}
