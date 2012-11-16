@@ -18,7 +18,7 @@ class Group(models.Model):
     privacy = models.IntegerField(choices=PRIVACY_CHOICES, default=1)
     created_by = models.ForeignKey(User)
     created_at = models.DateTimeField(auto_now_add=True)
-    members = models.ManyToManyField(User, through='GroupMembership', related_name='user_groups')
+    members = models.ManyToManyField(User, through='GroupMembership', related_name='user_groups', blank=True, null=True)
 
     objects = GroupManager()
 
@@ -43,8 +43,9 @@ class Group(models.Model):
 
 class GroupMembership(models.Model):
     MEMBERSHIP_STATUS = (
-        (1, 'Pending'),
-        (2, 'Accepted'),
+        (1, 'Active'),
+        (2, 'Pending'),
+        (3, 'Invited'),
     )
     user = models.ForeignKey(User)
     group = models.ForeignKey(Group)

@@ -24,7 +24,7 @@ def create(request, template='groups/create.html'):
             # create a membership for group creator
             membership, new = GroupMembership.objects.get_or_create(
                     user=request.user, group=new_group)
-            membership.status = 2
+            membership.status = 1
             membership.joined_at = new_group.created_at
             membership.save()
 
@@ -34,7 +34,7 @@ def create(request, template='groups/create.html'):
             for user in added_users:
                 membership, new = GroupMembership.objects.get_or_create(
                     user=user, group=new_group)
-                membership.status = 1
+                membership.status = 3
                 membership.save()
 
             previous_url = reverse('groups:index')
@@ -81,9 +81,9 @@ def join(request, id, template='groups/joined.html'):
         # if a group's privacy is open then let the user becomes a member
         # automatically
         if group.privacy == 1:
-            membership.status = 2
-        else:
             membership.status = 1
+        else:
+            membership.status = 2
             membership.joined_at = datetime.datetime.now().replace(tzinfo=utc)
         membership.save()
 
