@@ -33,6 +33,32 @@ class GroupForm(forms.ModelForm):
         return name
 
 
+class InviteMembersForm(forms.Form):
+    members = forms.MultipleChoiceField(widget=forms.widgets.CheckboxSelectMultiple, label='Invite users')
+
+    def __init__(self, *args, **kwargs):
+        self.group = kwargs.pop('group')
+        super(InviteMembersForm, self).__init__(*args, **kwargs)
+
+        friends = Friend.objects.friends(self.group.created_by)
+        friends_pks = [u.pk for u in friends]
+        existing_members = self.group.members.values_list('id', flat=True)
+
+        users_list = User.objects.filter(pk__in=friends_pks).\
+                exclude(pk__in=existing_members).values_list('id', 'username')
+        self.fields['members'].choices = users_list
+
+    def clean_members(self):
+        user = []
+
+        try:
+            user_ids = self.cleaned_data.get('members')
+            user = User.objects.filter(is_active=True, id__in=user_ids)
+        except:
+            raise forms.ValidationError('Cannot invite more users')
+        return user
+
+
 class ChangeOwnershipForm(forms.Form):
     members = forms.ChoiceField(widget=forms.RadioSelect, label='Change owner to')
 

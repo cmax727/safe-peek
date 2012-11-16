@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404
 from django.template import RequestContext
 from django.utils.timezone import utc
 
-from .forms import GroupForm, ChangeOwnershipForm
+from .forms import GroupForm, ChangeOwnershipForm, InviteMembersForm
 from .models import Group, GroupMembership
 
 import datetime
@@ -133,6 +133,35 @@ def manage(request, id, template='groups/manage.html'):
     variables = RequestContext(request, {
         'group': group,
         'memberships': memberships,
+    })
+    return render(request, template, variables)
+
+
+@login_required
+def invite(request, id, template='groups/invite.html'):
+    group = get_object_or_404(Group, created_by=request.user, pk=id)
+
+    if request.method == 'POST':
+        form = InviteMembersForm(request.POST, group=group)
+
+        if form.is_valid():
+            data = form.cleaned_data
+            users = data.get('members')
+
+            for user in users:
+                membership, new = GroupMembership.objects.get_or_create(
+                        group=group, user=user)
+
+                membership.status = 3
+                membership.save()
+
+            return HttpResponseRedirect(group.get_absolute_url())
+    else:
+        form = InviteMembersForm(group=group)
+
+    variables = RequestContext(request, {
+        'group': group,
+        'form': form
     })
     return render(request, template, variables)
 

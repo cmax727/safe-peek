@@ -16,6 +16,7 @@
 
 <hr>
 <p>
+    <a class="btn" href="{% url 'groups:invite' group.pk %}">Add more users</a>
     <a class="btn" href="{% url 'groups:change_ownership' group.pk %}">Change ownership</a>
     <a class="btn btn-danger" href="{% url 'groups:delete' group.pk %}">Delete this group</a>
 </p>
