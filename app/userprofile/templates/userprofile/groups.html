@@ -5,7 +5,7 @@
 
 <ul>
     {% for membership in memberships %}
-    <li><a href="{{ membership.group.get_absolute_url }}">{{ membership.group.name }}</a> {% if membership.group.created_by == user %}(owner){% endif %}</li>
+    <li><a href="{% if user|is_manager_of:group %}{% url 'groups:manage' group.pk %}{% else %}{{ group.get_absolute_url }}{% endif %}">{{ membership.group.name }}</a> {% if membership.group.created_by == user %}(owner){% endif %}</li>
     {% endfor %}
 </ul>
 {% endblock %}
