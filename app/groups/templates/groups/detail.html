@@ -24,7 +24,7 @@
 
 <hr>
 
-{% if user|is_member_of:group and group.privacy == 2 %}
+{% if user|is_member_of:group or group.privacy == 1 %}
 <h3>Members:</h3>
 <ul>
     {% for member in members %}

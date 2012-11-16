@@ -71,6 +71,15 @@ def detail(request, id, template='groups/detail.html'):
 
 
 @login_required
+def delete(request, id, template='groups/delete.html'):
+    group = get_object_or_404(Group, pk=id, created_by=request.user)
+    group.delete()
+
+    variables = RequestContext(request, {})
+    return render(request, template, variables)
+
+
+@login_required
 def join(request, id, template='groups/joined.html'):
     group = get_object_or_404(Group, pk=id)
 
@@ -89,9 +98,9 @@ def join(request, id, template='groups/joined.html'):
         # automatically
         if group.privacy == 1:
             membership.status = 1
+            membership.joined_at = datetime.datetime.now().replace(tzinfo=utc)
         else:
             membership.status = 2
-            membership.joined_at = datetime.datetime.now().replace(tzinfo=utc)
 
     membership.save()
 
@@ -134,5 +143,18 @@ def accept_membership(request, id, user_id):
     membership = get_object_or_404(GroupMembership, user_id=user_id, group=group, status=2)
     membership.status = 1
     membership.save()
+
+    return HttpResponseRedirect(reverse('groups:manage', args=[group.pk]))
+
+
+@login_required
+def remove_membership(request, id, user_id):
+    group = get_object_or_404(Group, created_by=request.user, pk=id)
+
+    if request.user.pk == int(user_id):
+        raise Http404('Group owners cannot remove membership themselves')
+
+    membership = get_object_or_404(GroupMembership, user_id=user_id, group=group)
+    membership.delete()
 
     return HttpResponseRedirect(reverse('groups:manage', args=[group.pk]))
