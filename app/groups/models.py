@@ -44,10 +44,10 @@ class Group(models.Model):
 class GroupMembership(models.Model):
     MEMBERSHIP_STATUS = (
         (1, 'Active'),
-        (2, 'Pending'),
+        (2, 'Request to join'),
         (3, 'Invited'),
     )
     user = models.ForeignKey(User)
     group = models.ForeignKey(Group)
-    status = models.IntegerField(choices=MEMBERSHIP_STATUS, default=1)
+    status = models.IntegerField(choices=MEMBERSHIP_STATUS, default=2)
     joined_at = models.DateTimeField(blank=True, null=True)

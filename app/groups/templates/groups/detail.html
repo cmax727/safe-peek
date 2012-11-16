@@ -5,13 +5,33 @@
 {% block title %}{{group.name}} Group{% endblock %}
 
 {% block content %}
-<h2>"{{group}}" group {% if not user|is_member_of:group %}<a href="{% url 'groups:join' group.pk %}" class="btn">Join this group</a>{% endif %}</h2>
+{% with membership_status=user|membership_status:group  %}
+
+<h2>"{{group}}" group
+    {% if not membership_status %}
+    <a href="{% url 'groups:join' group.pk %}" class="btn">Join this group</a>
+    {% else %}
+        {% if membership_status == 2 %}
+        <a href="{% url 'groups:leave' group.pk %}" class="btn">Cancel request</a>
+        {% else %}
+        {% if membership_status == 1 %}
+        <a href="{% url 'groups:leave' group.pk %}" class="btn">Leave Group</a>
+        {% endif %}
+        {% endif %}
+    {% endif %}
+</h2>
+{% endwith %}
+
 <hr>
 
+{% if user|is_member_of:group and group.privacy == 2 %}
 <h3>Members:</h3>
 <ul>
     {% for member in members %}
-    <li><a href="{{ member.user.get_aboslute_url }}">{{ member.user.display_name }}</a> {% if member.status != 1 %} - {{ member.get_status_display|lower }}{% endif %}</li>
+    <li><a href="{{ member.user.get_aboslute_url }}">{{ member.user.display_name }}</a>
+        {% if member.status != 1 %} - {{ member.get_status_display|lower }}{% endif %}
+    </li>
     {% endfor %}
 </ul>
+{% endif %}
 {% endblock %}

@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from django.template import RequestContext
@@ -74,10 +74,17 @@ def detail(request, id, template='groups/detail.html'):
 def join(request, id, template='groups/joined.html'):
     group = get_object_or_404(Group, pk=id)
 
-    if request.user not in group.members.all():
-        membership, new = GroupMembership.objects.get_or_create(user=request.user,
-                group=group)
+    membership, new = GroupMembership.objects.get_or_create(user=request.user,
+            group=group)
 
+    if membership.status == 1:
+        raise Http404()
+
+    elif membership.status == 3:
+        membership.status = 1
+        membership.joined_at = datetime.datetime.now().replace(tzinfo=utc)
+
+    else:
         # if a group's privacy is open then let the user becomes a member
         # automatically
         if group.privacy == 1:
@@ -85,12 +92,28 @@ def join(request, id, template='groups/joined.html'):
         else:
             membership.status = 2
             membership.joined_at = datetime.datetime.now().replace(tzinfo=utc)
-        membership.save()
+
+    membership.save()
 
     variables = RequestContext(request, {
         'membership': membership
     })
     return render(request, template, variables)
+
+
+@login_required
+def leave(request, id, template='groups/joined.html'):
+    group = get_object_or_404(Group, pk=id)
+
+    if group.created_by == request.user:
+        raise Http404('Owner can not leave the group')
+    try:
+        membership = GroupMembership.objects.get(user=request.user, group=group)
+    except:
+        raise Http404('You are not a member of this group')
+
+    membership.delete()
+    return HttpResponseRedirect(group.get_absolute_url())
 
 
 @login_required
@@ -108,8 +131,8 @@ def manage(request, id, template='groups/manage.html'):
 @login_required
 def accept_membership(request, id, user_id):
     group = get_object_or_404(Group, created_by=request.user, pk=id)
-    membership = get_object_or_404(GroupMembership, user_id=user_id, group=group, status=1)
-    membership.status = 2
+    membership = get_object_or_404(GroupMembership, user_id=user_id, group=group, status=2)
+    membership.status = 1
     membership.save()
 
     return HttpResponseRedirect(reverse('groups:manage', args=[group.pk]))
