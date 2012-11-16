@@ -7,13 +7,11 @@
 
 <div class="friends">
     {% friend_request_count user_profile %}
-    {% friends user_profile %}
 </div>
 
-{% if user_profile.socialaccount_set.exists %}
-{% for account in user.socialaccount_set.all %}
-    <h2 style="text-transform:capitalize;">{{ account.provider }}</h2>
-    <p><img width="50" height="50" src="{{ account.get_avatar_url }}" /></p>
-{% endfor %}
-{% endif %}
+<div class="friends">
+    {% for f in friends %}
+    {{ f.display_name }}</li>
+    {% endfor %}
+</div>
 {% endblock %}

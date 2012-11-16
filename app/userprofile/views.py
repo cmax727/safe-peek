@@ -1,19 +1,23 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.urlresolvers import reverse
+from django.db.models import Q
+from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404, render, render_to_response
 from django.template import RequestContext
-from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect, Http404
-from django.contrib.auth.decorators import login_required
-from django.db.models import Q
+
+from friendship.models import  Friend
+from postman.models import Message
+
 from .forms import StatusForm, EditProfileForm
 from .models import Profile, Status
-from postman.models import Message
-from datetime import datetime
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
+from datetime import datetime
 
 # from forms import RegistrationForm
 # from models import UserAvatar
+
 
 def write_status(request):
     if request.method == 'POST':
@@ -88,8 +92,11 @@ def setunread(request, template='postman/base_folder.html'):
 
 def profile_detail(request, username, template='userprofile/detail.html'):
     user = get_object_or_404(User, username=username, is_active=True)
+    friends = Friend.objects.friends(user)
+
     variables = RequestContext(request, {
-        'user_profile': user
+        'user_profile': user,
+        'friends': friends
     })
     return render(request, template, variables)
 

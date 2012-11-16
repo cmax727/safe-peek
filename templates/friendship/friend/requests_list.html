@@ -5,7 +5,7 @@
 {% for friendship_request in requests %}
     {% ifequal user friendship_request.to_user %}
         <li>{{ friendship_request.from_user }}
-            <a href="{% url connections:accept friendship_request.id %}">accept</a>
+            <a href="{% url connections:accept friendship_request.id %}">accept</a> | 
             <a href="{% url connections:reject friendship_request.id %}">reject</a>
         </li>
     {% endifequal %}
@@ -17,5 +17,5 @@
 <hr />
 {% load friendshiptags %}
 <h1>Your Friends</h1> 
-{% friends user %} 
+{% friends user_profile %} 
 {% endblock %} 

@@ -48,7 +48,8 @@ def search(request, template='connections/search.html'):
 def friends(request):
     friendship_requests = FriendshipRequest.objects.filter(rejected__isnull=True)
     variables = RequestContext(request, {
-        'requests': friendship_requests
+        'user_profile': request.user,
+        'requests': friendship_requests,
     })
     return render(request, 'friendship/friend/requests_list.html', variables)
 
