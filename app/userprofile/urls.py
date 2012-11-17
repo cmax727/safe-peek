@@ -10,5 +10,6 @@ urlpatterns = patterns('app.userprofile.views',
     url(r'^messages/setread/$', 'setread', name='setread'),
     url(r'^messages/setunread/$', 'setunread', name='setunread'),
     url(r'^statuses/$', 'statuses', name='statuses'),
-    url(r'^write_status/$', 'write_status', name='write_status'),
+    url(r'^write_status$', 'write_status', name='write_status'),
+    url(r'^comment/(?P<id>(\d)+)/$', 'comment', name='comment'),
 )

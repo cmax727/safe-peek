@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
-#from imagekit.models import ImageSpecField
+from imagekit.models import ImageSpecField
+from imagekit.processors import ResizeToFill, Adjust
 ## Create your models here.
 
 
@@ -35,6 +36,23 @@ post_save.connect(create_user_profile, sender=User)
 class Status(models.Model):
     title = models.TextField()
     image = models.ImageField(upload_to='statuses/', blank=True, default='')
+    thumbnail = ImageSpecField([Adjust(contrast=1.2, sharpness=1.1),
+        ResizeToFill(200, 200)], image_field='image', format='JPEG',
+        options={'quality': 90})
+    attachment = models.FileField(upload_to='statuses/', blank=True, default='')
+    url_link = models.URLField(max_length=200)
+    created_by = models.ForeignKey(User)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
         return self.title
+
+
+class CommentStatus(models.Model):
+    status = models.ForeignKey(Status)
+    comment = models.TextField()
+    created_by = models.ForeignKey(User)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return self.comment

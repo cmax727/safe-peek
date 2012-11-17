@@ -10,8 +10,8 @@ from django.template import RequestContext
 from friendship.models import  Friend
 from postman.models import Message
 
-from .forms import StatusForm, EditProfileForm
-from .models import Profile, Status
+from .forms import StatusForm, EditProfileForm, CommentStatusForm
+from .models import Profile, Status, CommentStatus
 
 from datetime import datetime
 
@@ -19,16 +19,41 @@ from datetime import datetime
 # from models import UserAvatar
 
 
-def write_status(request):
+def comment(request, id):
     if request.method == 'POST':
-        form = StatusForm(request.POST or None)
+        form = CommentStatusForm(request.POST or None)
         if form.is_valid():
             #print 'test'
-            title = form.cleaned_data.get('title')
-            image = form.cleaned_data.get('image')
-            ins = Status(title=title, image=image)
-            ins.save()
-            previous_url = request.META.get('HTTP_REFERER', reverse('userprofile:write_status'))
+            status = Status.objects.get(id=id)
+            new_comment = form.save(commit=False)
+            new_comment.created_by = request.user
+            new_comment.status = status
+            new_comment.save()
+            previous_url = request.META.get('HTTP_REFERER', reverse('userprofile:comment', args=(id,)))
+            return HttpResponseRedirect(previous_url)
+    else:
+        status = get_object_or_404(Status, id=id)
+        comments = CommentStatus.objects.filter(status=status)
+        form = CommentStatusForm()
+
+    variables = RequestContext(request, {
+        'status': status,
+        'comments': comments,
+        'form': form
+    })
+    return render_to_response('comment.html', variables)
+
+
+@login_required
+def write_status(request):
+    if request.method == 'POST':
+        form = StatusForm(request.POST or None, request.FILES)
+        if form.is_valid():
+            #print 'test'
+            new_status = form.save(commit=False)
+            new_status.created_by = request.user
+            new_status.save()
+            previous_url = request.META.get('HTTP_REFERER', reverse('userprofile:detail', args=(request.user,)))
             return HttpResponseRedirect(previous_url)
     else:
         form = StatusForm()
@@ -93,10 +118,12 @@ def setunread(request, template='postman/base_folder.html'):
 def profile_detail(request, username, template='userprofile/detail.html'):
     user = get_object_or_404(User, username=username, is_active=True)
     friends = Friend.objects.friends(user)
+    statuses = Status.objects.all()
 
     variables = RequestContext(request, {
         'user_profile': user,
-        'friends': friends
+        'friends': friends,
+        'statuses': statuses,
     })
     return render(request, template, variables)
 

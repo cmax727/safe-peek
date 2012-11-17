@@ -156,6 +156,8 @@ INSTALLED_APPS = (
     'app.userprofile',
     'app.connections',
     'app.groups',
+    'PIL',
+    'imagekit',
 )
 
 SOCIALACCOUNT_AVATAR_SUPPORT = 'avatar'

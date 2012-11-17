@@ -1,5 +1,5 @@
 from django import forms
-from .models import Profile, Status
+from .models import Profile, Status, CommentStatus
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 
@@ -22,3 +22,10 @@ class EditProfileForm(forms.ModelForm):
 class StatusForm(forms.ModelForm):
     class Meta:
         model = Status
+        exclude = ('created_by', 'created_at')
+
+
+class CommentStatusForm(forms.ModelForm):
+    class Meta:
+        model = CommentStatus
+        exclude = ('status', 'created_by', 'created_at')
