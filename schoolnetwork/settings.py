@@ -144,6 +144,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'south',
+    'imagekit',
     'avatar',
     'allauth',
     'allauth.account',
@@ -156,8 +157,6 @@ INSTALLED_APPS = (
     'app.userprofile',
     'app.connections',
     'app.groups',
-    'PIL',
-    'imagekit',
 )
 
 SOCIALACCOUNT_AVATAR_SUPPORT = 'avatar'
