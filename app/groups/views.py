@@ -1,13 +1,13 @@
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, Http404
-from django.shortcuts import render
+from django.shortcuts import render, render_to_response
 from django.shortcuts import get_object_or_404
 from django.template import RequestContext
 from django.utils.timezone import utc
 
-from .forms import GroupForm, ChangeOwnershipForm, InviteMembersForm
-from .models import Group, GroupMembership
+from .forms import GroupForm, ChangeOwnershipForm, InviteMembersForm, GroupStatusForm
+from .models import Group, GroupMembership, GroupStatus
 
 import datetime
 
@@ -62,10 +62,12 @@ def index(request, template='groups/index.html'):
 def detail(request, id, template='groups/detail.html'):
     group = get_object_or_404(Group, pk=id)
     members = group.groupmembership_set.all()
+    groupstatuses = GroupStatus.objects.all()
 
     variables = RequestContext(request, {
         'group': group,
         'members': members,
+        'groupstatuses': groupstatuses
     })
     return render(request, template, variables)
 
@@ -210,3 +212,22 @@ def remove_membership(request, id, user_id):
     membership.delete()
 
     return HttpResponseRedirect(reverse('groups:manage', args=[group.pk]))
+
+
+def write_groups(request):
+    if request.method == 'POST':
+        form = GroupStatusForm(request.POST or None, request.FILES)
+        if form.is_valid():
+            #print 'test'
+            new_status = form.save(commit=False)
+            new_status.created_by = request.user
+            new_status.save()
+            previous_url = request.META.get('HTTP_REFERER', reverse('groups:detail', args=(request.user,)))
+            return HttpResponseRedirect(previous_url)
+    else:
+        form = GroupStatusForm()
+
+    variables = RequestContext(request, {
+        'form': form
+    })
+    return render_to_response('write_groups.html', variables)

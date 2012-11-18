@@ -25,6 +25,19 @@
 {% endif %}
 {% endwith %}
 
+{% for groupstatus in groupstatuses %}
+<div>
+        <h2>{{groupstatus.title}}</h2>
+        <br>
+        <p>{{groupstatus.thumbnail}}</p>
+        <p>{{groupstatus.url_link}}</p>
+        <p>{% if groupstatus.thumbnail %}<img src="{{ groupstatus.thumbnail.url }}">{% endif%}</p>
+
+</div>
+
+{% endfor %}
+
+
 <hr>
 
 {% if user|is_member_of:group or group.privacy == 1 %}

@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from friendship.models import Friend
 
-from .models import Group, GroupMembership
+from .models import Group, GroupMembership, GroupStatus, GroupCommentStatus
 
 
 class GroupForm(forms.ModelForm):
@@ -81,3 +81,15 @@ class ChangeOwnershipForm(forms.Form):
         except:
             raise forms.ValidationError('User cannot be added as an owner')
         return user
+
+
+class GroupStatusForm(forms.ModelForm):
+    class Meta:
+        model = GroupStatus
+        exclude = ('created_by', 'created_at')
+
+
+class GroupCommentStatusForm(forms.ModelForm):
+    class Meta:
+        model = GroupCommentStatus
+        exclude = ('status', 'created_by', 'created_at')

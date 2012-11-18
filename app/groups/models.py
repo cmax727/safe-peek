@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from imagekit.models import ImageSpecField
+from imagekit.processors import ResizeToFill, Adjust
 
 
 class GroupManager(models.Manager):
@@ -51,3 +53,29 @@ class GroupMembership(models.Model):
     group = models.ForeignKey(Group)
     status = models.IntegerField(choices=MEMBERSHIP_STATUS, default=2)
     joined_at = models.DateTimeField(blank=True, null=True)
+
+
+class GroupStatus(models.Model):
+    title = models.TextField()
+    image = models.ImageField(upload_to='statuses/', blank=True, default='')
+    thumbnail = ImageSpecField([Adjust(contrast=1.2, sharpness=1.1),
+        ResizeToFill(200, 200)], image_field='image', format='JPEG',
+        options={'quality': 90})
+    attachment = models.FileField(upload_to='statuses/', blank=True, default='')
+    url_link = models.URLField(max_length=200)
+    created_by = models.ForeignKey(User)
+    group = models.ForeignKey(Group)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return self.title
+
+
+class GroupCommentStatus(models.Model):
+    status = models.ForeignKey(GroupStatus)
+    comment = models.TextField()
+    created_by = models.ForeignKey(User)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return self.comment

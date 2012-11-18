@@ -35,11 +35,11 @@ post_save.connect(create_user_profile, sender=User)
 
 class Status(models.Model):
     title = models.TextField()
-    image = models.ImageField(upload_to='statuses/', blank=True, default='')
+    image = models.ImageField(upload_to='detail/', blank=True, default='')
     thumbnail = ImageSpecField([Adjust(contrast=1.2, sharpness=1.1),
         ResizeToFill(200, 200)], image_field='image', format='JPEG',
         options={'quality': 90})
-    attachment = models.FileField(upload_to='statuses/', blank=True, default='')
+    attachment = models.FileField(upload_to='detail/', blank=True, default='')
     url_link = models.URLField(max_length=200)
     created_by = models.ForeignKey(User)
     created_at = models.DateTimeField(auto_now_add=True)
