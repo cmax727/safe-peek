@@ -62,7 +62,7 @@ class GroupStatus(models.Model):
         ResizeToFill(200, 200)], image_field='image', format='JPEG',
         options={'quality': 90})
     attachment = models.FileField(upload_to='statuses/', blank=True, default='')
-    url_link = models.URLField(max_length=200)
+    url_link = models.URLField(max_length=200, blank=True)
     created_by = models.ForeignKey(User)
     group = models.ForeignKey(Group)
     created_at = models.DateTimeField(auto_now_add=True)

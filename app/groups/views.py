@@ -214,15 +214,17 @@ def remove_membership(request, id, user_id):
     return HttpResponseRedirect(reverse('groups:manage', args=[group.pk]))
 
 
-def write_groups(request):
+def write_groups(request, id):
     if request.method == 'POST':
         form = GroupStatusForm(request.POST or None, request.FILES)
         if form.is_valid():
             #print 'test'
+            group = get_object_or_404(Group, pk=id)
             new_status = form.save(commit=False)
             new_status.created_by = request.user
+            new_status.group = group
             new_status.save()
-            previous_url = request.META.get('HTTP_REFERER', reverse('groups:detail', args=(request.user,)))
+            previous_url = reverse('groups:detail', args=(id,))
             return HttpResponseRedirect(previous_url)
     else:
         form = GroupStatusForm()

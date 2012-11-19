@@ -53,7 +53,7 @@ def write_status(request):
             new_status = form.save(commit=False)
             new_status.created_by = request.user
             new_status.save()
-            previous_url = request.META.get('HTTP_REFERER', reverse('userprofile:detail', args=(request.user,)))
+            previous_url = reverse('userprofile:detail', args=(request.user,))
             return HttpResponseRedirect(previous_url)
     else:
         form = StatusForm()

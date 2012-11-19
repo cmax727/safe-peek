@@ -86,7 +86,7 @@ class ChangeOwnershipForm(forms.Form):
 class GroupStatusForm(forms.ModelForm):
     class Meta:
         model = GroupStatus
-        exclude = ('created_by', 'created_at')
+        exclude = ('created_by', 'created_at', 'group')
 
 
 class GroupCommentStatusForm(forms.ModelForm):
