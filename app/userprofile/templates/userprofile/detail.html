@@ -25,6 +25,7 @@
 <br>
 <br>
 
+{% comment %}
 {% for status in statuses %}
 <div>
         <h2>{{status.title}}</h2>
@@ -35,8 +36,14 @@
         <p>{% if status.thumbnail %}<img src="{{ status.thumbnail.url }}">{% endif%}</p>
 
 </div>
-
 {% endfor %}
+{% endcomment %}
 
+{% for timeline in user_profile.profile.timelines.all %}
+<h2><a href="{{ timeline.get_absolute_url }}">{{ timeline.title }}</a></h2>
 
+{% if timeline.get_type == 'text' %}
+{{ timeline.get_content.content|safe }}
+{% endif %}
+{% endfor %}
 {% endblock %}

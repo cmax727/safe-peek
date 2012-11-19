@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load comments %}
+{% block content %}
+<h2>{{ obj.title }}</h2>
+
+{% if obj.get_type == 'text' %}
+{{ obj.get_content.content|safe }}
+{% endif %}
+
+<hr>
+{% render_comment_list for obj %}
+
+<hr>
+<h2>Add commments?</h2>
+{% render_comment_form for obj %}
+
+{% endblock %}

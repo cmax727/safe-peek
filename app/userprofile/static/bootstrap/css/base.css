@@ -3,3 +3,7 @@ body {
     padding-top: 40px;
     background-color: white;
 }
+
+#id_honeypot {
+    display: none;
+}

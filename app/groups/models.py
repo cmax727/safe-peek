@@ -1,7 +1,11 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.contenttypes import generic
+from django.db import models
+
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill, Adjust
+
+from app.timelines.models import Timeline
 
 
 class GroupManager(models.Manager):
@@ -22,6 +26,7 @@ class Group(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     members = models.ManyToManyField(User, through='GroupMembership', related_name='user_groups', blank=True, null=True)
 
+    timelines = generic.GenericRelation(Timeline)
     objects = GroupManager()
 
     def __unicode__(self):
