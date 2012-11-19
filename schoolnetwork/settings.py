@@ -143,6 +143,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
+    'django.contrib.comments',
     'south',
     'avatar',
     'allauth',
@@ -150,14 +151,14 @@ INSTALLED_APPS = (
     'allauth.socialaccount',
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.twitter',
+    'imagekit',
     'postman',
     'pagination',
     'friendship',
     'app.userprofile',
     'app.connections',
     'app.groups',
-    'PIL',
-    'imagekit',
+    'app.timelines',
 )
 
 SOCIALACCOUNT_AVATAR_SUPPORT = 'avatar'

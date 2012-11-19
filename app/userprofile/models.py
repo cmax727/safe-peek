@@ -1,9 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.contenttypes import generic
 from django.db.models.signals import post_save
+
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill, Adjust
-## Create your models here.
+
+from app.timelines.models import Timeline
 
 
 class Profile(models.Model):
@@ -14,6 +17,8 @@ class Profile(models.Model):
     user = models.OneToOneField(User)
     gender = models.IntegerField(choices=GENDER_CHOICES, default=1)
     picture = models.ImageField(upload_to='profiles', blank=True, null=True)
+
+    timelines = generic.GenericRelation(Timeline)
 
     def __unicode__(self):
         return self.user.username
