@@ -6,6 +6,8 @@ from django.db import models
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFit
 
+from .fields import YoutubeUrlField
+
 
 class Timeline(models.Model):
     title = models.CharField(max_length=255)
@@ -64,10 +66,7 @@ class ImageTimeline(Timeline):
 
 
 class YoutubeTimeline(Timeline):
-    youtube_link = models.CharField(max_length=255)
-
-    def get_embedded(self):
-        return ''
+    youtube_link = YoutubeUrlField()
 
 
 class FileTimeline(Timeline):

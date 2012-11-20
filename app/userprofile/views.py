@@ -135,11 +135,20 @@ def user_groups(request, username, template='userprofile/groups.html'):
 
 
 @login_required
-def upload_text(request, template='userprofile/upload_text.html'):
+def update_timeline(request, timeline_type='text'):
     user = get_object_or_404(User, is_active=True, username=request.user.username)
+    form_class = None
+
+    if timeline_type == 'text':
+        form_class = TextTimelineForm
+    elif timeline_type == 'picture':
+        form_class = ImageTimelineForm
+
+    # elif timeline_type == 'youtube':
+    #     form_class = YoutubeTimelineForm
 
     if request.method == 'POST':
-        form = TextTimelineForm(request.POST, content_object=user.profile)
+        form = form_class(request.POST, request.FILES, content_object=user.profile)
 
         if form.is_valid():
             t = form.save(commit=False)
@@ -147,28 +156,9 @@ def upload_text(request, template='userprofile/upload_text.html'):
             t.save()
             return HttpResponseRedirect(user.get_absolute_url())
     else:
-        form = TextTimelineForm(content_object=user.profile)
+        form = form_class(content_object=user.profile)
     variables = RequestContext(request, {
         'form': form
     })
-    return render(request, template, variables)
-
-
-@login_required
-def upload_picture(request, template='userprofile/upload_picture.html'):
-    user = get_object_or_404(User, is_active=True, username=request.user.username)
-
-    if request.method == 'POST':
-        form = ImageTimelineForm(request.POST, request.FILES, content_object=user.profile)
-
-        if form.is_valid():
-            t = form.save(commit=False)
-            t.created_by = user
-            t.save()
-            return HttpResponseRedirect(user.get_absolute_url())
-    else:
-        form = ImageTimelineForm(content_object=user.profile)
-    variables = RequestContext(request, {
-        'form': form
-    })
+    template = 'userprofile/upload_%s.html' % timeline_type
     return render(request, template, variables)
