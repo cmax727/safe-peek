@@ -13,5 +13,5 @@ urlpatterns = patterns('app.userprofile.views',
     url(r'^write/text/$', 'update_timeline', {'timeline_type': 'text'}, name='upload_text'),
     url(r'^write/picture/$', 'update_timeline', {'timeline_type': 'picture'}, name='upload_picture'),
     url(r'^write/youtube/$', 'update_timeline', {'timeline_type': 'youtube'}, name='upload_youtube'),
-    # url(r'^write/file/$', 'upload_file', name='upload_text'),
+    url(r'^write/file/$', 'update_timeline', {'timeline_type': 'file'}, name='upload_file'),
 )

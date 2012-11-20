@@ -39,6 +39,10 @@
     {% if timeline.get_type == 'youtube' %}
     <iframe width="480" height="360" src="{{ timeline.get_content.youtube_link.embed_url }}" frameborder="0" allowfullscreen></iframe>
     {% endif %}
+
+    {% if timeline.get_type == 'file' %}
+    <p><i class="icon-file"></i> <a href="{{ timeline.get_content.attachment.url }}">{{ timeline.get_content.filename }}</a></p>
+    {% endif %}
     <p>&nbsp;</p>
 </div>
 

@@ -36,7 +36,7 @@ class YoutubeTimelineForm(TimelineBaseForm):
         exclude = ('created_by',)
 
 
-class FileTimelineForm(forms.ModelForm):
+class FileTimelineForm(TimelineBaseForm):
     class Meta:
         model = FileTimeline
         exclude = ('created_by',)

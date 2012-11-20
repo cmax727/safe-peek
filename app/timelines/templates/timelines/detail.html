@@ -15,6 +15,10 @@
 <iframe width="480" height="360" src="{{ obj.get_content.youtube_link.embed_url }}" frameborder="0" allowfullscreen></iframe>
 {% endif %}
 
+{% if obj.get_type == 'file' %}
+<p><i class="icon-file"></i> <a href="{{ obj.get_content.attachment.url }}">{{ obj.get_content.filename }}</a></p>
+{% endif %}
+
 <hr>
 {% render_comment_list for obj %}
 

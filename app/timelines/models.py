@@ -8,6 +8,8 @@ from imagekit.processors import ResizeToFit
 
 from .fields import YoutubeUrlField
 
+import os
+
 
 class Timeline(models.Model):
     title = models.CharField(max_length=255)
@@ -71,3 +73,12 @@ class YoutubeTimeline(Timeline):
 
 class FileTimeline(Timeline):
     attachment = models.FileField(upload_to='timelines')
+
+    @property
+    def filename(self):
+        res = 'Download file'
+        try:
+            res = os.path.basename(self.attachment.name)
+        except:
+            pass
+        return res
