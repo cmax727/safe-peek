@@ -1,86 +1,21 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User, Group
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+#from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import HttpResponseRedirect, Http404
-from django.shortcuts import get_object_or_404, render, render_to_response
+from django.shortcuts import get_object_or_404, render
 from django.template import RequestContext
 
 from friendship.models import  Friend
 from postman.models import Message
 
-from .forms import StatusForm, EditProfileForm, CommentStatusForm, UserListForm
-from .models import Profile, Status, CommentStatus
+from .forms import EditProfileForm, UserListForm
+from .models import Profile
+
+from app.timelines.forms import *
 
 from datetime import datetime
-
-# from forms import RegistrationForm
-# from models import UserAvatar
-
-
-def comment(request, id):
-    if request.method == 'POST':
-        form = CommentStatusForm(request.POST or None)
-        if form.is_valid():
-            #print 'test'
-            status = Status.objects.get(id=id)
-            new_comment = form.save(commit=False)
-            new_comment.created_by = request.user
-            new_comment.status = status
-            new_comment.save()
-            previous_url = request.META.get('HTTP_REFERER', reverse('userprofile:comment', args=(id,)))
-            return HttpResponseRedirect(previous_url)
-    else:
-        status = get_object_or_404(Status, id=id)
-        comments = CommentStatus.objects.filter(status=status)
-        form = CommentStatusForm()
-
-    variables = RequestContext(request, {
-        'status': status,
-        'comments': comments,
-        'form': form
-    })
-    return render_to_response('comment.html', variables)
-
-
-@login_required
-def write_status(request):
-    if request.method == 'POST':
-        form = StatusForm(request.POST or None, request.FILES)
-        if form.is_valid():
-            #print 'test'
-            new_status = form.save(commit=False)
-            new_status.created_by = request.user
-            new_status.save()
-            previous_url = reverse('userprofile:detail', args=(request.user,))
-            return HttpResponseRedirect(previous_url)
-    else:
-        form = StatusForm()
-
-    variables = RequestContext(request, {
-        'form': form
-    })
-    return render_to_response('write_status.html', variables)
-
-
-def statuses(request):
-    statuses = Status.objects.all()
-    # paginator = Paginator(statuses_list, 2)
-
-    # page = request.GET.get('page')
-    # try:
-    #     status = paginator.page(page)
-    # except PageNotAnInteger:
-    #     # If page is not an integer, deliver first page.
-    #     status = paginator.page(1)
-    # except EmptyPage:
-    #     # If page is out of range (e.g. 9999), deliver last page of results.
-    #     status = paginator.page(paginator.num_pages)
-    variables = RequestContext(request, {
-        'status': statuses
-        })
-    return render_to_response('statuses.html', variables)
 
 
 @login_required
@@ -142,12 +77,10 @@ def setunread(request, template='postman/base_folder.html'):
 def profile_detail(request, username, template='userprofile/detail.html'):
     user = get_object_or_404(User, username=username, is_active=True)
     friends = Friend.objects.friends(user)
-    statuses = Status.objects.all()
 
     variables = RequestContext(request, {
         'user_profile': user,
         'friends': friends,
-        'statuses': statuses,
     })
     return render(request, template, variables)
 
@@ -197,5 +130,45 @@ def user_groups(request, username, template='userprofile/groups.html'):
     variables = RequestContext(request, {
         'user': user,
         'memberships': user.groupmembership_set.all().prefetch_related('user', 'group')
+    })
+    return render(request, template, variables)
+
+
+@login_required
+def upload_text(request, template='userprofile/upload_text.html'):
+    user = get_object_or_404(User, is_active=True, username=request.user.username)
+
+    if request.method == 'POST':
+        form = TextTimelineForm(request.POST, content_object=user.profile)
+
+        if form.is_valid():
+            t = form.save(commit=False)
+            t.created_by = user
+            t.save()
+            return HttpResponseRedirect(user.get_absolute_url())
+    else:
+        form = TextTimelineForm(content_object=user.profile)
+    variables = RequestContext(request, {
+        'form': form
+    })
+    return render(request, template, variables)
+
+
+@login_required
+def upload_picture(request, template='userprofile/upload_picture.html'):
+    user = get_object_or_404(User, is_active=True, username=request.user.username)
+
+    if request.method == 'POST':
+        form = ImageTimelineForm(request.POST, request.FILES, content_object=user.profile)
+
+        if form.is_valid():
+            t = form.save(commit=False)
+            t.created_by = user
+            t.save()
+            return HttpResponseRedirect(user.get_absolute_url())
+    else:
+        form = ImageTimelineForm(content_object=user.profile)
+    variables = RequestContext(request, {
+        'form': form
     })
     return render(request, template, variables)

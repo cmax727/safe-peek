@@ -7,7 +7,7 @@ from django.template import RequestContext
 from django.utils.timezone import utc
 
 from .models import Timeline, TextTimeline, ImageTimeline, YoutubeTimeline, FileTimeline
-from .forms import TimelineForm, TextTimelineForm, ImageTimelineForm, YoutubeTimelineForm, FileTimelineForm
+from .forms import TextTimelineForm, ImageTimelineForm, YoutubeTimelineForm, FileTimelineForm
 
 
 def main(request):
@@ -15,7 +15,7 @@ def main(request):
     return render_to_response('timelines/main.html', variables)
 
 
-def detail(request, id, template='  timelines/detail.html'):
+def detail(request, id, template='timelines/detail.html'):
     obj = get_object_or_404(Timeline, id=id)
 
     variables = RequestContext(request, {
@@ -24,23 +24,23 @@ def detail(request, id, template='  timelines/detail.html'):
     return render(request, template, variables)
 
 
-def write(request, template='   timelines/write.html'):
-    if request.method == 'POST':
-        form = TimelineForm(request.POST or None, request.FILES)
-        if form.is_valid():
-            #print 'test'
-            new_status = form.save(commit=False)
-            new_status.created_by = request.user
-            new_status.save()
-            previous_url = request.META.get('HTTP_REFERER', reverse('timelines:write', args=(request.user,)))
-            return HttpResponseRedirect(previous_url)
-    else:
-        form = TimelineForm()
+# def write(request, template='   timelines/write.html'):
+#     if request.method == 'POST':
+#         form = TimelineForm(request.POST or None, request.FILES)
+#         if form.is_valid():
+#             #print 'test'
+#             new_status = form.save(commit=False)
+#             new_status.created_by = request.user
+#             new_status.save()
+#             previous_url = request.META.get('HTTP_REFERER', reverse('timelines:write', args=(request.user,)))
+#             return HttpResponseRedirect(previous_url)
+#     else:
+#         form = TimelineForm()
 
-    variables = RequestContext(request, {
-        'form': form
-    })
-    return render_to_response('timelines/write.html', variables)
+#     variables = RequestContext(request, {
+#         'form': form
+#     })
+#     return render_to_response('timelines/write.html', variables)
 
 
 def text(request, template='   timelines/text.html'):

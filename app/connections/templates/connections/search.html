@@ -26,27 +26,24 @@
 <form action="." method="GET">
 <p>
     <label for="id_find_username">Find by username: </label>
-    <input id="id_find_username" style="margin-top: 8px" type="text" placeholder="Type you looking for" name="q" value="{{search}}" />
-    <!--<input class="btn-primary" name="commit" type="submit" value="search" />-->
+    <input id="id_find_username" style="margin-top: 8px" type="text" placeholder="Type you looking for" name="q" value="{{query}}" />
 </p>
 </form>
 
 <div>
     {% for user in users %}
-    <p><a href="{{ user.get_absolute_url }}">{{ user.display_name }}</a> 
+    <div>
+        <p><a href="{{ user.get_absolute_url }}">{% if user.profile.small_picture %}<img src="{{ user.profile.small_picture.url }}" alt="{{ user.display_name }}"> {% endif %}{{ user.display_name }}</a> 
         {% if user not in friends %}
             {% if request.user.is_authenticated %}
-                {% if not request.user|is_friend_with:user %}<span><a href="{% url 'connections:add' user %}">Add as your friend</a></span>{% endif %}
+                {% if not request.user|is_friend_with:user %}<span><a href="{% url 'connections:add' user %}" class="btn btn-small">Add as your friend</a></span>{% endif %}
             {% endif %}
         {% endif %}
         </p>
+    </div>
     {% endfor %}
+    <div class="clearfix">&nbsp;</div>
 </div>
-<h1>Your Friends</h1> 
-{% for f in friends %}
-   <li>{{ f.display_name }}</li>
-{% endfor %}
-
 
 {% if query and not users %}
 <p>Couldn't find the user you were looking for</p>

@@ -31,7 +31,6 @@ def search(request, template='connections/search.html'):
     query = request.GET.get('q', '')
     users = User.objects.filter(is_active=True)
     all_friends = Friend.objects.friends(request.user)
-    print all_friends
 
     if query:
         users = users.filter(username__icontains=query)

@@ -1,33 +1,42 @@
 from django import forms
-from .models import Timeline, TextTimeline, ImageTimeline, YoutubeTimeline, FileTimeline
-from django.contrib.auth.models import User
+from django.contrib.contenttypes.models import ContentType
+
+from .models import TextTimeline, ImageTimeline, YoutubeTimeline, FileTimeline
 
 
-class TimelineForm(forms.ModelForm):
-    class Meta:
-        model = Timeline
-        exclude = ('created_by, object_id, content_type')
+class TimelineBaseForm(forms.ModelForm):
+    content_type = forms.ModelChoiceField(queryset=ContentType.objects.all(), widget=forms.HiddenInput())
+    object_id = forms.IntegerField(widget=forms.HiddenInput())
+
+    def __init__(self, *args, **kwargs):
+        obj = kwargs.pop('content_object')
+        super(TimelineBaseForm, self).__init__(*args, **kwargs)
+
+        ctype = ContentType.objects.get_for_model(obj.__class__)
+        self.fields['content_type'].initial = ctype
+        self.fields['object_id'].initial = obj.pk
 
 
-class TextTimelineForm(forms.ModelForm):
+class TextTimelineForm(TimelineBaseForm):
     class Meta:
         model = TextTimeline
-        exclude = ('created_by, object_id, content_type')
+        exclude = ('created_by',)
 
 
-class ImageTimelineForm(forms.ModelForm):
+class ImageTimelineForm(TimelineBaseForm):
+
     class Meta:
+        exclude = ('created_by',)
         model = ImageTimeline
-        exclude = ('created_by, object_id, content_type')
 
 
 class YoutubeTimelineForm(forms.ModelForm):
     class Meta:
         model = YoutubeTimeline
-        exclude = ('created_by, object_id, content_type')
+        exclude = ('created_by',)
 
 
 class FileTimelineForm(forms.ModelForm):
     class Meta:
         model = FileTimeline
-        exclude = ('created_by, object_id, content_type')
+        exclude = ('created_by',)

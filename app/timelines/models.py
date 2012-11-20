@@ -3,15 +3,21 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.db import models
 
+from imagekit.models import ImageSpecField
+from imagekit.processors import ResizeToFit
+
 
 class Timeline(models.Model):
     title = models.CharField(max_length=255)
     created_by = models.ForeignKey(User)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    content_type = models.ForeignKey(ContentType, null=True, blank=True)
-    object_id = models.PositiveIntegerField(null=True, blank=True)
+    content_type = models.ForeignKey(ContentType)
+    object_id = models.PositiveIntegerField()
     content_object = generic.GenericForeignKey('content_type', 'object_id')
+
+    class Meta:
+        ordering = ('-created_at',)
 
     def __unicode__(self):
         return self.title
@@ -51,6 +57,10 @@ class TextTimeline(Timeline):
 
 class ImageTimeline(Timeline):
     image = models.ImageField(upload_to='timelines')
+    thumbnail_image = ImageSpecField([ResizeToFit(302, None)],
+            image_field='image',
+            format='JPEG',
+            options={'quality': 90})
 
 
 class YoutubeTimeline(Timeline):

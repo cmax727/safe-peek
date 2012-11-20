@@ -155,11 +155,11 @@ INSTALLED_APPS = (
     'postman',
     'pagination',
     'friendship',
+    'app.timelines',
     'app.userprofile',
     'app.academy',
     'app.connections',
     'app.groups',
-    'app.timelines',
 )
 
 SOCIALACCOUNT_AVATAR_SUPPORT = 'avatar'

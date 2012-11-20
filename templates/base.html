@@ -75,6 +75,16 @@
                     </ul>
                 </li>
               {% endif %}
+
+              <li class="dropdown" id="timeline-menu">
+                <a href="#timeline-menu" class="dropdown-toggle" data-toggle="dropdown">Update your timeline<b class="caret"></b></a>
+                  <ul class="dropdown-menu">
+                      <div><a href="{% url userprofile:upload_text %}">Write text</a></div>
+                      <div><a href="{% url userprofile:upload_picture %}">Upload a picture</a></div>
+                      <div><a href="{% url timelines:video %}">Add a youtube link</a></div>
+                      <div><a href="{% url timelines:attach %}">Upload a file</a></div>
+                  </ul>
+              </li>
             {% else %}
               <li><a href="{% url account_signup %}">Register</a></li>
               <li><a href="{% url account_login %}">Sign in</a></li>
@@ -101,6 +111,7 @@
                </a>
                <div class="dropdown-menu">
                     <ul>
+                        <li><a href="{% url userprofile:detail request.user %}">My profile</a></li> 
                         <li><a href="{% url userprofile:edit request.user %}">Edit Profile</a></li> 
                         <li><a href="{% url account_change_password %}">Change Password</a></li>
                         <li><a href="{% url socialaccount_connections %}">Link account</a></li> 

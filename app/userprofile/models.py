@@ -18,6 +18,15 @@ class Profile(models.Model):
     gender = models.IntegerField(choices=GENDER_CHOICES, default=1)
     picture = models.ImageField(upload_to='profiles', blank=True, null=True)
 
+    thumbnail_picture = ImageSpecField([ResizeToFill(100, 100)],
+            image_field='picture',
+            format='JPEG',
+            options={'quality': 90})
+    small_picture = ImageSpecField([ResizeToFill(25, 25)],
+            image_field='picture',
+            format='JPEG',
+            options={'quality': 90})
+
     timelines = generic.GenericRelation(Timeline)
 
     def __unicode__(self):
