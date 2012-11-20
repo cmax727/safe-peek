@@ -2,6 +2,8 @@ from django.conf.urls.defaults import patterns, include, url
 from django.conf import settings
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.contrib import admin
+import notifications
+
 admin.autodiscover()
 
 urlpatterns = patterns('',
@@ -15,6 +17,7 @@ urlpatterns = patterns('',
     url(r'^users/', include('app.connections.urls', namespace='connections')),
     url(r'^timelines/', include('app.timelines.urls', namespace='timelines')),
     url(r'', include('app.userprofile.urls', namespace='userprofile')),
+    url(r'^inbox/notifications/', include(notifications.urls)),
 )
 
 if settings.DEBUG:
