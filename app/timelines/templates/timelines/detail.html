@@ -4,7 +4,15 @@
 <h2>{{ obj.title }}</h2>
 
 {% if obj.get_type == 'text' %}
-{{ obj.get_content.content|safe }}
+{{ timeline.get_content.content|safe }}
+{% endif %}
+
+{% if obj.get_type == 'image' %}
+<p><a href="{{ obj.get_content.image.url }}"><img src="{{ obj.get_content.thumbnail_image.url }}" alt="{{ obj.title }}" title="{{ obj.title }}"></a></p>
+{% endif %}
+
+{% if obj.get_type == 'youtube' %}
+<iframe width="480" height="360" src="{{ obj.get_content.youtube_link.embed_url }}" frameborder="0" allowfullscreen></iframe>
 {% endif %}
 
 <hr>

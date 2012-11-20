@@ -12,6 +12,6 @@ urlpatterns = patterns('app.userprofile.views',
     url(r'^messages/setunread/$', 'setunread', name='setunread'),
     url(r'^write/text/$', 'update_timeline', {'timeline_type': 'text'}, name='upload_text'),
     url(r'^write/picture/$', 'update_timeline', {'timeline_type': 'picture'}, name='upload_picture'),
-    # url(r'^write/video/$', 'upload_video', name='upload_text'),
+    url(r'^write/youtube/$', 'update_timeline', {'timeline_type': 'youtube'}, name='upload_youtube'),
     # url(r'^write/file/$', 'upload_file', name='upload_text'),
 )

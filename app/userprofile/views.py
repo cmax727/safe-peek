@@ -143,9 +143,8 @@ def update_timeline(request, timeline_type='text'):
         form_class = TextTimelineForm
     elif timeline_type == 'picture':
         form_class = ImageTimelineForm
-
-    # elif timeline_type == 'youtube':
-    #     form_class = YoutubeTimelineForm
+    elif timeline_type == 'youtube':
+        form_class = YoutubeTimelineForm
 
     if request.method == 'POST':
         form = form_class(request.POST, request.FILES, content_object=user.profile)
