@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+
+<br>
+<div><a href="{% url timelines:write %}">Update timeline</a></div>
+<div><a href="{% url timelines:text %}">Update text</a></div>
+<div><a href="{% url timelines:picture %}">Update image</a></div>
+<div><a href="{% url timelines:video %}">Update video</a></div>
+<div><a href="{% url timelines:attach %}">Update file</a></div>
+
+<br>
+
+
+{% for timeline in user_profile.profile.timelines.all %}
+<h2><a href="{{ timeline.get_absolute_url }}">{{ timeline.title }}</a></h2>
+
+{% if timeline.get_type == 'text' %}
+{{ timeline.get_content.content|safe }}
+{% endif %}
+{% endfor %}
+{% endblock %}

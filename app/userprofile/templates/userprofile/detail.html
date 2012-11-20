@@ -18,7 +18,11 @@
 
 
 <br>
-<div><a href="{% url userprofile:write_status %}">Update status</a></div>
+<div><a href="{% url timelines:write %}">Update Timeline</a></div>
+<div><a href="{% url timelines:text %}">Update Text</a></div>
+<div><a href="{% url timelines:picture %}">Update Image</a></div>
+<div><a href="{% url timelines:video %}">Update Video</a></div>
+<div><a href="{% url timelines:attach %}">Update File</a></div>
 <br>
 
 <h1>{{ user_profile.display_name }}'s Status</h1>
