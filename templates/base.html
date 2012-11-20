@@ -27,38 +27,58 @@
             <li class="active"><a href="/" class="brand">School Network</a></li>
             
             {% if user.is_authenticated %}
-            <li class="dropdown" id="messages-menu">
-                <a href="#messages-menu" class="dropdown-toggle" data-toggle="dropdown">Messages <b class="caret"></b></a>
+              <li class="dropdown" id="messages-menu">
+                  <a href="#messages-menu" class="dropdown-toggle" data-toggle="dropdown">Messages <b class="caret"></b></a>
 
-                <ul class="dropdown-menu">
-                    <li><a href="{% url postman_inbox %}">Inbox</a></li>
-                    <li><a href="{% url postman_write %}">Write Message</a></li>
-                </ul>
-            </li>
+                  <ul class="dropdown-menu">
+                      <li><a href="{% url postman_inbox %}">Inbox</a></li>
+                      <li><a href="{% url postman_write %}">Write Message</a></li>
+                  </ul>
+              </li>
 
-            <li class="dropdown" id="users-menu">
-                <a href="#users-menu" class="dropdown-toggle" data-toggle="dropdown">Users <b class="caret"></b></a>
+              <li class="dropdown" id="users-menu">
+                  <a href="#users-menu" class="dropdown-toggle" data-toggle="dropdown">Users <b class="caret"></b></a>
 
-                <ul class="dropdown-menu">
-                    <li><a href="{% url connections:search %}">All users</a></li>
-                    <li><a href="{% url connections:friends %}">Friends</a></li> 
-                </ul>
-            </li>
+                  <ul class="dropdown-menu">
+                      <li><a href="{% url connections:search %}">All users</a></li>
+                      <li><a href="{% url connections:friends %}">Friends</a></li> 
+                  </ul>
+              </li>
 
-            <li class="dropdown" id="groups-menu">
-                <a href="#groups-menu" class="dropdown-toggle" data-toggle="dropdown">Groups <b class="caret"></b></a>
+              <li class="dropdown" id="groups-menu">
+                  <a href="#groups-menu" class="dropdown-toggle" data-toggle="dropdown">Groups <b class="caret"></b></a>
 
-                <ul class="dropdown-menu">
-                    <li><a href="{% url groups:create %}">Create a group</a></li>
-                    <li><a href="{% url groups:index %}">All groups</a></li>
-                    <li><a href="{% url userprofile:user_groups user %}">My groups</a></li>
-                    {# <li><a href="{% url connections:friends %}">Friends</a></li>  #}
-                </ul>
-            </li>
+                  <ul class="dropdown-menu">
+                      <li><a href="{% url groups:create %}">Create a group</a></li>
+                      <li><a href="{% url groups:index %}">All groups</a></li>
+                      <li><a href="{% url userprofile:user_groups user %}">My groups</a></li>
+                      {# <li><a href="{% url connections:friends %}">Friends</a></li>  #}
+                  </ul>
+              </li>
+              {% if user.is_professor or user.is_school_admin %}
+                <li class="dropdown" id="course-menu">
+                  <a href="#course-menu" class="dropdown-toggle" data-toggle="dropdown">Courses<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{% url academy:create_course %}">Create Course</a></li>
+                    </ul>
+                </li>
+              {% endif %}
+               {% if user.is_superuser or user.is_school_admin %}
+                <li class="dropdown" id="settings-menu">
+                  <a href="#settings-menu" class="dropdown-toggle" data-toggle="dropdown">Settings <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                      {% if user.is_school_admin %}
+                        <li><a href="{% url userprofile:usergroup %}">Create Professor</a></li>
+                      {% else %}
+                        <li><a href="{% url userprofile:usergroup %}">Create School Admin</a></li>
+                      {% endif %}
+                    </ul>
+                </li>
+              {% endif %}
             {% else %}
-            <li><a href="{% url account_signup %}">Register</a></li>
-            <li><a href="{% url account_login %}">Sign in</a></li>
-            <li><a href="{% url account_reset_password %}">Forgot your Password?</a></li>
+              <li><a href="{% url account_signup %}">Register</a></li>
+              <li><a href="{% url account_login %}">Sign in</a></li>
+              <li><a href="{% url account_reset_password %}">Forgot your Password?</a></li>
             {% endif %}
             <!-- user register-->
             {% if not user.is_authenticated %}

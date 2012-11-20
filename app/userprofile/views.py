@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.urlresolvers import reverse
 from django.db.models import Q
@@ -10,7 +10,7 @@ from django.template import RequestContext
 from friendship.models import  Friend
 from postman.models import Message
 
-from .forms import StatusForm, EditProfileForm, CommentStatusForm
+from .forms import StatusForm, EditProfileForm, CommentStatusForm, UserListForm
 from .models import Profile, Status, CommentStatus
 
 from datetime import datetime
@@ -81,6 +81,30 @@ def statuses(request):
         'status': statuses
         })
     return render_to_response('statuses.html', variables)
+
+
+@login_required
+def usergroup(request, template='userprofile/usergroup.html'):
+    if request.user.is_superuser:
+        param = 'School Admin'
+    else:
+        param = 'Professor'
+
+    list_user = User.objects.filter(groups__name=param)
+    if request.method == 'POST':
+        form = UserListForm(request.POST or None)
+        if form.is_valid():
+            user = User.objects.get(id=request.POST.get('username'))
+            g = Group.objects.get(name=param)
+            g.user_set.add(user)
+    else:
+        form = UserListForm()
+
+    variables = RequestContext(request, {
+        'form': form,
+        'list_user': list_user
+    })
+    return render(request, template, variables)
 
 
 def main(request, template='userprofile/index.html'):

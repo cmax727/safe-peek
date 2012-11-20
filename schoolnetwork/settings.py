@@ -156,6 +156,7 @@ INSTALLED_APPS = (
     'pagination',
     'friendship',
     'app.userprofile',
+    'app.academy',
     'app.connections',
     'app.groups',
     'app.timelines',

@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.contrib.contenttypes import generic
 from django.db.models.signals import post_save
 
@@ -29,6 +29,22 @@ def get_display_name(self):
         return self.username
     return self.get_full_name()
 User.add_to_class('display_name', get_display_name)
+
+
+def is_school_admin(self):
+    g = Group.objects.filter(name='School Admin', user=self)
+    if not g:
+        return False
+    return True
+User.add_to_class('is_school_admin', is_school_admin)
+
+
+def is_professor(self):
+    g = Group.objects.filter(name='Professor', user=self)
+    if not g:
+        return False
+    return True
+User.add_to_class('is_professor', is_professor)
 
 
 def create_user_profile(sender, instance, created, **kwargs):

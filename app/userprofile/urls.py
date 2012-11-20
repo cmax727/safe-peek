@@ -4,6 +4,7 @@ from django.conf.urls import patterns, url
 
 urlpatterns = patterns('app.userprofile.views',
     url(r'^$', 'main', name='main_page'),
+    url(r'^usergroup/$', 'usergroup', name='usergroup'),
     url(r'^(?P<username>[-\.\w]+)/$', 'profile_detail', name='detail'),
     url(r'^(?P<username>[-\.\w]+)/edit/$', 'edit', name='edit'),
     url(r'^(?P<username>[-\.\w]+)/groups/$', 'user_groups', name='user_groups'),

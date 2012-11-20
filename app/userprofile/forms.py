@@ -4,6 +4,10 @@ from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 
 
+class UserListForm(forms.Form):
+    username = forms.ModelChoiceField(queryset=User.objects.all())
+
+
 class EditProfileForm(forms.ModelForm):
     class Meta:
         model = Profile

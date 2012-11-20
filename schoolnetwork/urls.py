@@ -16,6 +16,7 @@ urlpatterns = patterns('',
     url(r'^groups/', include('app.groups.urls', namespace='groups')),
     url(r'^users/', include('app.connections.urls', namespace='connections')),
     url(r'^timelines/', include('app.timelines.urls', namespace='timelines')),
+    url(r'^academy/', include('app.academy.urls', namespace='academy')),
     url(r'', include('app.userprofile.urls', namespace='userprofile')),
     url(r'^inbox/notifications/', include(notifications.urls)),
 )
