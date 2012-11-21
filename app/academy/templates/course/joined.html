@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if membership.status == 2 %}
+<p>You have sent a request to join {{ membership.course.name }}. The professor will be notified to approve your membership</p>
+{% else %}
+<p>You have successfully join {{ membership.course.name }}.
+{% endif %}
+<p>View <a href="{{ membership.course.get_absolute_url }}">course page</a></p>
+{% endblock %}
