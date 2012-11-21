@@ -9,6 +9,10 @@ class Course(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     members = models.ManyToManyField(User, through='CourseMembership', related_name='user_course', blank=True, null=True)
 
+    @models.permalink
+    def get_absolute_url(self):
+        return ('academy:detail_course', [str(self.pk)])
+
     def __unicode__(self):
         return self.name
 

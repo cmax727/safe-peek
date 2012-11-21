@@ -3,6 +3,6 @@
 {% block content %}
 <h2>Courses</h2>
 {% for course in courses %}
-    <p>{{ course.name }}</p>
+    <p><a href="{{ course.get_absolute_url }}">{{ course.name }}</a></p>
 {% endfor %}
 {% endblock %}

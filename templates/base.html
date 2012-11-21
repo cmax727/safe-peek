@@ -55,14 +55,16 @@
                       {# <li><a href="{% url connections:friends %}">Friends</a></li>  #}
                   </ul>
               </li>
-              {% if user.is_professor or user.is_school_admin %}
+              
                 <li class="dropdown" id="course-menu">
                   <a href="#course-menu" class="dropdown-toggle" data-toggle="dropdown">Courses<b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        <li><a href="{% url academy:create_course %}">Create Course</a></li>
+                          <li><a href="{% url academy:course %}">List Course</a></li>
+                        {% if user.is_professor or user.is_school_admin %}
+                          <li><a href="{% url academy:create_course %}">Create Course</a></li>
+                        {% endif %}
                     </ul>
                 </li>
-              {% endif %}
                {% if user.is_superuser or user.is_school_admin %}
                 <li class="dropdown" id="settings-menu">
                   <a href="#settings-menu" class="dropdown-toggle" data-toggle="dropdown">Settings <b class="caret"></b></a>
