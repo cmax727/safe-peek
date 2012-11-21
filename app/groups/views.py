@@ -6,8 +6,12 @@ from django.shortcuts import get_object_or_404
 from django.template import RequestContext
 from django.utils.timezone import utc
 from django.contrib.auth.models import User
-from app.timelines.forms import *
+
+from .forms import GroupForm, ChangeOwnershipForm
 from .models import Group, GroupMembership, GroupStatus
+
+from app.timelines.forms import *
+
 import datetime
 
 
