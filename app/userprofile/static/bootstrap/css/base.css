@@ -7,3 +7,12 @@ body {
 #id_honeypot {
     display: none;
 }
+
+textarea#id_comment {
+    width: 400px;
+    height: 60px;
+}
+
+button.add_comment_button {
+    margin-top: 42px;
+}

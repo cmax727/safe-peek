@@ -1,29 +1,29 @@
 {% extends "base.html" %}
 {% load comments %}
 {% block content %}
-<h2>{{ obj.title }}</h2>
+<h2>{{ timeline.title }}</h2>
 
-{% if obj.get_type == 'text' %}
+{% if timeline.get_type == 'text' %}
 {{ timeline.get_content.content|safe }}
 {% endif %}
 
-{% if obj.get_type == 'image' %}
-<p><a href="{{ obj.get_content.image.url }}"><img src="{{ obj.get_content.thumbnail_image.url }}" alt="{{ obj.title }}" title="{{ obj.title }}"></a></p>
+{% if timeline.get_type == 'image' %}
+<p><a href="{{ timeline.get_content.image.url }}"><img src="{{ timeline.get_content.thumbnail_image.url }}" alt="{{ timeline.title }}" title="{{ timeline.title }}"></a></p>
 {% endif %}
 
-{% if obj.get_type == 'youtube' %}
-<iframe width="480" height="360" src="{{ obj.get_content.youtube_link.embed_url }}" frameborder="0" allowfullscreen></iframe>
+{% if timeline.get_type == 'youtube' %}
+<iframe width="480" height="360" src="{{ timeline.get_content.youtube_link.embed_url }}" frameborder="0" allowfullscreen></iframe>
 {% endif %}
 
-{% if obj.get_type == 'file' %}
-<p><i class="icon-file"></i> <a href="{{ obj.get_content.attachment.url }}">{{ obj.get_content.filename }}</a></p>
+{% if timeline.get_type == 'file' %}
+<p><i class="icon-file"></i> <a href="{{ timeline.get_content.attachment.url }}">{{ timeline.get_content.filename }}</a></p>
 {% endif %}
 
 <hr>
-{% render_comment_list for obj %}
+{% render_comment_list for timeline %}
 
 <hr>
 <h2>Add commments?</h2>
-{% render_comment_form for obj %}
+{% render_comment_form for timeline %}
 
 {% endblock %}

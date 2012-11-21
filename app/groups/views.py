@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render, render_to_response
@@ -8,7 +9,7 @@ from django.utils.timezone import utc
 from django.contrib.auth.models import User
 
 from .forms import GroupForm, ChangeOwnershipForm
-from .models import Group, GroupMembership, GroupStatus
+from .models import Group, GroupMembership
 
 from app.timelines.forms import *
 
@@ -65,12 +66,22 @@ def index(request, template='groups/index.html'):
 def detail(request, id, template='groups/detail.html'):
     group = get_object_or_404(Group, pk=id)
     members = group.groupmembership_set.all()
-    groupstatuses = GroupStatus.objects.all()
+
+    timeline_list = group.timelines.all()
+    paginator = Paginator(timeline_list, 10)
+
+    page = request.GET.get('page')
+    try:
+        timelines = paginator.page(page)
+    except PageNotAnInteger:
+        timelines = paginator.page(1)
+    except EmptyPage:
+        timelines = paginator.page(paginator.num_pages)
 
     variables = RequestContext(request, {
         'group': group,
         'members': members,
-        'groupstatuses': groupstatuses
+        'timelines': timelines,
     })
     return render(request, template, variables)
 

@@ -2,7 +2,7 @@
 {% load url from future %}
 
 {% if user.is_authenticated %}
-    {% get_comment_form for obj as form %}
+    {% get_comment_form for timeline as form %}
     <form action="{% comment_form_target %}" method="POST">
     {% csrf_token %}
     {{ form.comment }}
@@ -11,10 +11,7 @@
     {{ form.object_pk }}
     {{ form.timestamp }}
     {{ form.security_hash }}
-    <input type="hidden" name="next" value="{% url 'timelines:detail' obj.id %}" />
-    <p>
-    <button type="submit" value="Add comment" id="id_submit" class="btn btn-primary">Add comment</button>
-    </p>
+    <input type="hidden" name="next" value="{{ timeline.content_object.get_absolute_url }}" /><button type="submit" value="Add comment" id="id_submit" class="btn btn-primary add_comment_button">Add comment</button>
     </form>
 {% else %}
     <p>Please <a href="{% url 'auth_login' %}">log in</a> to leave a comment.</p>

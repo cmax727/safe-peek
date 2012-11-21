@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User, Group
-#from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import HttpResponseRedirect, Http404
@@ -77,10 +77,25 @@ def setunread(request, template='postman/base_folder.html'):
 def profile_detail(request, username, template='userprofile/detail.html'):
     user = get_object_or_404(User, username=username, is_active=True)
     friends = Friend.objects.friends(user)
+    timeline_list = user.profile.timelines.all()
+    paginator = Paginator(timeline_list, 10)
+
+    page = request.GET.get('page')
+    try:
+        timelines = paginator.page(page)
+    except PageNotAnInteger:
+        timelines = paginator.page(1)
+    except EmptyPage:
+        timelines = paginator.page(paginator.num_pages)
 
     variables = RequestContext(request, {
         'user_profile': user,
         'friends': friends,
+        'timelines': timelines,
+        'text_form': TextTimelineForm(user=user),
+        'image_form': ImageTimelineForm(user=user),
+        'youtube_form': YoutubeTimelineForm(user=user),
+        'file_form': FileTimelineForm(user=user),
     })
     return render(request, template, variables)
 
@@ -149,7 +164,7 @@ def update_timeline(request, timeline_type='text'):
         form_class = TextTimelineForm
 
     if request.method == 'POST':
-        form = form_class(request.POST, request.FILES, content_object=user.profile)
+        form = form_class(request.POST, request.FILES, user=user)
 
         if form.is_valid():
             t = form.save(commit=False)
@@ -157,7 +172,7 @@ def update_timeline(request, timeline_type='text'):
             t.save()
             return HttpResponseRedirect(user.get_absolute_url())
     else:
-        form = form_class(content_object=user.profile)
+        form = form_class(user=user)
     variables = RequestContext(request, {
         'form': form
     })
