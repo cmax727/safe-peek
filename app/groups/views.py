@@ -240,8 +240,9 @@ def write_groups(request, id):
 
 @login_required
 def update_timeline(request, id, timeline_type='text'):
-    user = get_object_or_404(User, is_active=True, username=request.user.username)
     group = get_object_or_404(Group, id=id)
+    user = get_object_or_404(User, is_active=True, username=request.user.username, user_groups=group)
+
     form_class = None
 
     if timeline_type == 'picture':
