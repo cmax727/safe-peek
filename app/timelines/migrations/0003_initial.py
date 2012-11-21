@@ -8,20 +8,62 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        # Adding model 'Timeline'
+        db.create_table('timelines_timeline', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('title', self.gf('django.db.models.fields.CharField')(max_length=255)),
+            ('created_by', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
+            ('created_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
+            ('content_type', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['contenttypes.ContentType'])),
+            ('object_id', self.gf('django.db.models.fields.PositiveIntegerField')()),
+        ))
+        db.send_create_signal('timelines', ['Timeline'])
 
-        # Changing field 'Timeline.object_id'
-        db.alter_column('timelines_timeline', 'object_id', self.gf('django.db.models.fields.PositiveIntegerField')(default=1))
+        # Adding model 'TextTimeline'
+        db.create_table('timelines_texttimeline', (
+            ('timeline_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['timelines.Timeline'], unique=True, primary_key=True)),
+            ('content', self.gf('django.db.models.fields.TextField')()),
+        ))
+        db.send_create_signal('timelines', ['TextTimeline'])
 
-        # Changing field 'Timeline.content_type'
-        db.alter_column('timelines_timeline', 'content_type_id', self.gf('django.db.models.fields.related.ForeignKey')(default=1, to=orm['contenttypes.ContentType']))
+        # Adding model 'ImageTimeline'
+        db.create_table('timelines_imagetimeline', (
+            ('timeline_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['timelines.Timeline'], unique=True, primary_key=True)),
+            ('image', self.gf('django.db.models.fields.files.ImageField')(max_length=100)),
+        ))
+        db.send_create_signal('timelines', ['ImageTimeline'])
+
+        # Adding model 'YoutubeTimeline'
+        db.create_table('timelines_youtubetimeline', (
+            ('timeline_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['timelines.Timeline'], unique=True, primary_key=True)),
+            ('youtube_link', self.gf('app.timelines.fields.YoutubeUrlField')(max_length=200)),
+        ))
+        db.send_create_signal('timelines', ['YoutubeTimeline'])
+
+        # Adding model 'FileTimeline'
+        db.create_table('timelines_filetimeline', (
+            ('timeline_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['timelines.Timeline'], unique=True, primary_key=True)),
+            ('attachment', self.gf('django.db.models.fields.files.FileField')(max_length=100)),
+        ))
+        db.send_create_signal('timelines', ['FileTimeline'])
+
 
     def backwards(self, orm):
+        # Deleting model 'Timeline'
+        db.delete_table('timelines_timeline')
 
-        # Changing field 'Timeline.object_id'
-        db.alter_column('timelines_timeline', 'object_id', self.gf('django.db.models.fields.PositiveIntegerField')(null=True))
+        # Deleting model 'TextTimeline'
+        db.delete_table('timelines_texttimeline')
 
-        # Changing field 'Timeline.content_type'
-        db.alter_column('timelines_timeline', 'content_type_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['contenttypes.ContentType'], null=True))
+        # Deleting model 'ImageTimeline'
+        db.delete_table('timelines_imagetimeline')
+
+        # Deleting model 'YoutubeTimeline'
+        db.delete_table('timelines_youtubetimeline')
+
+        # Deleting model 'FileTimeline'
+        db.delete_table('timelines_filetimeline')
+
 
     models = {
         'auth.group': {
@@ -61,22 +103,22 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         'timelines.filetimeline': {
-            'Meta': {'object_name': 'FileTimeline', '_ormbases': ['timelines.Timeline']},
+            'Meta': {'ordering': "('-created_at',)", 'object_name': 'FileTimeline', '_ormbases': ['timelines.Timeline']},
             'attachment': ('django.db.models.fields.files.FileField', [], {'max_length': '100'}),
             'timeline_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['timelines.Timeline']", 'unique': 'True', 'primary_key': 'True'})
         },
         'timelines.imagetimeline': {
-            'Meta': {'object_name': 'ImageTimeline', '_ormbases': ['timelines.Timeline']},
+            'Meta': {'ordering': "('-created_at',)", 'object_name': 'ImageTimeline', '_ormbases': ['timelines.Timeline']},
             'image': ('django.db.models.fields.files.ImageField', [], {'max_length': '100'}),
             'timeline_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['timelines.Timeline']", 'unique': 'True', 'primary_key': 'True'})
         },
         'timelines.texttimeline': {
-            'Meta': {'object_name': 'TextTimeline', '_ormbases': ['timelines.Timeline']},
+            'Meta': {'ordering': "('-created_at',)", 'object_name': 'TextTimeline', '_ormbases': ['timelines.Timeline']},
             'content': ('django.db.models.fields.TextField', [], {}),
             'timeline_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['timelines.Timeline']", 'unique': 'True', 'primary_key': 'True'})
         },
         'timelines.timeline': {
-            'Meta': {'object_name': 'Timeline'},
+            'Meta': {'ordering': "('-created_at',)", 'object_name': 'Timeline'},
             'content_type': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['contenttypes.ContentType']"}),
             'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'created_by': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"}),
@@ -85,9 +127,9 @@ class Migration(SchemaMigration):
             'title': ('django.db.models.fields.CharField', [], {'max_length': '255'})
         },
         'timelines.youtubetimeline': {
-            'Meta': {'object_name': 'YoutubeTimeline', '_ormbases': ['timelines.Timeline']},
+            'Meta': {'ordering': "('-created_at',)", 'object_name': 'YoutubeTimeline', '_ormbases': ['timelines.Timeline']},
             'timeline_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['timelines.Timeline']", 'unique': 'True', 'primary_key': 'True'}),
-            'youtube_link': ('django.db.models.fields.CharField', [], {'max_length': '255'})
+            'youtube_link': ('app.timelines.fields.YoutubeUrlField', [], {'max_length': '200'})
         }
     }
 

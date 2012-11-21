@@ -5,10 +5,9 @@ from django.shortcuts import render, render_to_response
 from django.shortcuts import get_object_or_404
 from django.template import RequestContext
 from django.utils.timezone import utc
-
-from .forms import GroupForm, ChangeOwnershipForm, InviteMembersForm, GroupStatusForm
+from django.contrib.auth.models import User
+from app.timelines.forms import *
 from .models import Group, GroupMembership, GroupStatus
-
 import datetime
 
 
@@ -233,3 +232,35 @@ def write_groups(request, id):
         'form': form
     })
     return render_to_response('write_groups.html', variables)
+
+
+@login_required
+def update_timeline(request, id, timeline_type='text'):
+    user = get_object_or_404(User, is_active=True, username=request.user.username)
+    group = get_object_or_404(Group, id=id)
+    form_class = None
+
+    if timeline_type == 'picture':
+        form_class = ImageTimelineForm
+    elif timeline_type == 'youtube':
+        form_class = YoutubeTimelineForm
+    elif timeline_type == 'file':
+        form_class = FileTimelineForm
+    else:
+        form_class = TextTimelineForm
+
+    if request.method == 'POST':
+        form = form_class(request.POST, request.FILES, content_object=group)
+
+        if form.is_valid():
+            t = form.save(commit=False)
+            t.created_by = user
+            t.save()
+            return HttpResponseRedirect(user.get_absolute_url())
+    else:
+        form = form_class(content_object=group)
+    variables = RequestContext(request, {
+        'form': form
+    })
+    template = 'userprofile/upload_%s.html' % timeline_type
+    return render(request, template, variables)
