@@ -22,4 +22,4 @@ def membership_status(user, course):
 
 @register.filter
 def is_manager_of(user, course):
-    return user == course.admin
+    return user == course.professor

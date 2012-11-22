@@ -72,6 +72,7 @@
                       {% if user.is_school_admin %}
                         <li><a href="{% url userprofile:usergroup %}">Create Professor</a></li>
                       {% else %}
+                        <li><a href="{% url academy:create_university %}">Create University</a></li>
                         <li><a href="{% url userprofile:usergroup %}">Create School Admin</a></li>
                       {% endif %}
                     </ul>

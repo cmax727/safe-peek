@@ -2,10 +2,23 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
+class University(models.Model):
+    name = models.CharField(max_length=50)
+    description = models.TextField()
+
+    @models.permalink
+    def get_absolute_url(self):
+        return ('academy:detail_university', [str(self.pk)])
+
+    def __unicode__(self):
+        return self.name
+
+
 class Course(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField()
-    admin = models.ForeignKey(User)
+    professor = models.ForeignKey(User)
+    university = models.ForeignKey(University)
     created_at = models.DateTimeField(auto_now_add=True)
     members = models.ManyToManyField(User, through='CourseMembership', related_name='user_course', blank=True, null=True)
 

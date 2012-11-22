@@ -14,8 +14,14 @@ class Profile(models.Model):
         (1, 'Male'),
         (2, 'Female'),
     )
+    USER_TYPE_CHOICES = (
+        (1, 'Students'),
+        (2, 'Professors'),
+        (3, 'School Admins,'),
+    )
     user = models.OneToOneField(User)
     gender = models.IntegerField(choices=GENDER_CHOICES, default=1)
+    user_type = models.IntegerField(choices=USER_TYPE_CHOICES, default=1)
     picture = models.ImageField(upload_to='profiles', blank=True, null=True)
 
     thumbnail_picture = ImageSpecField([ResizeToFill(100, 100)],

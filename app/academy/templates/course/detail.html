@@ -8,7 +8,7 @@
 
 {% with membership_status=user|membership_status:course  %}
 <h2>"{{course}}" Course
-    {% if user != course.admin %}
+    {% if user != course.professor %}
         {% if not membership_status %}
         <a href="{% url 'academy:join_course' course.pk %}" class="btn">Join this course</a>
         {% endif %}
@@ -19,9 +19,9 @@
 <ul>
     {% for member in members %}
     <li><a href="{{ member.user.get_aboslute_url }}">{{ member.user.display_name }}</a>
-        {% if course.admin == member.user %}(owner){% endif %}
+        {% if course.professor == member.user %}(owner){% endif %}
         {% if member.status != 1 %} - {{ member.get_status_display|lower }}{% endif %}
-        {% if member.status == 2 and course.admin == user %}
+        {% if member.status == 2 and course.professor == user %}
             <a href="{% url 'academy:accept_course' course.pk member.user.id %}" class="btn">Accept</a> | 
             <a href="{% url 'academy:leave_course' course.pk member.user.id %}" class="btn">Reject</a>
         {% endif %}

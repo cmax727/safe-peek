@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404, render, render_to_response
@@ -7,8 +7,27 @@ from django.template import RequestContext
 from datetime import datetime
 from django.utils.timezone import utc
 
-from .forms import CourseForm, CourseProfessorForm
+from .forms import CourseForm, UniversityForm, CourseProfessorForm
 from .models import Course, CourseMembership
+
+
+@login_required
+def createuniversity(request, template='university/create.html'):
+    if request.method == 'POST':
+        form = UniversityForm(request.POST or None)
+
+        if form.is_valid():
+            #data = form.cleaned_data
+            form.save()
+            return HttpResponseRedirect(reverse('academy:create_university'))
+
+    else:
+        form = UniversityForm()
+        #form = CourseForm()
+    variables = RequestContext(request, {
+        'form': form
+    })
+    return render(request, template, variables)
 
 
 @login_required
@@ -23,8 +42,8 @@ def createcourse(request, template='course/create.html'):
             data = form.cleaned_data
             users = data.get('members')
             course = form.save(commit=False)
-            if data.get('admin') is None:
-                course.admin = request.user
+            if data.get('professor') is None:
+                course.professor = request.user
             course.save()
             for user in users:
                 membership, new = CourseMembership.objects.get_or_create(
@@ -96,7 +115,7 @@ def leavecourse(request, id, uid, template='course/joined.html'):
     course = get_object_or_404(Course, pk=id)
     usr = get_object_or_404(User, id=uid)
 
-    if course.admin == usr:
+    if course.professor == usr:
         raise Http404('Owner can not leave the course')
     try:
         membership = CourseMembership.objects.get(user=usr, course=course)
@@ -109,7 +128,7 @@ def leavecourse(request, id, uid, template='course/joined.html'):
 
 @login_required
 def acceptcourse(request, id, uid):
-    course = get_object_or_404(Course, admin=request.user, pk=id)
+    course = get_object_or_404(Course, professor=request.user, pk=id)
     membership = get_object_or_404(CourseMembership, user_id=uid, course=course, status=2)
     membership.status = 1
     membership.save()
