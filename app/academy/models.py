@@ -3,8 +3,9 @@ from django.contrib.auth.models import User
 
 
 class University(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=200)
     description = models.TextField()
+    domain = models.CharField(max_length=50)
 
     @models.permalink
     def get_absolute_url(self):
@@ -12,6 +13,12 @@ class University(models.Model):
 
     def __unicode__(self):
         return self.name
+
+
+class UniversityMembership(models.Model):
+    user = models.ForeignKey(User)
+    university = models.ForeignKey(University)
+    joined_at = models.DateTimeField(blank=True, null=True)
 
 
 class Course(models.Model):
