@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.urlresolvers import reverse
 from django.db.models import Q
@@ -21,17 +21,17 @@ from datetime import datetime
 @login_required
 def usergroup(request, template='userprofile/usergroup.html'):
     if request.user.is_superuser:
-        param = 'School Admin'
+        param = 3
     else:
-        param = 'Professor'
-
-    list_user = User.objects.filter(groups__name=param)
+        param = 2
+    list_user = Profile.objects.filter(user_type=param)
+    #list_user = User.objects.filter(pk__in=userprofile.user)
     if request.method == 'POST':
         form = UserListForm(request.POST or None)
         if form.is_valid():
             user = User.objects.get(id=request.POST.get('username'))
-            g = Group.objects.get(name=param)
-            g.user_set.add(user)
+            Profile.objects.filter(user=user).update(user_type=param)
+            #profile.save()
     else:
         form = UserListForm()
 

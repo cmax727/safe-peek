@@ -1,11 +1,13 @@
 from django import forms
 from .models import Profile, Status, CommentStatus
 from django.contrib.auth.models import User
+from app.academy.models import University
 from django.utils.translation import ugettext_lazy as _
 
 
 class UserListForm(forms.Form):
     username = forms.ModelChoiceField(queryset=User.objects.all())
+    university = forms.ModelChoiceField(queryset=University.objects.all())
 
 
 class EditProfileForm(forms.ModelForm):
