@@ -1,13 +1,17 @@
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render, render_to_response
 from django.shortcuts import get_object_or_404
 from django.template import RequestContext
 from django.utils.timezone import utc
+from django.contrib.auth.models import User
 
-from .forms import GroupForm, ChangeOwnershipForm, InviteMembersForm, GroupStatusForm
-from .models import Group, GroupMembership, GroupStatus
+from .forms import GroupForm, ChangeOwnershipForm
+from .models import Group, GroupMembership
+
+from app.timelines.forms import *
 
 import datetime
 
@@ -62,12 +66,22 @@ def index(request, template='groups/index.html'):
 def detail(request, id, template='groups/detail.html'):
     group = get_object_or_404(Group, pk=id)
     members = group.groupmembership_set.all()
-    groupstatuses = GroupStatus.objects.all()
+
+    timeline_list = group.timelines.all()
+    paginator = Paginator(timeline_list, 10)
+
+    page = request.GET.get('page')
+    try:
+        timelines = paginator.page(page)
+    except PageNotAnInteger:
+        timelines = paginator.page(1)
+    except EmptyPage:
+        timelines = paginator.page(paginator.num_pages)
 
     variables = RequestContext(request, {
         'group': group,
         'members': members,
-        'groupstatuses': groupstatuses
+        'timelines': timelines,
     })
     return render(request, template, variables)
 
@@ -233,3 +247,36 @@ def write_groups(request, id):
         'form': form
     })
     return render_to_response('write_groups.html', variables)
+
+
+@login_required
+def update_timeline(request, id, timeline_type='text'):
+    group = get_object_or_404(Group, id=id)
+    user = get_object_or_404(User, is_active=True, username=request.user.username, user_groups=group)
+
+    form_class = None
+
+    if timeline_type == 'picture':
+        form_class = ImageTimelineForm
+    elif timeline_type == 'youtube':
+        form_class = YoutubeTimelineForm
+    elif timeline_type == 'file':
+        form_class = FileTimelineForm
+    else:
+        form_class = TextTimelineForm
+
+    if request.method == 'POST':
+        form = form_class(request.POST, request.FILES, content_object=group)
+
+        if form.is_valid():
+            t = form.save(commit=False)
+            t.created_by = user
+            t.save()
+            return HttpResponseRedirect(user.get_absolute_url())
+    else:
+        form = form_class(content_object=group)
+    variables = RequestContext(request, {
+        'form': form
+    })
+    template = 'userprofile/upload_%s.html' % timeline_type
+    return render(request, template, variables)

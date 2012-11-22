@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from friendship.models import Friend
 
-from .models import Group, GroupMembership, GroupStatus, GroupCommentStatus
+from .models import Group, GroupStatus, GroupCommentStatus
 
 
 class GroupForm(forms.ModelForm):

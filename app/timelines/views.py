@@ -19,7 +19,7 @@ def detail(request, id, template='timelines/detail.html'):
     obj = get_object_or_404(Timeline, id=id)
 
     variables = RequestContext(request, {
-        'obj': obj
+        'timeline': obj
     })
     return render(request, template, variables)
 

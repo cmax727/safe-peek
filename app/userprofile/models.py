@@ -38,6 +38,9 @@ class Profile(models.Model):
     def __unicode__(self):
         return self.user.username
 
+    def get_absolute_url(self):
+        return self.user.get_absolute_url()
+
 
 def get_display_name(self):
     if not self.get_full_name():
@@ -60,6 +63,15 @@ def is_professor(self):
         return False
     return True
 User.add_to_class('is_professor', is_professor)
+
+
+def active_groups(self):
+    res = []
+
+    for membership in self.groupmembership_set.prefetch_related('group').filter(status=1):
+        res.append(membership.group)
+    return res
+User.add_to_class('active_groups', active_groups)
 
 
 def create_user_profile(sender, instance, created, **kwargs):

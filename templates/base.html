@@ -7,14 +7,15 @@
     <link href="{{ STATIC_URL }}bootstrap/css/base.css" rel="stylesheet">
     <script src="{{ STATIC_URL }}bootstrap/js/jquery.js"></script>
     <script src="{{ STATIC_URL }}bootstrap/js/jquery-ui.js"></script>
-    <script src="{{ STATIC_URL }}bootstrap/js/bootstrap-dropdown.js"></script>
+    <script src="{{ STATIC_URL }}bootstrap/js/bootstrap.min.js"></script>
     <script src="{{ STATIC_URL }}bootstrap/js/bootstrap-scrollspy.js"></script>
     <script language="javascript">
     $('.dropdown-toggle').dropdown();
     $('.dropdown-menu').find('form').click(function (e) {
         e.stopPropagation();
       });
-</script>
+    </script>
+    {% block extrajs %}{% endblock %}
     <title>{% block title %}School Network{% endblock %}</title>
 </head>
 <body data-spy="scroll" data-target=".subnav" data-offset="50">
@@ -142,8 +143,7 @@
               <li class="nav-header">
                 User
               </li>
-              <li>
-        </ul>
+          </ul>
         </div>
       </div>
       <div class="span9">

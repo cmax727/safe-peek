@@ -1,12 +1,12 @@
 {% extends "base.html" %}
-{% load friendshiptags %}
+{% load url from future %}
+{% load friendshiptags comments %}
 
 {% block content %}
 
 <h2>
     {% if user_profile.profile.small_picture %}<img src="{{ user_profile.profile.small_picture.url }}" alt="{{ user_profile.display_name }}"> {% endif %}{{ user_profile.display_name }}'s friends:
 </h2>
-
 
 <div class="friends">
     {% friend_request_count user_profile %}
@@ -22,7 +22,49 @@
 
 <h3>{{ user_profile.display_name }}'s Status</h3>
 
-{% for timeline in user_profile.profile.timelines.all %}
+{% if user_profile == request.user %}
+<div class="tabbable" style="background: #f7f7f7; padding: 10px;border-radius: 8px;">
+    <h5>share your status:</h5>
+    <ul class="nav nav-pills">
+      <li><a href="#upload_text_wrapper" data-toggle="tab">Text</a></li>
+      <li><a href="#upload_image_wrapper" data-toggle="tab">Image</a></li>
+      <li><a href="#upload_youtube_wrapper" data-toggle="tab">Youtube</a></li>
+      <li><a href="#upload_file_wrapper" data-toggle="tab">File</a></li>
+    </ul>
+
+    <div class="tab-content">
+        <div id="upload_text_wrapper" class="tab-pane">
+            <form action="{% url 'userprofile:upload_text' %}" method="POST">{% csrf_token %}
+                {{ text_form.as_p }}
+                <button type="submit" class="btn btn-primary">Share</button>
+            </form>
+        </div>
+        
+        <div id="upload_image_wrapper" class="tab-pane">
+            <form action="{% url 'userprofile:upload_picture' %}" method="POST" enctype="multipart/form-data">{% csrf_token %}
+                {{ image_form.as_p }}
+                <button type="submit" class="btn btn-primary">Upload image</button>
+            </form>
+        </div>
+        
+        <div id="upload_youtube_wrapper" class="tab-pane">
+            <form action="{% url 'userprofile:upload_youtube' %}" method="POST">{% csrf_token %}
+                {{ youtube_form.as_p }}
+                <button type="submit" class="btn btn-primary">Share YouTube video</button>
+            </form>
+        </div>
+        
+        <div id="upload_file_wrapper" class="tab-pane">
+            <form action="{% url 'userprofile:upload_file' %}" method="POST" enctype="multipart/form-data">{% csrf_token %}
+                {{ file_form.as_p }}
+                <button type="submit" class="btn btn-primary">Upload file</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% for timeline in timelines %}
 <div>
     <br>
     <h4><a href="{{ timeline.get_absolute_url }}">{{ timeline.title }}</a></h4>
@@ -44,7 +86,32 @@
     <p><i class="icon-file"></i> <a href="{{ timeline.get_content.attachment.url }}">{{ timeline.get_content.filename }}</a></p>
     {% endif %}
     <p>&nbsp;</p>
+
+    <div class="padding-left: 10px">
+        {% render_comment_list for timeline %}
+        {% render_comment_form for timeline %}
+    </div>
 </div>
 
 {% endfor %}
+
+{% if timelines.paginator.num_pages > 1 %}
+<div class="pagination pagination-small pagination-left">
+    <ul>
+        {% if timelines.has_previous %}
+        <li><a href="?page={{ timelines.previous_page_number }}">Newer</a></li>
+        {% else %}
+        <li class="disabled"><a href="?page={{ timelines.number }}">Newer</a></li>
+        {% endif %}
+        {% for pagenum in timelines.paginator.page_range %}
+        <li {% if pagenum == timelines.number %}class="active"{% endif %}><a href="?page={{ pagenum }}">{{ pagenum }}</a></li>
+        {% endfor %}
+        {% if timelines.has_next %}
+        <li><a href="?page={{ timelines.next_page_number }}">Older</a></li>
+        {% else %}
+        <li class="disabled"><a href="?page={{ timelines.number }}">Older</a></li>
+        {% endif %}
+    </ul>
+</div>
+{% endif %}
 {% endblock %}
