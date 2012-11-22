@@ -10,6 +10,10 @@ from django.utils.timezone import utc
 from .forms import CourseForm, UniversityForm, CourseProfessorForm
 from .models import Course, CourseMembership
 
+from app.timelines.forms import *
+
+import datetime
+
 
 @login_required
 def createuniversity(request, template='university/create.html'):
@@ -134,3 +138,36 @@ def acceptcourse(request, id, uid):
     membership.save()
 
     return HttpResponseRedirect(course.get_absolute_url())
+
+
+@login_required
+def update_timeline(request, id, timeline_type='text'):
+    course = get_object_or_404(Course, id=id)
+    user = get_object_or_404(User, is_active=True, username=request.user.username, user_course=course)
+
+    form_class = None
+
+    if timeline_type == 'picture':
+        form_class = ImageTimelineForm
+    elif timeline_type == 'youtube':
+        form_class = YoutubeTimelineForm
+    elif timeline_type == 'file':
+        form_class = FileTimelineForm
+    else:
+        form_class = TextTimelineForm
+
+    if request.method == 'POST':
+        form = form_class(request.POST, request.FILES, content_object=course)
+
+        if form.is_valid():
+            t = form.save(commit=False)
+            t.created_by = user
+            t.save()
+            return HttpResponseRedirect(user.get_absolute_url())
+    else:
+        form = form_class(content_object=course)
+    variables = RequestContext(request, {
+        'form': form
+    })
+    template = 'userprofile/upload_%s.html' % timeline_type
+    return render(request, template, variables)

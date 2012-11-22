@@ -10,4 +10,8 @@ urlpatterns = patterns('app.academy.views',
     url(r'^course/join/(?P<id>(\d)+)/$', 'joincourse', name='join_course'),
     url(r'^course/leave/(?P<id>(\d)+)/(?P<uid>(\d)+)/$', 'leavecourse', name='leave_course'),
     url(r'^course/accept/(?P<id>(\d)+)/(?P<uid>(\d)+)/$', 'acceptcourse', name='accept_course'),
+    url(r'^(?P<id>(\d)+)/course/text/$', 'update_timeline', {'timeline_type': 'text'}, name='upload_text'),
+    url(r'^(?P<id>(\d)+)/course/picture/$', 'update_timeline', {'timeline_type': 'picture'}, name='upload_picture'),
+    url(r'^(?P<id>(\d)+)/course/youtube/$', 'update_timeline', {'timeline_type': 'youtube'}, name='upload_youtube'),
+    url(r'^(?P<id>(\d)+)/course/file/$', 'update_timeline', {'timeline_type': 'file'}, name='upload_file'),
 )
