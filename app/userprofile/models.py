@@ -74,6 +74,15 @@ def active_groups(self):
 User.add_to_class('active_groups', active_groups)
 
 
+def active_course(self):
+    res = []
+
+    for membership in self.coursemembership_set.prefetch_related('course').filter(status=1):
+        res.append(membership.course)
+    return res
+User.add_to_class('active_course', active_course)
+
+
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)

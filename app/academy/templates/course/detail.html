@@ -15,6 +15,43 @@
     {% endif %}
 </h2>
 {% endwith %}
+
+<hr>
+
+{% if user|is_member_of:course or course.privacy == 1 %}
+{% for timeline in timelines %}
+<div>
+    <br>
+    <h4><a href="{{ timeline.get_absolute_url }}">{{ timeline.title }}</a></h4>
+    <p><small><em>created {{ timeline.created_at|timesince }} ago</small></em></p>
+
+    {% if timeline.get_type == 'text' %}
+    {{ timeline.get_content.content|safe }}
+    {% endif %}
+
+    {% if timeline.get_type == 'image' %}
+    <p><a href="{{ timeline.get_content.image.url }}"><img src="{{ timeline.get_content.thumbnail_image.url }}" alt="{{ timeline.title }}" title="{{ timeline.title }}"></a></p>
+    {% endif %}
+
+    {% if timeline.get_type == 'youtube' %}
+    <iframe width="480" height="360" src="{{ timeline.get_content.youtube_link.embed_url }}" frameborder="0" allowfullscreen></iframe>
+    {% endif %}
+
+    {% if timeline.get_type == 'file' %}
+    <p><i class="icon-file"></i> <a href="{{ timeline.get_content.attachment.url }}">{{ timeline.get_content.filename }}</a></p>
+    {% endif %}
+    <p>&nbsp;</p>
+
+
+</div>
+
+{% endfor %}
+{% endif %}
+
+<hr>
+
+
+
 <h3>Members:</h3>
 <ul>
     {% for member in members %}
