@@ -24,7 +24,7 @@ class CourseForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(CourseForm, self).__init__(*args, **kwargs)
-        self.fields['professor'].queryset = User.objects.filter(groups__name='Professor')
+        self.fields['professor'].queryset = User.objects.filter(profile__user_type=2)
 
     def clean_name(self):
         name = self.cleaned_data.get('name')
