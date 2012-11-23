@@ -53,3 +53,14 @@ class CourseMembership(models.Model):
     course = models.ForeignKey(Course)
     status = models.IntegerField(choices=MEMBERSHIP_STATUS, default=2)
     joined_at = models.DateTimeField(blank=True, null=True)
+
+
+class Syllabus(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+    course = models.ForeignKey(Course)
+    attachment = models.FileField(upload_to='syllabus/', blank=True, default='')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return self.name

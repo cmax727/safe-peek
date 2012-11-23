@@ -8,8 +8,8 @@ from django.template import RequestContext
 from datetime import datetime
 from django.utils.timezone import utc
 
-from .forms import CourseForm, UniversityForm, CourseProfessorForm
-from .models import Course, CourseMembership
+from .forms import CourseForm, UniversityForm, CourseProfessorForm, SyllabusForm
+from .models import Course, CourseMembership, Syllabus
 
 from app.timelines.forms import *
 
@@ -184,3 +184,23 @@ def update_timeline(request, id, timeline_type='text'):
     })
     template = 'userprofile/upload_%s.html' % timeline_type
     return render(request, template, variables)
+
+
+def syllabus(request, id):
+    if request.method == 'POST':
+        form = SyllabusForm(request.POST or None, request.FILES)
+        if form.is_valid():
+            #print 'test'
+            course = get_object_or_404(Course, pk=id)
+            new_syllabus = form.save(commit=False)
+            new_syllabus.course = course
+            new_syllabus.save()
+            previous_url = reverse('academy:detail_course', args=(id,))
+            return HttpResponseRedirect(previous_url)
+    else:
+        form = SyllabusForm()
+
+    variables = RequestContext(request, {
+        'form': form
+    })
+    return render_to_response('course/create_syllabus.html', variables)
