@@ -94,10 +94,22 @@ def detailcourse(request, id, template='course/detail.html'):
     except EmptyPage:
         timelines = paginator.page(paginator.num_pages)
 
+    syllabus_list = Syllabus.objects.filter(course=course)
+    paginator2 = Paginator(syllabus_list, 10)
+
+    page2 = request.GET.get('page2')
+    try:
+        syllabuses = paginator2.page(page2)
+    except PageNotAnInteger:
+        syllabuses = paginator2.page(1)
+    except EmptyPage:
+        syllabuses = paginator2.page(paginator.num_pages)
+
     variables = RequestContext(request, {
         'course': course,
         'members': members,
         'timelines': timelines,
+        'syllabuses': syllabuses,
     })
     return render(request, template, variables)
 

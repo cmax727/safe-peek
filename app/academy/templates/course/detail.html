@@ -16,12 +16,19 @@
 </h2>
 {% endwith %}
 
-
-
 <hr>
 
-{% if user|is_member_of:course %}
-xxxxxx
+{% if user|is_member_of:course or user|is_manager_of:course %}
+<h4>Syllabus</h4>
+{% if user|is_manager_of:course %}
+<a href="{% url 'academy:create_syllabus' course.pk %}">Create New Syllabus</a>
+<br>
+{% endif %}
+{% for syllabus in syllabuses %}
+    {{syllabus.name}}
+
+{% endfor %}
+<hr>
 {% for timeline in timelines %}
 <div>
     <br>
