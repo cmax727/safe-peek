@@ -16,9 +16,12 @@
 </h2>
 {% endwith %}
 
+
+
 <hr>
 
-{% if user|is_member_of:course or course.privacy == 1 %}
+{% if user|is_member_of:course %}
+xxxxxx
 {% for timeline in timelines %}
 <div>
     <br>
@@ -41,7 +44,7 @@
     <p><i class="icon-file"></i> <a href="{{ timeline.get_content.attachment.url }}">{{ timeline.get_content.filename }}</a></p>
     {% endif %}
     <p>&nbsp;</p>
-
+    
 
 </div>
 

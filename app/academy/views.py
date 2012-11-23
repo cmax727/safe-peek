@@ -1,14 +1,15 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404, render, render_to_response
 from django.template import RequestContext
 from datetime import datetime
 from django.utils.timezone import utc
 
-from .forms import CourseForm, UniversityForm, CourseProfessorForm
-from .models import Course, CourseMembership
+from .forms import CourseForm, UniversityForm, CourseProfessorForm, SyllabusForm
+from .models import Course, CourseMembership, Syllabus
 
 from app.timelines.forms import *
 
@@ -82,9 +83,21 @@ def detailcourse(request, id, template='course/detail.html'):
     course = get_object_or_404(Course, pk=id)
     members = course.coursemembership_set.all()
 
+    timeline_list = course.timelines.all()
+    paginator = Paginator(timeline_list, 10)
+
+    page = request.GET.get('page')
+    try:
+        timelines = paginator.page(page)
+    except PageNotAnInteger:
+        timelines = paginator.page(1)
+    except EmptyPage:
+        timelines = paginator.page(paginator.num_pages)
+
     variables = RequestContext(request, {
         'course': course,
         'members': members,
+        'timelines': timelines,
     })
     return render(request, template, variables)
 
@@ -171,3 +184,23 @@ def update_timeline(request, id, timeline_type='text'):
     })
     template = 'userprofile/upload_%s.html' % timeline_type
     return render(request, template, variables)
+
+
+def syllabus(request, id):
+    if request.method == 'POST':
+        form = SyllabusForm(request.POST or None, request.FILES)
+        if form.is_valid():
+            #print 'test'
+            course = get_object_or_404(Course, pk=id)
+            new_syllabus = form.save(commit=False)
+            new_syllabus.course = course
+            new_syllabus.save()
+            previous_url = reverse('academy:detail_course', args=(id,))
+            return HttpResponseRedirect(previous_url)
+    else:
+        form = SyllabusForm()
+
+    variables = RequestContext(request, {
+        'form': form
+    })
+    return render_to_response('course/create_syllabus.html', variables)
