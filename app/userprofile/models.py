@@ -2,11 +2,13 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
 from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill, Adjust
 
 from app.timelines.models import Timeline
+from allauth.account.signals import email_confirmed
 
 
 class Profile(models.Model):
@@ -113,3 +115,11 @@ class CommentStatus(models.Model):
 
     def __unicode__(self):
         return self.comment
+
+
+@receiver(email_confirmed)
+def handle_email_confirmed(sender, email_address, **kwargs):
+    print sender
+    print kwargs
+    print email_address.email
+    print "xxxx"
