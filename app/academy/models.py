@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.contenttypes import generic
+
+from app.timelines.models import Timeline
 
 
 class University(models.Model):
@@ -28,6 +31,9 @@ class Course(models.Model):
     university = models.ForeignKey(University)
     created_at = models.DateTimeField(auto_now_add=True)
     members = models.ManyToManyField(User, through='CourseMembership', related_name='user_course', blank=True, null=True)
+
+    timelines = generic.GenericRelation(Timeline)
+    objects = University()
 
     @models.permalink
     def get_absolute_url(self):

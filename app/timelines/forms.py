@@ -11,9 +11,9 @@ class TimelineBaseForm(forms.ModelForm):
         self.user = kwargs.pop('user')
         super(TimelineBaseForm, self).__init__(*args, **kwargs)
 
-        allowed_postings = self.user.active_groups()
+        allowed_postings = self.user.active_course()
         allowed_postings.insert(0, self.user.profile)
-        allowed_postings.insert(1, self.user.active_groups)
+        allowed_postings2 = self.user.active_groups()
 
         timeline_choices = []
 
@@ -21,6 +21,12 @@ class TimelineBaseForm(forms.ModelForm):
             ctype = ContentType.objects.get_for_model(instance.__class__)
             ctype_object = '%s_%s' % (ctype.pk, instance.pk)
             timeline_choices.append((ctype_object, instance))
+
+        for instance2 in allowed_postings2:
+            ctype2 = ContentType.objects.get_for_model(instance.__class__)
+            ctype_object2 = '%s_%s' % (ctype2.pk, instance2.pk)
+            timeline_choices.append((ctype_object2, instance2))
+
         self.fields['timeline'].choices = timeline_choices
 
     def clean_timeline(self):
