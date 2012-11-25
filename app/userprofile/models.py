@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
@@ -43,6 +44,24 @@ class Profile(models.Model):
 
     def get_absolute_url(self):
         return self.user.get_absolute_url()
+
+    def get_thumbnail_picture(self):
+        res = '%simages/profile-default.jpg' % settings.STATIC_URL
+
+        try:
+            res = self.thumbnail_picture.url
+        except:
+            pass
+        return res
+
+    def get_small_picture(self):
+        res = '%simages/profile-default.jpg' % settings.STATIC_URL
+
+        try:
+            res = self.small_picture.url
+        except:
+            pass
+        return res
 
 
 def get_display_name(self):

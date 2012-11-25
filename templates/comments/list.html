@@ -1,0 +1,11 @@
+{% for comment in comment_list %}
+
+<div class="media">
+    <a class="pull-left" href="{{ comment.user.get_absolute_url }}"><img class="media-object" src="{{ comment.user.profile.get_small_picture }}"></a>
+    <div class="media-body" style="float: left; margin-left: 10px;">
+        <p><a href="{{ comment.user.get_absolute_url }}">{{ comment.user.display_name}}</a> commented {{ comment.submit_date|timesince }} ago:</p>
+        <p><em>{{ comment.comment|linebreaksbr }}</em></p>
+    </div>
+</div>
+<div class="clearfix">&nbsp;</div>
+{% endfor %}

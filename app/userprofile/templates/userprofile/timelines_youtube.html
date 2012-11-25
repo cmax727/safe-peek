@@ -1,0 +1,14 @@
+{% load comments %}
+<div class="timeline">
+    <p><img src="{{ timeline.created_by.profile.get_small_picture }}" width="25" height="25" alt="{{ timeline.created_by.display_name }}"> {{ timeline.created_by.display_name }} shared <strong>{{ timeline.title }}</strong><small> {{ timeline.created_at|timesince }} ago</small></p>
+    <div><iframe width="480" height="360" src="{{ timeline.get_content.youtube_link.embed_url }}" frameborder="0" allowfullscreen></iframe></div>
+
+    {% get_comment_count for timeline as comment_count %}
+    <div class="timeline-info">
+        <p><a href="#" class="comments-list"><small><i class="icon-comment"></i> {{ comment_count}} comment(s)</small></a></p>
+    </div>
+    <div class="comments">
+        {% render_comment_list for timeline %}
+        {% render_comment_form for timeline %}
+    </div>
+</div>

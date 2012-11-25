@@ -43,6 +43,9 @@ def usergroup(request, template='userprofile/usergroup.html'):
 
 
 def main(request, template='userprofile/index.html'):
+
+    if request.user.is_authenticated():
+        return HttpResponseRedirect(request.user.get_absolute_url())
     variables = RequestContext(request, {
     })
     return render(request, template, variables)

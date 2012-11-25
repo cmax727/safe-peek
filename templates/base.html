@@ -80,15 +80,6 @@
                 </li>
               {% endif %}
 
-              <li class="dropdown" id="timeline-menu">
-                <a href="#timeline-menu" class="dropdown-toggle" data-toggle="dropdown">Update your timeline<b class="caret"></b></a>
-                  <ul class="dropdown-menu">
-                      <div><a href="{% url userprofile:upload_text %}">Write text</a></div>
-                      <div><a href="{% url userprofile:upload_picture %}">Upload a picture</a></div>
-                      <div><a href="{% url userprofile:upload_youtube %}">Add a youtube link</a></div>
-                      <div><a href="{% url userprofile:upload_file %}">Upload a file</a></div>
-                  </ul>
-              </li>
             {% else %}
               <li><a href="{% url account_signup %}">Register</a></li>
               <li><a href="{% url account_login %}">Sign in</a></li>
@@ -136,18 +127,31 @@
   </header>
   <section>
     <div class="row">
-      <div class="span3">
-        <div class="well">
-
-          <ul class="nav nav-list">
-              <li class="nav-header">
-                User
-              </li>
-          </ul>
-        </div>
-      </div>
       <div class="span9">
         {% block content %}{% endblock %}
+      </div>
+
+      <div class="span3">
+        {% if request.user.is_authenticated %}
+        <h3>Shortcuts</h3>
+        <ul class="nav nav-list">
+          <li class="nav-header">Your groups</li>
+          {% for group in user.active_groups %}
+          <li><a href="{{ group.get_absolute_url }}">{{ group.name }}</a></li>
+          {% empty %}
+          <li>You do not belong to any of the groups yet.</li>
+          {% endfor %}
+          
+          <li class="nav-header">Courses</li>
+          {% for course in user.active_course %}
+          <li><a href="{{ course.get_absolute_url}}">{{ course.name }}</a></li>
+          {% empty %}
+          <li>You are not registered to any courses yet</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+
+        {% block sidebar %}{% endblock %}
       </div>
     </div>
   </section>

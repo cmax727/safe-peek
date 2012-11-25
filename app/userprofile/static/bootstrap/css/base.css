@@ -16,3 +16,17 @@ textarea#id_comment {
 button.add_comment_button {
     margin-top: 42px;
 }
+
+div.timeline {
+    border-bottom: solid 1px #ccc;
+    margin: 20px 0;
+}
+
+div.timeline .comments {
+    padding-left: 40px;
+    display: none;
+}
+
+.comment-detail {
+    margin: 20px 0;
+}
