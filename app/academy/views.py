@@ -46,6 +46,9 @@ def detail(request, slug, template='university/detail.html'):
 
 @login_required
 def createuniversity(request, template='university/create.html'):
+    if not request.user.is_superuser:
+        raise Http404()
+
     if request.method == 'POST':
         form = UniversityForm(request.POST or None)
 

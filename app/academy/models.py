@@ -40,7 +40,7 @@ class UniversityMembership(models.Model):
         (2, 'Professors'),
         (3, 'School Admins,'),
     )
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, related_name='academy_roles')
     role = models.IntegerField(choices=USER_TYPE_CHOICES, default=1)
     university = models.ForeignKey(University)
     joined_at = models.DateTimeField(blank=True, null=True)
