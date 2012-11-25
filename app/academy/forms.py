@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
+from django.template.defaultfilters import slugify
 
 from .models import Course, University, Syllabus
 
@@ -7,6 +8,7 @@ from .models import Course, University, Syllabus
 class UniversityForm(forms.ModelForm):
     class Meta:
         model = University
+        exclude = ('slug', 'members')
 
     def clean_name(self):
         name = self.cleaned_data.get('name')
@@ -15,6 +17,14 @@ class UniversityForm(forms.ModelForm):
             raise forms.ValidationError('University with name %s is already taken. \
                     Please choose another one' % name)
         return name
+
+    def save(self, force_insert=False, force_update=False, commit=True):
+        obj = super(UniversityForm, self).save(commit=False)
+
+        if commit:
+            obj.slug = slugify(obj.name)
+            obj.save()
+        return obj
 
 
 class CourseForm(forms.ModelForm):

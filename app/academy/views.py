@@ -9,11 +9,39 @@ from datetime import datetime
 from django.utils.timezone import utc
 
 from .forms import CourseForm, UniversityForm, CourseProfessorForm, SyllabusForm
-from .models import Course, CourseMembership, Syllabus
+from .models import Course, CourseMembership, Syllabus, University
 
 from app.timelines.forms import *
 
-import datetime
+
+@login_required
+def index(request, template='university/index.html'):
+    universities_list = University.objects.order_by('name')
+    paginator = Paginator(universities_list, 10)
+    page = request.GET.get('page')
+
+    try:
+        universities = paginator.page(page)
+    except PageNotAnInteger:
+        universities = paginator.page(1)
+    except EmptyPage:
+        universities = paginator.page(paginator.num_pages)
+    variables = RequestContext(request, {
+        'universities': universities
+    })
+    return render(request, template, variables)
+
+
+@login_required
+def detail(request, slug, template='university/detail.html'):
+    university = get_object_or_404(University, slug=slug)
+    students = university.students.all()
+
+    variables = RequestContext(request, {
+        'university': university,
+        'students': students,
+    })
+    return render(request, template, variables)
 
 
 @login_required
@@ -23,8 +51,8 @@ def createuniversity(request, template='university/create.html'):
 
         if form.is_valid():
             #data = form.cleaned_data
-            form.save()
-            return HttpResponseRedirect(reverse('academy:create_university'))
+            university = form.save()
+            return HttpResponseRedirect(reverse('academy:detail', args=[university.slug]))
 
     else:
         form = UniversityForm()
@@ -126,7 +154,7 @@ def joincourse(request, id, template='course/joined.html'):
 
     elif membership.status == 3:
         membership.status = 1
-        membership.joined_at = datetime.datetime.now().replace(tzinfo=utc)
+        membership.joined_at = datetime.now().replace(tzinfo=utc)
 
     else:
         membership.status = 2

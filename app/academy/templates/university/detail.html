@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>{{ university.name }}</h2>
+
+{% if university.students %}
+<div>
+    <h3>Students</h3>
+    {% for student in university.students %}
+    <div><a href="{{ student.get_absolute_url }}"><img src="{{ student.profile.get_small_picture }}" alt="{{ student.display_name }}" width="25" height="25"></a></div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if university.professors %}
+<div>
+    <h3>Professors</h3>
+    {% for student in university.professors %}
+    <div><a href="{{ student.get_absolute_url }}"><img src="{{ student.profile.get_small_picture }}" alt="{{ student.display_name }}" width="25" height="25"></a></div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if university.school_adminds %}
+<div>
+    <h3>School admins</h3>
+    {% for student in university.school_admins %}
+    <div><a href="{{ student.get_absolute_url }}"><img src="{{ student.profile.get_small_picture }}" alt="{{ student.display_name }}" width="25" height="25"></a></div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endblock %}
+
+{% block sidebar %}
+<div style="margin: 20px 0">
+    {% if user.is_superuser %}
+    <h3>University menu</h3>
+    <ul class="nav nav-list">
+        <li class="nav-header">System admins menu</li>
+        <li><a href="">Appoint users as school admin</a></li>
+        <li><a href="">Appoint users as professors</a></li>
+        <li><a href="">Setup courses</a></li>
+    </ul>
+    {% endif %}
+    <ul class="nav nav-list">
+        <li class="nav-header">Students menu</li>
+        <li><a href=""></a></li>
+    </ul>
+</div>
+{% endblock %}

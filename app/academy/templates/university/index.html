@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h3>List of universities</h3>
+
+<ul>
+    {% for u in universities %}
+    <li><a href="{{ u.get_absolute_url }}">{{ u.name }}</a></li>
+    {% endfor %}
+</ul>
+{% endblock %}
