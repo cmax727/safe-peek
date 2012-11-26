@@ -86,7 +86,7 @@ class UniversityCourseForm(forms.ModelForm):
         self.fields['university'].initial = university_obj
         self.fields['professor'].queryset = university_obj.members.\
                 filter(academy_roles__role=2, academy_roles__university=university_obj)
-        self.fields['students'].queryset = university_obj.members.filter(academy_roles__role=2)
+        self.fields['students'].queryset = university_obj.members.filter(academy_roles__role=1)
 
 
 class CourseForm(forms.ModelForm):
