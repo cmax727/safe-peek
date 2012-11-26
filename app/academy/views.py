@@ -8,10 +8,13 @@ from django.template import RequestContext
 from datetime import datetime
 from django.utils.timezone import utc
 
-from .forms import CourseForm, UniversityForm, CourseProfessorForm, SyllabusForm
+from .forms import (CourseForm, UniversityForm, CourseProfessorForm,
+        SyllabusForm, UniversityAdminForm, UniversityProfessorForm,
+        UniversityCourseForm)
 from .models import Course, CourseMembership, Syllabus, University
 
 from app.timelines.forms import *
+from .templatetags.university_tags import *
 
 
 @login_required
@@ -46,8 +49,6 @@ def detail(request, slug, template='university/detail.html'):
 
 @login_required
 def createuniversity(request, template='university/create.html'):
-    if not request.user.is_superuser:
-        raise Http404()
 
     if request.method == 'POST':
         form = UniversityForm(request.POST or None)
@@ -62,6 +63,81 @@ def createuniversity(request, template='university/create.html'):
         #form = CourseForm()
     variables = RequestContext(request, {
         'form': form
+    })
+    return render(request, template, variables)
+
+
+@login_required
+def university_admins(request, slug, template='university/choose_users.html'):
+
+    if not request.user.is_superuser:
+        raise Http404
+    university = get_object_or_404(University, slug=slug)
+
+    if request.method == 'POST':
+        form = UniversityAdminForm(request.POST, university=university)
+
+        if form.is_valid():
+            admin_pks = form.cleaned_data.get('admins')
+            university.academy_roles.filter(user__pk__in=admin_pks)\
+                    .update(role=3)
+            return HttpResponseRedirect(university.get_absolute_url())
+    else:
+        form = UniversityAdminForm(university=university)
+
+    variables = RequestContext(request, {
+        'form': form,
+        'university': university,
+        'title': 'Assign %s admins' % university
+    })
+    return render(request, template, variables)
+
+
+@login_required
+def university_professors(request, slug, template='university/choose_users.html'):
+    university = get_object_or_404(University, slug=slug)
+
+    if request.method == 'POST':
+        form = UniversityProfessorForm(request.POST, university=university)
+
+        if form.is_valid():
+            admin_pks = form.cleaned_data.get('professors')
+            university.academy_roles.filter(user__pk__in=admin_pks)\
+                    .update(role=2)
+            return HttpResponseRedirect(university.get_absolute_url())
+    else:
+        form = UniversityProfessorForm(university=university)
+
+    variables = RequestContext(request, {
+        'form': form,
+        'university': university,
+        'title': 'Assign %s professors' % university
+    })
+    return render(request, template, variables)
+
+
+@login_required
+def university_create_course(request, slug, template='university/create_course.html'):
+    university = get_object_or_404(University, slug=slug)
+
+    if request.method == 'POST':
+        form = UniversityCourseForm(request.POST, university=university)
+
+        if form.is_valid():
+            obj = form.save()
+            students = form.cleaned_data.get('students')
+            for student in students:
+                if student not in obj.members.all():
+                    CourseMembership.objects.create(user=student,
+                            course=obj, status=3)
+            return HttpResponseRedirect(obj.get_absolute_url())
+    else:
+        form = UniversityCourseForm(university=university)
+
+    variables = RequestContext(request, {
+        'form': form,
+        'university': university,
+        'title': 'Create a course for %s' % university
     })
     return render(request, template, variables)
 

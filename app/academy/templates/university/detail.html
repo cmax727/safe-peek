@@ -1,5 +1,6 @@
 {% extends "base.html" %}
-
+{% load url from future %}
+{% load university_tags %}
 {% block content %}
 <h2>{{ university.name }}</h2>
 
@@ -21,7 +22,7 @@
 </div>
 {% endif %}
 
-{% if university.school_adminds %}
+{% if university.school_admins %}
 <div>
     <h3>School admins</h3>
     {% for student in university.school_admins %}
@@ -36,10 +37,14 @@
     {% if user.is_superuser %}
     <h3>University menu</h3>
     <ul class="nav nav-list">
+        {% if user.is_superuser or user|is_school_admins_for:university %}
         <li class="nav-header">System admins menu</li>
-        <li><a href="">Appoint users as school admin</a></li>
-        <li><a href="">Appoint users as professors</a></li>
-        <li><a href="">Setup courses</a></li>
+        {% if user.is_superuser %}
+        <li><a href="{% url 'academy:university_admins' university.slug %}">Appoint users as school admin</a></li>
+        {% endif %}
+        <li><a href="{% url 'academy:university_professors' university.slug %}">Appoint users as professors</a></li>
+        <li><a href="{% url 'academy:university_create_course'  university.slug %}">Create new courses</a></li>
+        {% endif %}
     </ul>
     {% endif %}
     <ul class="nav nav-list">

@@ -72,18 +72,12 @@ User.add_to_class('display_name', get_display_name)
 
 
 def is_school_admin(self):
-    g = Profile.objects.filter(user_type=3, user=self)
-    if not g:
-        return False
-    return True
+    return self.academy_roles.filter(role=3).exists()
 User.add_to_class('is_school_admin', is_school_admin)
 
 
 def is_professor(self):
-    g = Profile.objects.filter(user_type=2, user=self)
-    if not g:
-        return False
-    return True
+    return self.academy_roles.filter(role=2).exists()
 User.add_to_class('is_professor', is_professor)
 
 

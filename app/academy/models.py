@@ -23,15 +23,15 @@ class University(models.Model):
 
     @property
     def students(self):
-        return self.members.filter(profile__user_type=1)
+        return self.members.filter(academy_roles__role=1, university=self)
 
     @property
     def professors(self):
-        return self.members.filter(profile__user_type=2)
+        return self.members.filter(academy_roles__role=2, university=self)
 
     @property
     def school_admins(self):
-        return self.members.filter(profile__user_type=3)
+        return self.members.filter(academy_roles__role=3, university=self)
 
 
 class UniversityMembership(models.Model):
@@ -42,7 +42,7 @@ class UniversityMembership(models.Model):
     )
     user = models.ForeignKey(User, related_name='academy_roles')
     role = models.IntegerField(choices=USER_TYPE_CHOICES, default=1)
-    university = models.ForeignKey(University)
+    university = models.ForeignKey(University, related_name='academy_roles')
     joined_at = models.DateTimeField(blank=True, null=True)
 
 

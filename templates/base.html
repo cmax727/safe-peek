@@ -58,23 +58,23 @@
               </li>
               
                 <li class="dropdown" id="course-menu">
-                  <a href="#course-menu" class="dropdown-toggle" data-toggle="dropdown">Courses<b class="caret"></b></a>
+                  <a href="#course-menu" class="dropdown-toggle" data-toggle="dropdown">Academy<b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                          <li><a href="{% url academy:course %}">List Course</a></li>
-                        {% if user.is_professor or user.is_school_admin %}
-                          <li><a href="{% url academy:create_course %}">Create Course</a></li>
-                        {% endif %}
+                      <li><a href="{% url academy:index %}">Universities</a></li>
+                      {% if user.is_professor or user.is_school_admin or user.is_superuser %}
+                      {# <li><a href="{% url academy:create_course %}">Create Course</a></li> #}
+                      {% endif %}
                     </ul>
                 </li>
                {% if user.is_superuser or user.is_school_admin %}
                 <li class="dropdown" id="settings-menu">
-                  <a href="#settings-menu" class="dropdown-toggle" data-toggle="dropdown">Settings <b class="caret"></b></a>
+                  <a href="#settings-menu" class="dropdown-toggle" data-toggle="dropdown">Academy Settings <b class="caret"></b></a>
                     <ul class="dropdown-menu">
                       {% if user.is_school_admin %}
-                        <li><a href="{% url userprofile:usergroup %}">Create Professor</a></li>
+                      {# <li><a href="{% url userprofile:usergroup %}">Assign Professors</a></li> #}
                       {% else %}
-                        <li><a href="{% url academy:create_university %}">Create University</a></li>
-                        <li><a href="{% url userprofile:usergroup %}">Create School Admin</a></li>
+                      <li><a href="{% url academy:create_university %}">Create University</a></li>
+                      {# <li><a href="{% url userprofile:usergroup %}">Assign School Admin</a></li> #}
                       {% endif %}
                     </ul>
                 </li>

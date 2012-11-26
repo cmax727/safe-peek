@@ -39,6 +39,56 @@ class UniversityForm(forms.ModelForm):
         return obj
 
 
+class UniversityAdminForm(forms.Form):
+    admins = forms.MultipleChoiceField()
+
+    def __init__(self, *args, **kwargs):
+        university = kwargs.pop('university', '')
+        super(UniversityAdminForm, self).__init__(*args, **kwargs)
+        members = university.members.all()
+        current_admins = []
+
+        for membership in university.academy_roles.all():
+            if membership.role == 3 and membership.user.pk not in current_admins:
+                current_admins.append(membership.user.pk)
+        self.fields['admins'].choices = [(u.pk, u.display_name()) for u in members]
+        self.fields['admins'].initial = current_admins
+
+
+class UniversityProfessorForm(forms.Form):
+    professors = forms.MultipleChoiceField()
+
+    def __init__(self, *args, **kwargs):
+        university = kwargs.pop('university', '')
+        super(UniversityProfessorForm, self).__init__(*args, **kwargs)
+        members = university.members.all()
+        current_professors = []
+
+        for membership in university.academy_roles.all():
+            if membership.role == 2 and membership.user.pk not in current_professors:
+                current_professors.append(membership.user.pk)
+
+        self.fields['professors'].choices = [(u.pk, u.display_name()) for u in members]
+        self.fields['professors'].initial = current_professors
+
+
+class UniversityCourseForm(forms.ModelForm):
+    university = forms.ModelChoiceField(queryset=University.objects.all(), widget=forms.HiddenInput())
+    students = forms.ModelMultipleChoiceField(queryset=User.objects.all())
+
+    class Meta:
+        model = Course
+        exclude = ('created_at', 'members')
+
+    def __init__(self, *args, **kwargs):
+        university_obj = kwargs.pop('university', '')
+        super(UniversityCourseForm, self).__init__(*args, **kwargs)
+        self.fields['university'].initial = university_obj
+        self.fields['professor'].queryset = university_obj.members.\
+                filter(academy_roles__role=2, academy_roles__university=university_obj)
+        self.fields['students'].queryset = university_obj.members.filter(academy_roles__role=2)
+
+
 class CourseForm(forms.ModelForm):
     class Meta:
         model = Course
