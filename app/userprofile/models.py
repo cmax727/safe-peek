@@ -132,20 +132,19 @@ class CommentStatus(models.Model):
 
 
 @receiver(email_confirmed)
-def handle_email_confirmed(sender, email_address, **kwargs):
-    tmp = email_address.email
+def setup_universities_upon_registration(email_address, **kwargs):
     user = email_address.user
-    tmp_dom = tmp.split('@')
-    dom = tmp_dom[1].split('.')
-    university = University.objects.filter(domain=dom[0])
-    usr = User.objects.get(username=user)
-    if university:
-        univ = University.objects.get(domain=dom[0])
-        univmember = UniversityMembership(user=usr, university=univ)
-        univmember.save()
+    email = email_address.email
+    username, dom = email.split('@')
+
+    university = University.objects.filter(domain=dom)
+
+    if university.count() > 0:
+        membership = UniversityMembership.objects.create(user=user,
+                university=university[0])
+
     else:
-        name = 'University with domain name %s' % dom[0]
-        univ = University(name=name, description='new university', domain=dom[0])
-        univ.save()
-        univmember = UniversityMembership(user=usr, university=univ)
-        univmember.save()
+        univ = University.objects.create(name=dom,
+                description='new university', domain=dom)
+        membership = UniversityMembership.objects.create(user=user,
+                university=univ)
