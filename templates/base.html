@@ -148,6 +148,13 @@
           {% empty %}
           <li>You are not registered to any courses yet</li>
           {% endfor %}
+
+          <li class="nav-header">School</li>
+          {% for university in user.university_set.all %}
+          <li><a href="{{ university.get_absolute_url }}">{{ university.name }}</a></li>
+          {% empty %}
+          <li>You are not registered with any school yet.</li>
+          {% endfor %}
         </ul>
         {% endif %}
 

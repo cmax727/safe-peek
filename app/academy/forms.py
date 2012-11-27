@@ -1,6 +1,5 @@
 from django import forms
 from django.contrib.auth.models import User
-from django.template.defaultfilters import slugify
 
 from .models import Course, University, Syllabus, Assignment, AssignmentMembership
 
@@ -29,14 +28,6 @@ class UniversityForm(forms.ModelForm):
         if not re.search(domain_pattern, domain):
             raise forms.ValidationError('Invalid domain name')
         return domain
-
-    def save(self, force_insert=False, force_update=False, commit=True):
-        obj = super(UniversityForm, self).save(commit=False)
-
-        if commit:
-            obj.slug = slugify(obj.name)
-            obj.save()
-        return obj
 
 
 class UniversityAdminForm(forms.Form):
@@ -74,7 +65,8 @@ class UniversityProfessorForm(forms.Form):
 
 class UniversityCourseForm(forms.ModelForm):
     university = forms.ModelChoiceField(queryset=University.objects.all(), widget=forms.HiddenInput())
-    students = forms.ModelMultipleChoiceField(queryset=User.objects.all())
+    professors = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
+    students = forms.ModelMultipleChoiceField(queryset=User.objects.all(), required=False)
 
     class Meta:
         model = Course
@@ -128,9 +120,11 @@ class SyllabusForm(forms.ModelForm):
 
 
 class AssignmentForm(forms.ModelForm):
+    course = forms.ModelChoiceField(queryset=Course.objects.all(), widget=forms.HiddenInput())
+
     class Meta:
         model = Assignment
-        exclude = ('created_at', 'course')
+        exclude = ('created_at', 'members')
 
 
 class SubmitAssignmentForm(forms.ModelForm):

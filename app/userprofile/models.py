@@ -9,7 +9,7 @@ from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill, Adjust
 
 from app.timelines.models import Timeline
-from app.academy.models import University, UniversityMembership
+from app.academy.models import University, UniversityMembership, Course
 from allauth.account.signals import email_confirmed
 
 
@@ -91,7 +91,7 @@ User.add_to_class('active_groups', active_groups)
 
 
 def active_course(self):
-    res = []
+    res = list(Course.objects.filter(professor=self))
 
     for membership in self.coursemembership_set.prefetch_related('course').filter(status=1):
         res.append(membership.course)
@@ -137,14 +137,9 @@ def setup_universities_upon_registration(email_address, **kwargs):
     email = email_address.email
     username, dom = email.split('@')
 
-    university = University.objects.filter(domain=dom)
-
-    if university.count() > 0:
-        membership = UniversityMembership.objects.create(user=user,
-                university=university[0])
-
-    else:
-        univ = University.objects.create(name=dom,
-                description='new university', domain=dom)
-        membership = UniversityMembership.objects.create(user=user,
-                university=univ)
+    try:
+        univ = University.objects.get(domain=dom)
+        UniversityMembership.objects.create(university=univ, user=user)
+    except:
+        univ = University.objects.create(name=dom, description='new university',
+                domain=dom)

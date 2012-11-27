@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
 from django.db.models.signals import post_save
+from django.template.defaultfilters import slugify
 
 from app.timelines.models import Timeline
 
@@ -115,6 +116,9 @@ class AssignmentMembership(models.Model):
 def auto_add_users_into_university(sender, instance, created, **kwargs):
 
     if created:
+        instance.slug = slugify(instance.name)
+        instance.save()
+
         users = User.objects.filter(email__endswith=instance.domain)
 
         for user in users:

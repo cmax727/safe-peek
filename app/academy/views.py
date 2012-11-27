@@ -132,7 +132,8 @@ def university_create_course(request, slug, template='university/create_course.h
                             course=obj, status=1)
             return HttpResponseRedirect(obj.get_absolute_url())
     else:
-        form = UniversityCourseForm(university=university)
+        form = UniversityCourseForm(university=university,
+                initial={'professor': request.user})
 
     variables = RequestContext(request, {
         'form': form,
@@ -338,21 +339,19 @@ def syllabus(request, id, template='course/create_syllabus.html'):
 
 
 def createassignment(request, id, template='course/create_assignment.html'):
+    course = get_object_or_404(Course, pk=id)
+
     if request.method == 'POST':
-        form = AssignmentForm(request.POST or None, request.FILES)
+        form = AssignmentForm(request.POST, request.FILES)
+
         if form.is_valid():
-            #print 'test'
-            course = get_object_or_404(Course, pk=id)
-            new_assignment = form.save(commit=False)
-            new_assignment.course = course
-            new_assignment.save()
-            previous_url = reverse('academy:detail_course', args=(id,))
-            return HttpResponseRedirect(previous_url)
+            new_assignment = form.save()
+            return HttpResponseRedirect(course.get_absolute_url())
     else:
-        form = AssignmentForm()
+        form = AssignmentForm(initial={'course': course})
 
     variables = RequestContext(request, {
-        'form': form
+        'form': form,
     })
     return render(request, template, variables)
 
