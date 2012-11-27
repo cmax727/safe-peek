@@ -10,8 +10,8 @@ from django.utils.timezone import utc
 
 from .forms import (CourseForm, UniversityForm, CourseProfessorForm,
         SyllabusForm, UniversityAdminForm, UniversityProfessorForm,
-        UniversityCourseForm)
-from .models import Course, CourseMembership, Syllabus, University
+        UniversityCourseForm, AssignmentForm, SubmitAssignmentForm)
+from .models import Course, CourseMembership, Syllabus, University, Assignment
 
 from app.timelines.forms import *
 from .templatetags.university_tags import *
@@ -129,7 +129,7 @@ def university_create_course(request, slug, template='university/create_course.h
             for student in students:
                 if student not in obj.members.all():
                     CourseMembership.objects.create(user=student,
-                            course=obj, status=3)
+                            course=obj, status=1)
             return HttpResponseRedirect(obj.get_absolute_url())
     else:
         form = UniversityCourseForm(university=university)
@@ -212,11 +212,23 @@ def detailcourse(request, id, template='course/detail.html'):
     except EmptyPage:
         syllabuses = paginator2.page(paginator.num_pages)
 
+    assignment_list = Assignment.objects.filter(course=course, due_date__gte=datetime.today)
+    paginator3 = Paginator(assignment_list, 10)
+
+    page3 = request.GET.get('page3')
+    try:
+        assignments = paginator3.page(page3)
+    except PageNotAnInteger:
+        assignments = paginator3.page(1)
+    except EmptyPage:
+        assignments = paginator3.page(paginator.num_pages)
+
     variables = RequestContext(request, {
         'course': course,
         'members': members,
         'timelines': timelines,
         'syllabuses': syllabuses,
+        'assignments': assignments,
     })
     return render(request, template, variables)
 
@@ -305,7 +317,7 @@ def update_timeline(request, id, timeline_type='text'):
     return render(request, template, variables)
 
 
-def syllabus(request, id):
+def syllabus(request, id, template='course/create_syllabus.html'):
     if request.method == 'POST':
         form = SyllabusForm(request.POST or None, request.FILES)
         if form.is_valid():
@@ -322,4 +334,47 @@ def syllabus(request, id):
     variables = RequestContext(request, {
         'form': form
     })
-    return render_to_response('course/create_syllabus.html', variables)
+    return render(request, template, variables)
+
+
+def createassignment(request, id, template='course/create_assignment.html'):
+    if request.method == 'POST':
+        form = AssignmentForm(request.POST or None, request.FILES)
+        if form.is_valid():
+            #print 'test'
+            course = get_object_or_404(Course, pk=id)
+            new_assignment = form.save(commit=False)
+            new_assignment.course = course
+            new_assignment.save()
+            previous_url = reverse('academy:detail_course', args=(id,))
+            return HttpResponseRedirect(previous_url)
+    else:
+        form = AssignmentForm()
+
+    variables = RequestContext(request, {
+        'form': form
+    })
+    return render(request, template, variables)
+
+
+@login_required
+def detailassignment(request, id, template='course/detailassignment.html'):
+    assignment = get_object_or_404(Assignment, pk=id)
+    members = assignment.assignmentmembership_set.all()
+
+    if request.method == 'POST':
+        form = SubmitAssignmentForm(request.POST or None, request.FILES)
+        if form.is_valid():
+            new_submit = form.save(commit=False)
+            new_submit.assignment = assignment
+            new_submit.user = request.user
+            new_submit.save()
+    else:
+        form = SubmitAssignmentForm()
+
+    variables = RequestContext(request, {
+        'assignment': assignment,
+        'members': members,
+        'form': form
+    })
+    return render(request, template, variables)

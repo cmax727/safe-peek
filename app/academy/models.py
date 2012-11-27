@@ -88,6 +88,30 @@ class Syllabus(models.Model):
         return self.name
 
 
+class Assignment(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+    course = models.ForeignKey(Course)
+    attachment = models.FileField(upload_to='assignment/', blank=True, default='')
+    due_date = models.DateField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    members = models.ManyToManyField(User, through='AssignmentMembership')
+
+    @models.permalink
+    def get_absolute_url(self):
+        return ('academy:detail_assignment', [str(self.pk)])
+
+    def __unicode__(self):
+        return self.name
+
+
+class AssignmentMembership(models.Model):
+    user = models.ForeignKey(User)
+    assignment = models.ForeignKey(Assignment)
+    attachment = models.FileField(upload_to='assignment/', blank=True, default='')
+    grade = models.CharField(max_length=5)
+
+
 def auto_add_users_into_university(sender, instance, created, **kwargs):
 
     if created:

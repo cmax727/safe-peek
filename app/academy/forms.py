@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 
-from .models import Course, University, Syllabus
+from .models import Course, University, Syllabus, Assignment, AssignmentMembership
 
 import re
 
@@ -125,3 +125,15 @@ class SyllabusForm(forms.ModelForm):
     class Meta:
         model = Syllabus
         exclude = ('created_at', 'course')
+
+
+class AssignmentForm(forms.ModelForm):
+    class Meta:
+        model = Assignment
+        exclude = ('created_at', 'course')
+
+
+class SubmitAssignmentForm(forms.ModelForm):
+    class Meta:
+        model = AssignmentMembership
+        exclude = ('user', 'grade', 'assignment')

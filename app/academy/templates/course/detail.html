@@ -25,9 +25,26 @@
 <br>
 {% endif %}
 {% for syllabus in syllabuses %}
-    {{syllabus.name}}
+    <p>
+    <h4>{{syllabus.name}}</h4>
+    <a href="{{syllabus.attachment}}">file</a>
+    <br>
+    {{syllabus.description}}
+    </p>
+{% endfor %}
+<hr>
+<h4>Assignment</h4>
+{% if user|is_manager_of:course %}
+<a href="{% url 'academy:create_assignment' course.pk %}">Create New Assignment</a>
+<br>
+{% endif %}
+
+{% for assignment in assignments %}
+    <p>
+    <h4><a href="{% url 'academy:detail_assignment' assignment.pk %}">{{assignment.name}}</a></h4>
 
 {% endfor %}
+
 <hr>
 {% for timeline in timelines %}
 <div>
