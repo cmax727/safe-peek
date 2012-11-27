@@ -13,7 +13,8 @@ class TimelineBaseForm(forms.ModelForm):
 
         allowed_postings = self.user.active_groups()
         allowed_postings.insert(0, self.user.profile)
-        # allowed_postings2 = self.user.active_groups()
+        # allowed_postings2 = self.user.active_course()
+        # allowed_postings.insert(0, self.user.user_university())
 
         timeline_choices = []
 

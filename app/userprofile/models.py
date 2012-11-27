@@ -99,6 +99,12 @@ def active_course(self):
 User.add_to_class('active_course', active_course)
 
 
+def user_university(self):
+    univ = UniversityMembership.objects.get(user=self)
+    return univ.University.name
+User.add_to_class('user_university', user_university)
+
+
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)

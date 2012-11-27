@@ -14,6 +14,8 @@ class University(models.Model):
 
     members = models.ManyToManyField(User, through='UniversityMembership')
 
+    timelines = generic.GenericRelation(Timeline)
+
     @models.permalink
     def get_absolute_url(self):
         return ('academy:detail', [self.slug])

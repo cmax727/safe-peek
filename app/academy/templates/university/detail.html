@@ -4,6 +4,37 @@
 {% block content %}
 <h2>{{ university.name }}</h2>
 
+
+<hr>
+
+<a href="{% url university:upload_text %}">Upload Text</a></li>
+<a href="{% url university:upload_picture %}">Upload image</a></li>
+<a href="{% url university:upload_youtube %}">Upload Youtube</a></li>
+<a href="{% url university:upload_file %}">upload File</a></li>
+
+<hr>
+
+
+{% for timeline in timelines %}
+<div class="margin: 20px 0">
+        {% if timeline.get_type == 'text' %}
+            {% include 'userprofile/timelines_text.html' %}
+        {% endif %}
+
+        {% if timeline.get_type == 'image' %}
+            {% include 'userprofile/timelines_image.html' %}
+        {% endif %}
+
+        {% if timeline.get_type = 'youtube' %}
+            {% include 'userprofile/timelines_youtube.html' %}
+        {% endif %}
+        {% if timeline.get_type = 'file' %}
+            {% include 'userprofile/timelines_file.html' %}
+        {% endif %}
+</div>
+{% endfor %}
+<hr>
+
 {% if university.students %}
 <div>
     <h3>Students</h3>
