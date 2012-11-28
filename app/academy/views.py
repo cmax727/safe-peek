@@ -39,23 +39,10 @@ def index(request, template='university/index.html'):
 def detail(request, slug, template='university/detail.html'):
     university = get_object_or_404(University, slug=slug)
     students = university.students.all()
-    #campus = University.objects.filter(content_object=university)
-
-    timeline_list = university.timelines.all()
-    paginator = Paginator(timeline_list, 10)
-
-    page = request.GET.get('page')
-    try:
-        timelines = paginator.page(page)
-    except PageNotAnInteger:
-        timelines = paginator.page(1)
-    except EmptyPage:
-        timelines = paginator.page(paginator.num_pages)
 
     variables = RequestContext(request, {
         'university': university,
         'students': students,
-        'timelines': timelines,
     })
     return render(request, template, variables)
 
@@ -336,36 +323,3 @@ def syllabus(request, id):
         'form': form
     })
     return render_to_response('course/create_syllabus.html', variables)
-
-
-@login_required
-def write_timeline(request, id, timeline_type='text'):
-    university = get_object_or_404(University, id=id)
-    user = get_object_or_404(User, is_active=True, username=request.user.username, user_university=university)
-
-    form_class = None
-
-    if timeline_type == 'picture':
-        form_class = ImageTimelineForm
-    elif timeline_type == 'youtube':
-        form_class = YoutubeTimelineForm
-    elif timeline_type == 'file':
-        form_class = FileTimelineForm
-    else:
-        form_class = TextTimelineForm
-
-    if request.method == 'POST':
-        form = form_class(request.POST, request.FILES, content_object=university)
-
-        if form.is_valid():
-            t = form.save(commit=False)
-            t.created_by = user
-            t.save()
-            return HttpResponseRedirect(user.get_absolute_url())
-    else:
-        form = form_class(content_object=university)
-    variables = RequestContext(request, {
-        'form': form
-    })
-    template = 'university/upload_%s.html' % timeline_type
-    return render(request, template, variables)

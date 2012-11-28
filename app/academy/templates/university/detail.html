@@ -65,17 +65,17 @@
 
 {% block sidebar %}
 <div style="margin: 20px 0">
-    {% if user.is_superuser %}
+    {% if user.is_superuser or user|is_school_admins_for:university or user|is_professor_for:university %}
     <h3>University menu</h3>
     <ul class="nav nav-list">
-        {% if user.is_superuser or user|is_school_admins_for:university %}
         <li class="nav-header">System admins menu</li>
         {% if user.is_superuser %}
         <li><a href="{% url 'academy:university_admins' university.slug %}">Appoint users as school admin</a></li>
         {% endif %}
+        {% if user.is_superuser or user|is_school_admins_for:university %}
         <li><a href="{% url 'academy:university_professors' university.slug %}">Appoint users as professors</a></li>
-        <li><a href="{% url 'academy:university_create_course'  university.slug %}">Create new courses</a></li>
         {% endif %}
+        <li><a href="{% url 'academy:university_create_course'  university.slug %}">Create new courses</a></li>
     </ul>
     {% endif %}
     <ul class="nav nav-list">

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load assignment_tags %}
+
+{% block title %}Detail Assignment{% endblock %}
+
+{% block content %}
+
+<h1>{{assignment.name}}</h1>
+<hr>
+<a href="{{assignment.attachment}}">File</a>
+<p>
+{{assignment.description}}
+</p>
+{% if not user|is_member_of:assignment %}
+<b>Submit Assignment</b>
+<form action="" method="post" enctype="multipart/form-data">
+{% csrf_token %}
+{{form.as_p}}
+<button type="submit" class="btn btn-primary">Upload file</button>
+</form>
+
+{% endif %}
+{% ifequal user assignment.course.professor %}
+{% for member in members %}
+    <p>{{member.user.display_name }} - <a href="{{ member.attachment }}">submited</a></p>
+{% endfor %}
+{% endifequal %}
+{% endblock %}

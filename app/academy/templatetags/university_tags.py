@@ -10,4 +10,4 @@ def is_school_admins_for(user, university):
 
 @register.filter
 def is_professor_for(user, university):
-    return user.academy_roles.filter(university=university, role=3).exists()
+    return user.academy_roles.filter(university=university, role=2).exists()

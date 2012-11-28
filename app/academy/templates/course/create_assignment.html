@@ -1,8 +1,14 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-<h1>New Syllabus</h1>
+<script type="text/javascript">
+$(document).ready(function(){
+    $('#id_due_date').datepicker({
+        format: 'mm-dd-yyyy'
+    });
+});
+</script>
+<h1>New Assignment</h1>
 <form action="" method="post" enctype="multipart/form-data">
 {% csrf_token %}
 {{form.as_p}}
