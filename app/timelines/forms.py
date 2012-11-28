@@ -13,20 +13,14 @@ class TimelineBaseForm(forms.ModelForm):
 
         allowed_postings = self.user.active_groups()
         allowed_postings.insert(0, self.user.profile)
-        # allowed_postings2 = self.user.active_course()
-        # allowed_postings.insert(0, self.user.user_university())
-
+        allowed_postings.extend(self.user.active_courses())
+        allowed_postings.extend(self.user.university_set.all())
         timeline_choices = []
 
         for instance in allowed_postings:
-            ctype = ContentType.objects.get_for_model(instance.__class__)
+            ctype = ContentType.objects.get_for_model(instance)
             ctype_object = '%s_%s' % (ctype.pk, instance.pk)
             timeline_choices.append((ctype_object, instance))
-
-        # for instance2 in allowed_postings2:
-        #     ctype2 = ContentType.objects.get_for_model(instance.__class__)
-        #     ctype_object2 = '%s_%s' % (ctype2.pk, instance2.pk)
-        #     timeline_choices.append((ctype_object2, instance2))
 
         self.fields['timeline'].choices = timeline_choices
 
@@ -75,3 +69,7 @@ class FileTimelineForm(TimelineBaseForm):
     class Meta:
         model = FileTimeline
         exclude = ('created_by', 'content_type', 'object_id')
+
+
+# class UnivBaseForm(TimelineBaseForm):
+#     timeline = forms.ChoiceField(help_text='Share status on your Campus', widget=forms.HiddenInput())

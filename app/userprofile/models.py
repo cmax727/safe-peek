@@ -90,19 +90,13 @@ def active_groups(self):
 User.add_to_class('active_groups', active_groups)
 
 
-def active_course(self):
+def active_courses(self):
     res = list(Course.objects.filter(professor=self))
 
     for membership in self.coursemembership_set.prefetch_related('course').filter(status=1):
         res.append(membership.course)
     return res
-User.add_to_class('active_course', active_course)
-
-
-def user_university(self):
-    univ = UniversityMembership.objects.get(user=self)
-    return univ.University.name
-User.add_to_class('user_university', user_university)
+User.add_to_class('active_courses', active_courses)
 
 
 def create_user_profile(sender, instance, created, **kwargs):

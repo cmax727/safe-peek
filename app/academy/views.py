@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponseRedirect, Http404
@@ -13,7 +14,7 @@ from .forms import (CourseForm, UniversityForm, CourseProfessorForm,
         UniversityCourseForm)
 from .models import Course, CourseMembership, Syllabus, University
 
-from app.timelines.forms import *
+from app.academy.forms import *
 from .templatetags.university_tags import *
 
 
@@ -40,9 +41,25 @@ def detail(request, slug, template='university/detail.html'):
     university = get_object_or_404(University, slug=slug)
     students = university.students.all()
 
+    timeline_list = university.timelines.all()
+    paginator = Paginator(timeline_list, 10)
+
+    page = request.GET.get('page')
+    try:
+        timelines = paginator.page(page)
+    except PageNotAnInteger:
+        timelines = paginator.page(1)
+    except EmptyPage:
+        timelines = paginator.page(paginator.num_pages)
+
     variables = RequestContext(request, {
         'university': university,
         'students': students,
+        'timelines': timelines,
+        'text_form': TextTimelineForm(user=user),
+        'image_form': ImageTimelineForm(user=user),
+        'youtube_form': YoutubeTimelineForm(user=user),
+        'file_form': FileTimelineForm(user=user),
     })
     return render(request, template, variables)
 
@@ -274,6 +291,40 @@ def acceptcourse(request, id, uid):
 
 
 @login_required
+def write_timeline(request, id, timeline_type='text'):
+    university = get_object_or_404(University, id=id)
+
+    form_class = None
+
+    if timeline_type == 'picture':
+        form_class = AcademyImageTimelineForm
+    elif timeline_type == 'youtube':
+        form_class = AcademyYoutubeTimelineForm
+    elif timeline_type == 'file':
+        form_class = AcademyFileTimelineForm
+    else:
+        form_class = AcademyTextTimelineForm
+
+    if request.method == 'POST':
+        form = form_class(request.POST, request.FILES, user=request.user)
+
+        if form.is_valid():
+            t = form.save(commit=False)
+            t.created_by = request.user
+            t.save()
+            return HttpResponseRedirect(university.get_absolute_url())
+    else:
+        ctype = ContentType.objects.get_for_model(university)
+        timeline = '%s_%s' % (ctype.pk, university.pk)
+        form = form_class(user=request.user, initial={'timeline': timeline})
+    variables = RequestContext(request, {
+        'form': form
+    })
+    template = 'university/upload_%s.html' % timeline_type
+    return render(request, template, variables)
+
+
+@login_required
 def update_timeline(request, id, timeline_type='text'):
     course = get_object_or_404(Course, id=id)
     user = get_object_or_404(User, is_active=True, username=request.user.username, user_course=course)
@@ -323,9 +374,7 @@ def syllabus(request, id):
     variables = RequestContext(request, {
         'form': form
     })
-<<<<<<< HEAD
     return render_to_response('course/create_syllabus.html', variables)
-=======
     return render(request, template, variables)
 
 
@@ -368,4 +417,3 @@ def detailassignment(request, id, template='course/detailassignment.html'):
         'form': form
     })
     return render(request, template, variables)
->>>>>>> fb362598ffc2faeadb94fd687dd3ce5a9250a128

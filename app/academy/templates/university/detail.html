@@ -6,12 +6,46 @@
 
 
 <hr>
+{% comment %} <div class="tabbable" style="background: #f7f7f7; padding: 10px;border-radius: 8px; width: 450px; margin: 20px 0;">
+    <h5>share your status:</h5>
+    <ul class="nav nav-pills">
+      <li><a href="#upload_text_wrapper" data-toggle="tab">Text</a></li>
+      <li><a href="#upload_image_wrapper" data-toggle="tab">Image</a></li>
+      <li><a href="#upload_youtube_wrapper" data-toggle="tab">Youtube</a></li>
+      <li><a href="#upload_file_wrapper" data-toggle="tab">File</a></li>
+    </ul>
 
-<a href="{% url university:upload_text %}">Upload Text</a></li>
-<a href="{% url university:upload_picture %}">Upload image</a></li>
-<a href="{% url university:upload_youtube %}">Upload Youtube</a></li>
-<a href="{% url university:upload_file %}">upload File</a></li>
-
+    <div class="tab-content">
+        <div id="upload_text_wrapper" class="tab-pane">
+            <form action="{% url 'academy:upload_text' university.id %}" method="POST">{% csrf_token %}
+                {{ text_form.as_p }}
+                <button type="submit" class="btn btn-primary">Share</button>
+            </form>
+        </div>
+        
+        <div id="upload_image_wrapper" class="tab-pane">
+            <form action="{% url 'academy:upload_picture' university.id %}" method="POST" enctype="multipart/form-data">{% csrf_token %}
+                {{ image_form.as_p }}
+                <button type="submit" class="btn btn-primary">Upload image</button>
+            </form>
+        </div>
+        
+        <div id="upload_youtube_wrapper" class="tab-pane">
+            <form action="{% url 'academy:upload_youtube' university.id %}" method="POST">{% csrf_token %}
+                {{ youtube_form.as_p }}
+                <button type="submit" class="btn btn-primary">Share YouTube video</button>
+            </form>
+        </div>
+        
+        <div id="upload_file_wrapper" class="tab-pane">
+            <form action="{% url 'academy:upload_file' university.id %}" method="POST" enctype="multipart/form-data">{% csrf_token %}
+                {{ file_form.as_p }}
+                <button type="submit" class="btn btn-primary">Upload file</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endcomment %}
 <hr>
 
 

@@ -2,11 +2,11 @@
 
 {% block content %}
 
-<h1>Write a text</h1>
+<h1>Write something to Campus</h1>
 <form action="" method="post">
 {% csrf_token %}
 {{form.as_p}}
 
-<button type="submit" class="btn btn-primary">Write to your group</button>
+<button type="submit" class="btn btn-primary">Write to your campus</button>
 </form>
 {% endblock %}

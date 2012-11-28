@@ -2,6 +2,8 @@ from django import forms
 from django.contrib.auth.models import User
 
 from .models import Course, University, Syllabus, Assignment, AssignmentMembership
+from app.timelines.forms import TextTimelineForm, ImageTimelineForm, YoutubeTimelineForm, FileTimelineForm
+
 
 import re
 
@@ -131,3 +133,19 @@ class SubmitAssignmentForm(forms.ModelForm):
     class Meta:
         model = AssignmentMembership
         exclude = ('user', 'grade', 'assignment')
+
+
+class AcademyTextTimelineForm(TextTimelineForm):
+    timeline = forms.ChoiceField(widget=forms.HiddenInput())
+
+
+class AcademyImageTimelineForm(ImageTimelineForm):
+    timeline = forms.ChoiceField(widget=forms.HiddenInput())
+
+
+class AcademyYoutubeTimelineForm(YoutubeTimelineForm):
+    timeline = forms.ChoiceField(widget=forms.HiddenInput())
+
+
+class AcademyFileTimelineForm(FileTimelineForm):
+    timeline = forms.ChoiceField(widget=forms.HiddenInput())
