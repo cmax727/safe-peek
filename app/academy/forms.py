@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 
-from .models import Course, University, Syllabus, Assignment, AssignmentMembership
+from .models import Course, CourseFiles, University, Syllabus, Assignment, AssignmentMembership
 
 import re
 
@@ -97,6 +97,14 @@ class CourseForm(forms.ModelForm):
             raise forms.ValidationError('Course with name %s is already taken. \
                     Please choose another one' % name)
         return name
+
+
+class CourseFilesForm(forms.ModelForm):
+    course = forms.ModelChoiceField(queryset=Course.objects.all(), widget=forms.HiddenInput())
+
+    class Meta:
+        model = CourseFiles
+        exclude = ('created_at')
 
 
 class CourseProfessorForm(forms.ModelForm):

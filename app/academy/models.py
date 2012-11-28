@@ -78,6 +78,12 @@ class CourseMembership(models.Model):
     joined_at = models.DateTimeField(blank=True, null=True)
 
 
+class CourseFiles(models.Model):
+    course = models.ForeignKey(Course)
+    attachment = models.FileField(upload_to='course/', blank=True, default='')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
 class Syllabus(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()

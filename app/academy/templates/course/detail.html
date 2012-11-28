@@ -14,6 +14,7 @@
         <li><a href="#timeline_content" data-toggle="tab">Timeline</a></li>
         <li><a href="#syllabus_content" data-toggle="tab">Syllabus</a></li>
         <li><a href="#assignments_content" data-toggle="tab">Assignments</a></li>
+        <li><a href="#files_content" data-toggle="tab">Files</a></li>
     </ul>
 
     <div class="tab-content">
@@ -109,6 +110,26 @@
                 <div class="span3">
                     {% if user|is_manager_of:course %}
                     <p><i class="icon icon-plus"></i><a href="{% url 'academy:create_assignment' course.pk %}">Create New Assignment</a></p>
+                    {% endif %}
+                </div>
+                
+            </div>
+        </div>
+        <div id="files_content" class="tab-pane">
+            <div class="row">
+                <div class="span6">
+                {% if files %}
+                <h4>files</h4>
+
+                    {% for file in files %}
+                        <p><i class="icon icon-file"></i><a href="{{ file.attachment.url }}"> {{ file.attachment.name }}</a></p>
+                    {% endfor %}
+                {% endif %}
+                </div>
+
+                <div class="span3">
+                    {% if user|is_manager_of:course %}
+                        <p><i class="icon icon-plus"></i><a href="{% url 'academy:upload_file' course.pk %}">Upload New File</a></p>
                     {% endif %}
                 </div>
                 

@@ -8,10 +8,10 @@ from django.template import RequestContext
 from datetime import datetime
 from django.utils.timezone import utc
 
-from .forms import (CourseForm, UniversityForm, CourseProfessorForm,
+from .forms import (CourseForm, CourseFilesForm, UniversityForm, CourseProfessorForm,
         SyllabusForm, UniversityAdminForm, UniversityProfessorForm,
         UniversityCourseForm, AssignmentForm, SubmitAssignmentForm)
-from .models import Course, CourseMembership, Syllabus, University, Assignment
+from .models import Course, CourseMembership, CourseFiles, Syllabus, University, Assignment
 
 from app.timelines.forms import *
 from .templatetags.university_tags import *
@@ -190,6 +190,7 @@ def course(request):
 def detailcourse(request, id, template='course/detail.html'):
     course = get_object_or_404(Course, pk=id)
     members = course.coursemembership_set.all()
+    files = course.coursefiles_set.all()
 
     timeline_list = course.timelines.all()
     paginator = Paginator(timeline_list, 10)
@@ -230,6 +231,7 @@ def detailcourse(request, id, template='course/detail.html'):
         'timelines': timelines,
         'syllabuses': syllabuses,
         'assignments': assignments,
+        'files': files,
     })
     return render(request, template, variables)
 
@@ -345,10 +347,28 @@ def createassignment(request, id, template='course/create_assignment.html'):
         form = AssignmentForm(request.POST, request.FILES)
 
         if form.is_valid():
-            new_assignment = form.save()
+            form.save()
             return HttpResponseRedirect(course.get_absolute_url())
     else:
         form = AssignmentForm(initial={'course': course})
+
+    variables = RequestContext(request, {
+        'form': form,
+    })
+    return render(request, template, variables)
+
+
+def files(request, id, template='course/upload.html'):
+    course = get_object_or_404(Course, pk=id)
+
+    if request.method == 'POST':
+        form = CourseFilesForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(course.get_absolute_url())
+    else:
+        form = CourseFilesForm(initial={'course': course})
 
     variables = RequestContext(request, {
         'form': form,
