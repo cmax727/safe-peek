@@ -1,10 +1,8 @@
 from django import forms
 from django.contrib.auth.models import User
 
-from .models import Course, University, Syllabus, Assignment, AssignmentMembership
+from .models import Course, CourseFiles, University, Syllabus, Assignment, AssignmentSubmit
 from app.timelines.forms import TextTimelineForm, ImageTimelineForm, YoutubeTimelineForm, FileTimelineForm
-
-
 import re
 
 
@@ -101,6 +99,14 @@ class CourseForm(forms.ModelForm):
         return name
 
 
+class CourseFilesForm(forms.ModelForm):
+    course = forms.ModelChoiceField(queryset=Course.objects.all(), widget=forms.HiddenInput())
+
+    class Meta:
+        model = CourseFiles
+        exclude = ('created_at')
+
+
 class CourseProfessorForm(forms.ModelForm):
     class Meta:
         model = Course
@@ -131,7 +137,7 @@ class AssignmentForm(forms.ModelForm):
 
 class SubmitAssignmentForm(forms.ModelForm):
     class Meta:
-        model = AssignmentMembership
+        model = AssignmentSubmit
         exclude = ('user', 'grade', 'assignment')
 
 

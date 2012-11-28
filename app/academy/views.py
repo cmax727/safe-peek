@@ -9,12 +9,14 @@ from django.template import RequestContext
 from datetime import datetime
 from django.utils.timezone import utc
 
-from .forms import (CourseForm, UniversityForm, CourseProfessorForm,
+from .forms import (CourseForm, CourseFilesForm, UniversityForm, CourseProfessorForm,
         SyllabusForm, UniversityAdminForm, UniversityProfessorForm,
-        UniversityCourseForm)
-from .models import Course, CourseMembership, Syllabus, University
+        UniversityCourseForm, AssignmentForm, SubmitAssignmentForm, TextTimelineForm)
 
-from app.academy.forms import *
+from .forms import TextTimelineForm, ImageTimelineForm, YoutubeTimelineForm, FileTimelineForm
+
+from .models import Course, CourseMembership, CourseFiles, Syllabus, University, Assignment
+
 from .templatetags.university_tags import *
 
 
@@ -56,10 +58,10 @@ def detail(request, slug, template='university/detail.html'):
         'university': university,
         'students': students,
         'timelines': timelines,
-        'text_form': TextTimelineForm(user=user),
-        'image_form': ImageTimelineForm(user=user),
-        'youtube_form': YoutubeTimelineForm(user=user),
-        'file_form': FileTimelineForm(user=user),
+        # 'text_form': TextTimelineForm(user=user),
+        # 'image_form': ImageTimelineForm(user=user),
+        # 'youtube_form': YoutubeTimelineForm(user=user),
+        # 'file_form': FileTimelineForm(user=user),
     })
     return render(request, template, variables)
 
@@ -195,7 +197,7 @@ def createcourse(request, template='course/create.html'):
 
 
 @login_required
-def course(request):
+def course(request, slug):
     courses = Course.objects.all()
     variables = RequestContext(request, {
         'courses': courses
@@ -204,9 +206,10 @@ def course(request):
 
 
 @login_required
-def detailcourse(request, id, template='course/detail.html'):
+def detailcourse(request, slug, id, template='course/detail.html'):
     course = get_object_or_404(Course, pk=id)
     members = course.coursemembership_set.all()
+    files = course.coursefiles_set.all()
 
     timeline_list = course.timelines.all()
     paginator = Paginator(timeline_list, 10)
@@ -235,12 +238,14 @@ def detailcourse(request, id, template='course/detail.html'):
         'members': members,
         'timelines': timelines,
         'syllabuses': syllabuses,
+        'assignments': assignments,
+        'files': files,
     })
     return render(request, template, variables)
 
 
 @login_required
-def joincourse(request, id, template='course/joined.html'):
+def joincourse(request, slug, id, template='course/joined.html'):
     course = get_object_or_404(Course, pk=id)
 
     membership, new = CourseMembership.objects.get_or_create(user=request.user,
@@ -265,7 +270,7 @@ def joincourse(request, id, template='course/joined.html'):
 
 
 @login_required
-def leavecourse(request, id, uid, template='course/joined.html'):
+def leavecourse(request, slug, id, uid, template='course/joined.html'):
     course = get_object_or_404(Course, pk=id)
     usr = get_object_or_404(User, id=uid)
 
@@ -281,7 +286,7 @@ def leavecourse(request, id, uid, template='course/joined.html'):
 
 
 @login_required
-def acceptcourse(request, id, uid):
+def acceptcourse(request, slug, id, uid):
     course = get_object_or_404(Course, professor=request.user, pk=id)
     membership = get_object_or_404(CourseMembership, user_id=uid, course=course, status=2)
     membership.status = 1
@@ -357,7 +362,7 @@ def update_timeline(request, id, timeline_type='text'):
     return render(request, template, variables)
 
 
-def syllabus(request, id):
+def syllabus(request, slug, id, template='course/create_syllabus.html'):
     if request.method == 'POST':
         form = SyllabusForm(request.POST or None, request.FILES)
         if form.is_valid():
@@ -366,7 +371,7 @@ def syllabus(request, id):
             new_syllabus = form.save(commit=False)
             new_syllabus.course = course
             new_syllabus.save()
-            previous_url = reverse('academy:detail_course', args=(id,))
+            previous_url = reverse('academy:detail_course', args=(slug, id,))
             return HttpResponseRedirect(previous_url)
     else:
         form = SyllabusForm()
@@ -378,14 +383,14 @@ def syllabus(request, id):
     return render(request, template, variables)
 
 
-def createassignment(request, id, template='course/create_assignment.html'):
+def createassignment(request, slug, id, template='course/create_assignment.html'):
     course = get_object_or_404(Course, pk=id)
 
     if request.method == 'POST':
         form = AssignmentForm(request.POST, request.FILES)
 
         if form.is_valid():
-            new_assignment = form.save()
+            form.save()
             return HttpResponseRedirect(course.get_absolute_url())
     else:
         form = AssignmentForm(initial={'course': course})
@@ -396,10 +401,28 @@ def createassignment(request, id, template='course/create_assignment.html'):
     return render(request, template, variables)
 
 
+def files(request, slug, id, template='course/upload.html'):
+    course = get_object_or_404(Course, pk=id)
+
+    if request.method == 'POST':
+        form = CourseFilesForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(course.get_absolute_url())
+    else:
+        form = CourseFilesForm(initial={'course': course})
+
+    variables = RequestContext(request, {
+        'form': form,
+    })
+    return render(request, template, variables)
+
+
 @login_required
-def detailassignment(request, id, template='course/detailassignment.html'):
+def detailassignment(request, slug, id, template='course/detailassignment.html'):
     assignment = get_object_or_404(Assignment, pk=id)
-    members = assignment.assignmentmembership_set.all()
+    members = assignment.assignmentsubmit_set.all()
 
     if request.method == 'POST':
         form = SubmitAssignmentForm(request.POST or None, request.FILES)

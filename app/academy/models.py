@@ -62,7 +62,7 @@ class Course(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('academy:detail_course', [str(self.pk)])
+        return ('academy:detail_course', [self.university.slug, str(self.pk)])
 
     def __unicode__(self):
         return self.name
@@ -78,6 +78,12 @@ class CourseMembership(models.Model):
     course = models.ForeignKey(Course)
     status = models.IntegerField(choices=MEMBERSHIP_STATUS, default=2)
     joined_at = models.DateTimeField(blank=True, null=True)
+
+
+class CourseFiles(models.Model):
+    course = models.ForeignKey(Course)
+    attachment = models.FileField(upload_to='course/', blank=True, default='')
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
 class Syllabus(models.Model):
@@ -98,7 +104,6 @@ class Assignment(models.Model):
     attachment = models.FileField(upload_to='assignment/', blank=True, default='')
     due_date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
-    members = models.ManyToManyField(User, through='AssignmentMembership')
 
     @models.permalink
     def get_absolute_url(self):
@@ -108,7 +113,7 @@ class Assignment(models.Model):
         return self.name
 
 
-class AssignmentMembership(models.Model):
+class AssignmentSubmit(models.Model):
     user = models.ForeignKey(User)
     assignment = models.ForeignKey(Assignment)
     attachment = models.FileField(upload_to='assignment/', blank=True, default='')

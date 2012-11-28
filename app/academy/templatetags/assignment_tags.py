@@ -4,8 +4,8 @@ register = template.Library()
 
 
 @register.filter
-def is_member_of(user, assignment):
+def already_submit(user, assignment):
     try:
-        return assignment.assignmentmembership_set.get(user=user)
+        return assignment.assignmentsubmit_set.get(user=user)
     except:
         False
