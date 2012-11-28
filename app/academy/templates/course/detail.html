@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load url from future %}
 {% load course_tags %}
+{% load assignment_tags %}
 
 {% block title %}{{course.name}} Course{% endblock %}
 
@@ -27,8 +28,8 @@
                     {% if course.professor == member.user %}(owner){% endif %}
                     {% if member.status != 1 %} - {{ member.get_status_display|lower }}{% endif %}
                     {% if member.status == 2 and course.professor == user %}
-                        <a href="{% url 'academy:accept_course' course.pk member.user.id %}" class="btn btn-primary">Accept</a> 
-                        <a href="{% url 'academy:leave_course' course.pk member.user.id %}" class="btn">Reject</a>
+                        <a href="{% url 'academy:accept_course' course.university.slug course.pk member.user.id %}" class="btn btn-primary">Accept</a> 
+                        <a href="{% url 'academy:leave_course' course.university.slug course.pk member.user.id %}" class="btn">Reject</a>
                     {% endif %}
                 </li>
                 {% endfor %}
@@ -36,7 +37,7 @@
             {% with membership_status=user|membership_status:course  %}
             {% if user != course.professor %}
                 {% if not membership_status %}
-                <p><a href="{% url 'academy:join_course' course.pk %}" class="btn btn-primary">Join this course</a></p>
+                <p><a href="{% url 'academy:join_course' course.university.slug course.pk %}" class="btn btn-primary">Join this course</a></p>
                 {% endif %}
             {% endif %}
             {% endwith %}
@@ -88,7 +89,7 @@
                 <div class="span3">
                     {% if user|is_member_of:course or user|is_manager_of:course %}
                     <div style="pull-right">
-                        <p><i class="icon icon-plus"></i> <a href="{% url 'academy:create_syllabus' course.pk %}">Create New Syllabus</a></p>
+                        <p><i class="icon icon-plus"></i> <a href="{% url 'academy:create_syllabus' course.university.slug course.pk %}">Create New Syllabus</a></p>
                     </div>
                     {% endif %}
                 </div>
@@ -102,14 +103,16 @@
                 <h4>Available Assignments</h4>
 
                 {% for assignment in assignments %}
-                <p><i class="icon icon-file"></i><a href="{{ assignment.attachment.url }}"> {{ assignment.name }}</a></p>
+                <p><i class="icon icon-file"></i><a href="{{ assignment.attachment.url }}"> {{ assignment.name }}</a>
+                        <a href="{% url 'academy:detail_assignment' course.university.slug assignment.pk %}">Detail</a>
+                </p>
             {% endfor %}
                 {% endif %}
                 </div>
 
                 <div class="span3">
                     {% if user|is_manager_of:course %}
-                    <p><i class="icon icon-plus"></i><a href="{% url 'academy:create_assignment' course.pk %}">Create New Assignment</a></p>
+                    <p><i class="icon icon-plus"></i><a href="{% url 'academy:create_assignment' course.university.slug course.pk %}">Create New Assignment</a></p>
                     {% endif %}
                 </div>
                 
@@ -129,7 +132,7 @@
 
                 <div class="span3">
                     {% if user|is_manager_of:course %}
-                        <p><i class="icon icon-plus"></i><a href="{% url 'academy:upload_file' course.pk %}">Upload New File</a></p>
+                        <p><i class="icon icon-plus"></i><a href="{% url 'academy:upload_file'  course.university.slug course.pk %}">Upload New File</a></p>
                     {% endif %}
                 </div>
                 

@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 
-from .models import Course, CourseFiles, University, Syllabus, Assignment, AssignmentMembership
+from .models import Course, CourseFiles, University, Syllabus, Assignment, AssignmentSubmit
 
 import re
 
@@ -137,5 +137,5 @@ class AssignmentForm(forms.ModelForm):
 
 class SubmitAssignmentForm(forms.ModelForm):
     class Meta:
-        model = AssignmentMembership
+        model = AssignmentSubmit
         exclude = ('user', 'grade', 'assignment')

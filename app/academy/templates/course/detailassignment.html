@@ -7,11 +7,11 @@
 
 <h1>{{assignment.name}}</h1>
 <hr>
-<a href="{{assignment.attachment}}">File</a>
+<a href="{{assignment.attachment.url}}">{{assignment.attachment.name}}</a>
 <p>
 {{assignment.description}}
 </p>
-{% if not user|is_member_of:assignment %}
+{% if not user|already_submit:assignment %}
 <b>Submit Assignment</b>
 <form action="" method="post" enctype="multipart/form-data">
 {% csrf_token %}
@@ -20,9 +20,10 @@
 </form>
 
 {% endif %}
+
 {% ifequal user assignment.course.professor %}
 {% for member in members %}
-    <p>{{member.user.display_name }} - <a href="{{ member.attachment }}">submited</a></p>
+    <p>{{member.user.display_name }} - <a href="{{ member.attachment.url }}">{{member.attachment.name}}</a></p>
 {% endfor %}
 {% endifequal %}
 {% endblock %}
