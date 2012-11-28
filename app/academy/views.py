@@ -132,7 +132,8 @@ def university_create_course(request, slug, template='university/create_course.h
                             course=obj, status=3)
             return HttpResponseRedirect(obj.get_absolute_url())
     else:
-        form = UniversityCourseForm(university=university)
+        form = UniversityCourseForm(university=university,
+                initial={'professor': request.user})
 
     variables = RequestContext(request, {
         'form': form,
@@ -322,4 +323,49 @@ def syllabus(request, id):
     variables = RequestContext(request, {
         'form': form
     })
+<<<<<<< HEAD
     return render_to_response('course/create_syllabus.html', variables)
+=======
+    return render(request, template, variables)
+
+
+def createassignment(request, id, template='course/create_assignment.html'):
+    course = get_object_or_404(Course, pk=id)
+
+    if request.method == 'POST':
+        form = AssignmentForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            new_assignment = form.save()
+            return HttpResponseRedirect(course.get_absolute_url())
+    else:
+        form = AssignmentForm(initial={'course': course})
+
+    variables = RequestContext(request, {
+        'form': form,
+    })
+    return render(request, template, variables)
+
+
+@login_required
+def detailassignment(request, id, template='course/detailassignment.html'):
+    assignment = get_object_or_404(Assignment, pk=id)
+    members = assignment.assignmentmembership_set.all()
+
+    if request.method == 'POST':
+        form = SubmitAssignmentForm(request.POST or None, request.FILES)
+        if form.is_valid():
+            new_submit = form.save(commit=False)
+            new_submit.assignment = assignment
+            new_submit.user = request.user
+            new_submit.save()
+    else:
+        form = SubmitAssignmentForm()
+
+    variables = RequestContext(request, {
+        'assignment': assignment,
+        'members': members,
+        'form': form
+    })
+    return render(request, template, variables)
+>>>>>>> fb362598ffc2faeadb94fd687dd3ce5a9250a128
