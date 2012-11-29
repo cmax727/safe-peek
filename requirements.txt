@@ -1,6 +1,5 @@
 django==1.4.2
 south
-django-allauth
 django-postman
 django-pagination
 django-friendship

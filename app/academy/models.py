@@ -82,7 +82,7 @@ class CourseMembership(models.Model):
 
 class CourseFiles(models.Model):
     course = models.ForeignKey(Course)
-    attachment = models.FileField(upload_to='course/', blank=True, default='')
+    attachment = models.FileField(upload_to='course/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
 
