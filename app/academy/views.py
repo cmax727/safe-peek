@@ -429,10 +429,8 @@ def files(request, slug, id, template='course/upload.html'):
 
 @login_required
 def detailassignment(request, slug, aid, id, template='course/detailassignment.html'):
-    assignment = get_object_or_404(Assignment, pk=id)
-    #submits = assignment.assignmentsubmit_set.all()
-    course = get_object_or_404(Course, id=aid)
-    members = course.coursemembership_set.all()
+    assignment = get_object_or_404(Assignment, pk=id, course__pk=aid, course__university__slug=slug)
+    members = assignment.course.coursemembership_set.all()
 
     if request.method == 'POST':
         form = SubmitAssignmentForm(request.POST or None, request.FILES)

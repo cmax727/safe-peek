@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load assignment_tags %}
+{% load url from future %}
 
 {% block title %}Detail Assignment{% endblock %}
 
@@ -7,10 +8,12 @@
 
 <h1>{{assignment.name}}</h1>
 <hr>
-<a href="{{assignment.attachment.url}}">{{assignment.attachment.name}}</a>
-<p>
+{% if assignment.attachment %}
+<a href="{{assignment.attachment.url}}">Download file</a>
+{% endif %}
+
 {{assignment.description|safe}}
-</p>
+
 {% if not user == assignment.course.professor %}
 
     {% if not user|already_submit:assignment %}
@@ -26,14 +29,11 @@
 {% endif %}
 {% ifequal user assignment.course.professor %}
 <hr>
-<h1>Members</h1>
+<h1>Submissions</h1>
 {% for member in members %}
-        {% if member.user|already_submit:assignment %}
-            <a href="{{ member.user.username }}"><p>{{member.user.display_name }}</p></a>
-        {% else %}
-            <p>{{member.user.display_name }}</p>
-        {% endif %}
-    
+    {% if member.user|already_submit:assignment %}
+    <p><a href="{% url 'academy:user_assignment' assignment.course.university.slug assignment.course.pk assignment.pk member.user.username %}">{{member.user.display_name }} {% if not member.user|already_submit:assignment %}- haven't submitted{% endif %}</a></p>
+    {% endif %}
 {% endfor %}
 {% endifequal %}
 {% endblock %}
