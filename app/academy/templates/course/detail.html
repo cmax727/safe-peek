@@ -104,7 +104,7 @@
 
                 {% for assignment in assignments %}
                 <p><i class="icon icon-file"></i><a href="{{ assignment.attachment.url }}"> {{ assignment.name }}</a>
-                        <a href="{% url 'academy:detail_assignment' course.university.slug assignment.pk %}">Detail</a>
+                        <a href="{% url 'academy:detail_assignment' course.university.slug course.id assignment.pk %}">Detail</a>
                 </p>
             {% endfor %}
                 {% endif %}

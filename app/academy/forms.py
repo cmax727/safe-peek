@@ -138,7 +138,13 @@ class AssignmentForm(forms.ModelForm):
 class SubmitAssignmentForm(forms.ModelForm):
     class Meta:
         model = AssignmentSubmit
-        exclude = ('user', 'grade', 'assignment')
+        exclude = ('user', 'grade', 'assignment', 'comment')
+
+
+class SubmitAssignmentUserForm(forms.ModelForm):
+    class Meta:
+        model = AssignmentSubmit
+        exclude = ('user', 'attachment', 'assignment')
 
 
 class AcademyTextTimelineForm(TextTimelineForm):

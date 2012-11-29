@@ -7,3 +7,4 @@ django-friendship
 PIL
 django-imagekit
 django-avatar
+django-wysiwyg

@@ -118,6 +118,7 @@ class AssignmentSubmit(models.Model):
     assignment = models.ForeignKey(Assignment)
     attachment = models.FileField(upload_to='assignment/', blank=True, default='')
     grade = models.CharField(max_length=5)
+    comment = models.TextField()
 
 
 def auto_add_users_into_university(sender, instance, created, **kwargs):

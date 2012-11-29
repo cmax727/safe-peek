@@ -11,11 +11,11 @@ from django.utils.timezone import utc
 
 from .forms import (CourseForm, CourseFilesForm, UniversityForm, CourseProfessorForm,
         SyllabusForm, UniversityAdminForm, UniversityProfessorForm,
-        UniversityCourseForm, AssignmentForm, SubmitAssignmentForm, TextTimelineForm)
+        UniversityCourseForm, AssignmentForm, SubmitAssignmentForm, SubmitAssignmentUserForm, TextTimelineForm)
 
 from .forms import TextTimelineForm, ImageTimelineForm, YoutubeTimelineForm, FileTimelineForm
 
-from .models import Course, CourseMembership, CourseFiles, Syllabus, University, Assignment
+from .models import Course, CourseMembership, CourseFiles, Syllabus, University, Assignment, AssignmentSubmit
 
 from .templatetags.university_tags import *
 
@@ -209,6 +209,7 @@ def course(request, slug):
 def detailcourse(request, slug, id, template='course/detail.html'):
     course = get_object_or_404(Course, pk=id)
     members = course.coursemembership_set.all()
+    assignments = course.assignment_set.all()
     files = course.coursefiles_set.all()
 
     timeline_list = course.timelines.all()
@@ -420,9 +421,11 @@ def files(request, slug, id, template='course/upload.html'):
 
 
 @login_required
-def detailassignment(request, slug, id, template='course/detailassignment.html'):
+def detailassignment(request, slug, aid, id, template='course/detailassignment.html'):
     assignment = get_object_or_404(Assignment, pk=id)
-    members = assignment.assignmentsubmit_set.all()
+    #submits = assignment.assignmentsubmit_set.all()
+    course = get_object_or_404(Course, id=aid)
+    members = course.coursemembership_set.all()
 
     if request.method == 'POST':
         form = SubmitAssignmentForm(request.POST or None, request.FILES)
@@ -437,6 +440,27 @@ def detailassignment(request, slug, id, template='course/detailassignment.html')
     variables = RequestContext(request, {
         'assignment': assignment,
         'members': members,
+        'form': form
+    })
+    return render(request, template, variables)
+
+
+@login_required
+def detail_assignment_user(request, slug, aid, id, uname, template='course/detailassignmentuser.html'):
+    assignment = get_object_or_404(Assignment, pk=id)
+    user = get_object_or_404(User, username=uname)
+
+    if request.method == 'POST':
+        ids = assignment.assignmentsubmit_set.get(user=user).id
+        grade = request.POST.get('grade', '')
+        comment = request.POST.get('comment', '')
+        AssignmentSubmit.objects.filter(pk=ids).update(grade=grade, comment=comment)
+
+    submit = assignment.assignmentsubmit_set.get(user=user)
+    form = SubmitAssignmentUserForm(instance=submit)
+    variables = RequestContext(request, {
+        'assignment': assignment,
+        'submit': submit,
         'form': form
     })
     return render(request, template, variables)

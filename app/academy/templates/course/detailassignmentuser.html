@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load assignment_tags %}
 
-{% block title %}Detail Assignment{% endblock %}
+{% block title %}Detail Assignment {{submit.user}}{% endblock %}
 
 {% block content %}
 
@@ -26,14 +26,14 @@
 {% endif %}
 {% ifequal user assignment.course.professor %}
 <hr>
-<h1>Members</h1>
-{% for member in members %}
-        {% if member.user|already_submit:assignment %}
-            <a href="{{ member.user.username }}"><p>{{member.user.display_name }}</p></a>
-        {% else %}
-            <p>{{member.user.display_name }}</p>
-        {% endif %}
-    
-{% endfor %}
+<h1>Attachment {{submit.user}}</h1>
+
+<a href="{{submit.attachment.url}}">{{ submit.attachment.name }}</a>
+
+    <form action="" method="post">
+    {% csrf_token %}
+    {{form.as_p}}
+    <button type="submit" class="btn btn-primary">Save</button>
+    </form>
 {% endifequal %}
 {% endblock %}

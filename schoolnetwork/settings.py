@@ -155,6 +155,7 @@ INSTALLED_APPS = (
     'postman',
     'pagination',
     'friendship',
+    'django_wysiwyg',
     'app.timelines',
     'app.userprofile',
     'app.academy',
