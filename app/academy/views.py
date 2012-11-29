@@ -13,7 +13,7 @@ from .forms import (CourseForm, CourseFilesForm, UniversityForm, CourseProfessor
         SyllabusForm, UniversityAdminForm, UniversityProfessorForm,
         UniversityCourseForm, AssignmentForm, SubmitAssignmentForm, SubmitAssignmentUserForm, TextTimelineForm)
 
-from .forms import TextTimelineForm, ImageTimelineForm, YoutubeTimelineForm, FileTimelineForm
+from .forms import AcademyTextTimelineForm, AcademyImageTimelineForm, AcademyYoutubeTimelineForm, AcademyFileTimelineForm
 
 from .models import Course, CourseMembership, CourseFiles, Syllabus, University, Assignment, AssignmentSubmit
 
@@ -54,14 +54,21 @@ def detail(request, slug, template='university/detail.html'):
     except EmptyPage:
         timelines = paginator.page(paginator.num_pages)
 
+    ctype = ContentType.objects.get_for_model(university)
+    timeline = '%s_%s' % (ctype.pk, university.pk)
+    text_form = AcademyTextTimelineForm(user=request.user, initial={'timeline': timeline})
+    image_form = AcademyImageTimelineForm(user=request.user, initial={'timeline': timeline})
+    youtube_form = AcademyYoutubeTimelineForm(user=request.user, initial={'timeline': timeline})
+    file_form = AcademyFileTimelineForm(user=request.user, initial={'timeline': timeline})
+
     variables = RequestContext(request, {
         'university': university,
         'students': students,
         'timelines': timelines,
-        # 'text_form': TextTimelineForm(user=user),
-        # 'image_form': ImageTimelineForm(user=user),
-        # 'youtube_form': YoutubeTimelineForm(user=user),
-        # 'file_form': FileTimelineForm(user=user),
+        'text_form': text_form,
+        'image_form': image_form,
+        'youtube_form': youtube_form,
+        'file_form': file_form,
     })
     return render(request, template, variables)
 
