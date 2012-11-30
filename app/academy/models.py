@@ -82,7 +82,7 @@ class CourseMembership(models.Model):
 
 class CourseFiles(models.Model):
     course = models.ForeignKey(Course)
-    attachment = models.FileField(upload_to='course/', blank=True, default='')
+    attachment = models.FileField(upload_to='course/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
 
@@ -107,7 +107,7 @@ class Assignment(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('academy:detail_assignment', [str(self.pk)])
+        return ('academy:detail_assignment', [self.course.university.slug, str(self.course.pk), str(self.pk)])
 
     def __unicode__(self):
         return self.name

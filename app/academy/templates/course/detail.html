@@ -103,9 +103,11 @@
                 <h4>Available Assignments</h4>
 
                 {% for assignment in assignments %}
-                <p><i class="icon icon-file"></i><a href="{{ assignment.attachment.url }}"> {{ assignment.name }}</a>
-                        <a href="{% url 'academy:detail_assignment' course.university.slug course.id assignment.pk %}">Detail</a>
-                </p>
+                {% if assignment.attachment %}
+                <p><i class="icon icon-file"></i><a href="{{ assignment.attachment.url }}"> {{ assignment.name }}</a> (due in {{ assignment.due_date|timeuntil }})</p>
+                {% else %}
+                <p><a href="{{ assignment.get_absolute_url }}">{{ assignment.name }}</a> (due in {{ assignment.due_date|timeuntil }})</p>
+                {% endif %}
             {% endfor %}
                 {% endif %}
                 </div>
