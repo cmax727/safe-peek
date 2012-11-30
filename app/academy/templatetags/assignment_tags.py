@@ -6,6 +6,7 @@ register = template.Library()
 @register.filter
 def already_submit(user, assignment):
     try:
-        return assignment.assignmentsubmit_set.get(user=user)
+        submit = assignment.assignmentsubmit_set.get(user=user)
+        return submit
     except:
         False

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load course_tags %}
+{% block content %}
+
+<h1>Report Assignment</h1>
+<form action="" method="post" enctype="multipart/form-data">
+{% csrf_token %}
+{% if user|is_manager_of:course %}
+
+<p>
+<label>User: </label>
+<select id="id_member" name="member">
+    <option value="-" selected>All</option>
+{% for member in course.coursemembership_set.all %}
+    <option value="{{ member.user.id }}">{{ member.user }}</option>
+{% endfor %}
+</select>
+</p>
+{% endif %}
+<p>
+<label>Assignment: </label>
+<select id="id_assignment" name="assignment">
+    <option value="-" selected>All</option>
+{% for assignment in course.assignment_set.all %}
+    <option value="{{ assignment.id }}">{{ assignment.name }}</option>
+{% endfor %}
+</select>
+</p>
+<button type="submit" class="btn btn-primary">Search</button>
+
+<p>
+{% for result in results %}
+    <hr>
+    {% if user|is_manager_of:course %}
+        {{result.user.display_name}}
+    {% endif %}
+    <table border="1" cellpadding="1">
+        <tr>
+            <th>Assignment Name</th>
+            <th>Grade</th>
+            <th>Professor Comments</th>
+        </tr>
+        <tr>
+            <td>{{result.assignment.name}}</td>
+            <td>{{result.grade}}</td>
+            <td>{{result.comment}}</td>
+        </tr>
+    </table>
+{% endfor %}
+</p>
+</form>
+
+{% endblock %}

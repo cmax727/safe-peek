@@ -12,7 +12,7 @@
 {{assignment.description|safe}}
 </p>
 {% if not user == assignment.course.professor %}
-
+    {{ user|already_submit:assignment|safe }}
     {% if not user|already_submit:assignment %}
     <b>Submit Assignment</b>
     <form action="" method="post" enctype="multipart/form-data">

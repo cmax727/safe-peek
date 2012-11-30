@@ -120,6 +120,9 @@ class AssignmentSubmit(models.Model):
     grade = models.CharField(max_length=5)
     comment = models.TextField()
 
+    def __unicode__(self):
+        return 'Grade: <b>%s</b><br>Professor Comment: <b>%s</b>' % (self.grade, self.comment)
+
 
 def auto_add_users_into_university(sender, instance, created, **kwargs):
 

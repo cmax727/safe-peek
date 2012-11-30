@@ -111,6 +111,8 @@
                 </div>
 
                 <div class="span3">
+                    <p><i class="icon icon-plus"></i><a href="{% url 'academy:report_assignment' course.university.slug course.pk %}">Report Grade</a></p>
+
                     {% if user|is_manager_of:course %}
                     <p><i class="icon icon-plus"></i><a href="{% url 'academy:create_assignment' course.university.slug course.pk %}">Create New Assignment</a></p>
                     {% endif %}

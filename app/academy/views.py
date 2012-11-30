@@ -409,6 +409,35 @@ def createassignment(request, slug, id, template='course/create_assignment.html'
     return render(request, template, variables)
 
 
+def report_assignment(request, slug, id, template='course/report_assignment.html'):
+    course = get_object_or_404(Course, pk=id)
+    assignment = Assignment.objects.filter(course=course)
+
+    if request.method == 'POST':
+        pk = request.POST.get('assignment', '')
+        if pk != '-':
+            assignment = Assignment.objects.filter(course=course, pk=pk)
+
+        if request.user == course.professor:
+            uid = request.POST.get('member', '')
+            if uid != '-':
+                results = AssignmentSubmit.objects.filter(assignment__in=assignment, user__pk=uid)
+            else:
+                results = AssignmentSubmit.objects.filter(assignment__in=assignment)
+        else:
+            results = AssignmentSubmit.objects.filter(user=request.user, assignment__in=assignment)
+    else:
+        if request.user == course.professor:
+            results = AssignmentSubmit.objects.filter(assignment__in=assignment)
+        else:
+            results = AssignmentSubmit.objects.filter(user=request.user, assignment__in=assignment)
+    variables = RequestContext(request, {
+        'course': course,
+        'results': results
+    })
+    return render(request, template, variables)
+
+
 def files(request, slug, id, template='course/upload.html'):
     course = get_object_or_404(Course, pk=id)
 
