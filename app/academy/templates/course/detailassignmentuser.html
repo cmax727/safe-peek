@@ -6,11 +6,6 @@
 {% block content %}
 
 <h1>{{assignment.name}}</h1>
-<hr>
-<a href="{{assignment.attachment.url}}">{{assignment.attachment.name}}</a>
-<p>
-{{assignment.description|safe}}
-</p>
 {% if not user == assignment.course.professor %}
 
     {% if not user|already_submit:assignment %}
@@ -26,9 +21,8 @@
 {% endif %}
 {% ifequal user assignment.course.professor %}
 <hr>
-<h1>Attachment {{submit.user}}</h1>
 
-<a href="{{submit.attachment.url}}">{{ submit.attachment.name }}</a>
+<a href="{{submit.attachment.url}}">Download submission by {{ submit.user.display_name }}</a>
 
     <form action="" method="post">
     {% csrf_token %}

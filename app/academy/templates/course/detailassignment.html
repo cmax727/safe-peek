@@ -11,17 +11,22 @@
 {% if assignment.attachment %}
 <a href="{{assignment.attachment.url}}">Download file</a>
 {% endif %}
-
+<h4>Assignment detail:</h4>
 {{assignment.description|safe}}
 
-{% if not user == assignment.course.professor %}
-    {{ user|already_submit:assignment|safe }}
-    {% if not user|already_submit:assignment %}
-    <b>Submit Assignment</b>
+{% if user != assignment.course.professor %}
+    <hr>
+    {% if user|already_submit:assignment %}
+    {% with submitted_assignment=user|already_submit:assignment %}
+    {{ submitted_assignment.}}
+    {% endwith %}
+    {% else %}
+    <h4>Submit your assignment</h4>
+    <p>Please submit your assignment by uploading a file</p>
     <form action="" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{form.as_p}}
-    <button type="submit" class="btn btn-primary">Upload file</button>
+    <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 
     {% endif %}
@@ -31,9 +36,11 @@
 <hr>
 <h1>Submissions</h1>
 {% for member in members %}
-    {% if member.user|already_submit:assignment %}
-    <p><a href="{% url 'academy:user_assignment' assignment.course.university.slug assignment.course.pk assignment.pk member.user.username %}">{{member.user.display_name }} {% if not member.user|already_submit:assignment %}- haven't submitted{% endif %}</a></p>
+    {% with submitted_assignment=member.user|already_submit:assignment %}
+    {% if submitted_assignment %}
+    <p><a href="{% url 'academy:user_assignment' assignment.course.university.slug assignment.course.pk assignment.pk member.user.username %}">{{member.user.display_name }}</a>{% if not submitted_assignment %} -  no grade yet{% endif %}</p>
     {% endif %}
+    {% endwith %}
 {% endfor %}
 {% endifequal %}
 {% endblock %}

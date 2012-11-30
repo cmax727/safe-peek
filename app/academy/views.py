@@ -462,12 +462,13 @@ def detailassignment(request, slug, aid, id, template='course/detailassignment.h
     members = assignment.course.coursemembership_set.all()
 
     if request.method == 'POST':
-        form = SubmitAssignmentForm(request.POST or None, request.FILES)
+        form = SubmitAssignmentForm(request.POST, request.FILES)
         if form.is_valid():
             new_submit = form.save(commit=False)
             new_submit.assignment = assignment
             new_submit.user = request.user
             new_submit.save()
+            print new_submit
     else:
         form = SubmitAssignmentForm()
 
@@ -489,6 +490,7 @@ def detail_assignment_user(request, slug, aid, id, uname, template='course/detai
         grade = request.POST.get('grade', '')
         comment = request.POST.get('comment', '')
         AssignmentSubmit.objects.filter(pk=ids).update(grade=grade, comment=comment)
+        return HttpResponseRedirect(assignment.get_absolute_url())
 
     submit = assignment.assignmentsubmit_set.get(user=user)
     form = SubmitAssignmentUserForm(instance=submit)
