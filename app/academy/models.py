@@ -67,6 +67,10 @@ class Course(models.Model):
     def __unicode__(self):
         return self.name
 
+    @property
+    def total_students(self):
+        return self.coursemembership_set.filter(status=1).count()
+
 
 class CourseMembership(models.Model):
     MEMBERSHIP_STATUS = (

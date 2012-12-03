@@ -4,87 +4,124 @@
 {% block content %}
 <h2>{{ university.name }}</h2>
 
-
-<hr>
-<div class="tabbable" style="background: #f7f7f7; padding: 10px;border-radius: 8px; width: 450px; margin: 20px 0;">
-    <h5>share your status:</h5>
-    <ul class="nav nav-pills">
-      <li><a href="#upload_text_wrapper" data-toggle="tab">Text</a></li>
-      <li><a href="#upload_image_wrapper" data-toggle="tab">Image</a></li>
-      <li><a href="#upload_youtube_wrapper" data-toggle="tab">Youtube</a></li>
-      <li><a href="#upload_file_wrapper" data-toggle="tab">File</a></li>
+<div class="tabbable" style="margin: 20px 0">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#university-timeline" data-toggle="tab">Timeline</a></li>
+        <li><a href="#university-courses" data-toggle="tab">Courses</a></li>
+        <li><a href="#university-professors" data-toggle="tab">Professors</a></li>
+        <li><a href="#university-students" data-toggle="tab">Students</a></li>
     </ul>
 
     <div class="tab-content">
-        <div id="upload_text_wrapper" class="tab-pane">
-            <form action="{% url 'academy:upload_text' university.id %}" method="POST">{% csrf_token %}
-                {{ text_form.as_p }}
-                <button type="submit" class="btn btn-primary">Share</button>
-            </form>
+        <div id="university-timeline" class="tab-pane active">
+            <div class="row">
+                <div class="span6">
+                    {% for timeline in timelines %}
+                    <div class="margin: 20px 0">
+                        {% if timeline.get_type == 'text' %}
+                            {% include 'userprofile/timelines_text.html' %}
+                        {% endif %}
+
+                        {% if timeline.get_type == 'image' %}
+                            {% include 'userprofile/timelines_image.html' %}
+                        {% endif %}
+
+                        {% if timeline.get_type = 'youtube' %}
+                            {% include 'userprofile/timelines_youtube.html' %}
+                        {% endif %}
+                        {% if timeline.get_type = 'file' %}
+                            {% include 'userprofile/timelines_file.html' %}
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="span3">
+                    <div class="tabbable" style="background: #f7f7f7; padding: 10px;border-radius: 8px; margin: 20px 0;">
+                        <h5>share your status to {{ university.name }}:</h5>
+                        <ul class="nav nav-pills">
+                          <li><a href="#upload_text_wrapper" data-toggle="tab">Text</a></li>
+                          <li><a href="#upload_image_wrapper" data-toggle="tab">Image</a></li>
+                          <li><a href="#upload_youtube_wrapper" data-toggle="tab">Youtube</a></li>
+                          <li><a href="#upload_file_wrapper" data-toggle="tab">File</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <div id="upload_text_wrapper" class="tab-pane">
+                                <form action="{% url 'academy:upload_text' university.id %}" method="POST">{% csrf_token %}
+                                    {{ text_form.as_p }}
+                                    <button type="submit" class="btn btn-primary">Share</button>
+                                </form>
+                            </div>
+                            
+                            <div id="upload_image_wrapper" class="tab-pane">
+                                <form action="{% url 'academy:upload_picture' university.id %}" method="POST" enctype="multipart/form-data">{% csrf_token %}
+                                    {{ image_form.as_p }}
+                                    <button type="submit" class="btn btn-primary">Upload image</button>
+                                </form>
+                            </div>
+                            
+                            <div id="upload_youtube_wrapper" class="tab-pane">
+                                <form action="{% url 'academy:upload_youtube' university.id %}" method="POST">{% csrf_token %}
+                                    {{ youtube_form.as_p }}
+                                    <button type="submit" class="btn btn-primary">Share YouTube video</button>
+                                </form>
+                            </div>
+                            
+                            <div id="upload_file_wrapper" class="tab-pane">
+                                <form action="{% url 'academy:upload_file' university.id %}" method="POST" enctype="multipart/form-data">{% csrf_token %}
+                                    {{ file_form.as_p }}
+                                    <button type="submit" class="btn btn-primary">Upload file</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        
-        <div id="upload_image_wrapper" class="tab-pane">
-            <form action="{% url 'academy:upload_picture' university.id %}" method="POST" enctype="multipart/form-data">{% csrf_token %}
-                {{ image_form.as_p }}
-                <button type="submit" class="btn btn-primary">Upload image</button>
-            </form>
+        <div id="university-courses" class="tab-pane">
+            <table class="table table-hover">
+                <caption>List of courses</caption>
+                <thead>
+                    <tr>
+                        <th colspan="2">Course name</th>
+                        <th>Professor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for course in university.course_set.all %}
+                    <tr>
+                        <td colspan="2">
+                            <p><a href="{{ course.get_absolute_url }}">{{ course.name }}</a> <small>{{ course.total_students }} student(s)</small></p>
+                        </td>
+                        <td><a href="{{ course.professor.get_absolute_url }}"><img src="{{ course.professor.profile.get_small_picture }}" alt="{{ course.professor.display_name }}" width="25" height="25"> {{ course.professor.display_name }}</a></td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3">{{ university.name }} doesn't offer any courses yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
         </div>
-        
-        <div id="upload_youtube_wrapper" class="tab-pane">
-            <form action="{% url 'academy:upload_youtube' university.id %}" method="POST">{% csrf_token %}
-                {{ youtube_form.as_p }}
-                <button type="submit" class="btn btn-primary">Share YouTube video</button>
-            </form>
+        <div id="university-professors" class="tab-pane">
+            <h3>Professors</h3>
+            {% for professor in university.professors %}
+            <p><a href="{{ professor.get_absolute_url }}"><img src="{{ professor.profile.get_small_picture }}" alt="{{ professor.display_name }}" width="25" height="25"></a> {{ professor.display_name }}</p>
+            {% empty %}
+            <p>There are no professors registered in {{ university.name }} yet</p>
+            {% endfor %}
         </div>
-        
-        <div id="upload_file_wrapper" class="tab-pane">
-            <form action="{% url 'academy:upload_file' university.id %}" method="POST" enctype="multipart/form-data">{% csrf_token %}
-                {{ file_form.as_p }}
-                <button type="submit" class="btn btn-primary">Upload file</button>
-            </form>
+        <div id="university-students" class="tab-pane">
+            <h3>Students</h3>
+            {% for student in university.students %}
+            <p><a href="{{ student.get_absolute_url }}"><img src="{{ student.profile.get_small_picture }}" alt="{{ student.display_name }}" width="25" height="25"> {{ student.display_name }}</a></p>
+            {% empty %}
+            <p>There are no students registered in {{ university.name }} yet</p>
+            {% endfor %}
         </div>
     </div>
 </div>
-<hr>
-
-
-{% for timeline in timelines %}
-<div class="margin: 20px 0">
-        {% if timeline.get_type == 'text' %}
-            {% include 'userprofile/timelines_text.html' %}
-        {% endif %}
-
-        {% if timeline.get_type == 'image' %}
-            {% include 'userprofile/timelines_image.html' %}
-        {% endif %}
-
-        {% if timeline.get_type = 'youtube' %}
-            {% include 'userprofile/timelines_youtube.html' %}
-        {% endif %}
-        {% if timeline.get_type = 'file' %}
-            {% include 'userprofile/timelines_file.html' %}
-        {% endif %}
-</div>
-{% endfor %}
-<hr>
-
-{% if university.students %}
-<div>
-    <h3>Students</h3>
-    {% for student in university.students %}
-    <div><a href="{{ student.get_absolute_url }}"><img src="{{ student.profile.get_small_picture }}" alt="{{ student.display_name }}" width="25" height="25"></a></div>
-    {% endfor %}
-</div>
-{% endif %}
-
-{% if university.professors %}
-<div>
-    <h3>Professors</h3>
-    {% for student in university.professors %}
-    <div><a href="{{ student.get_absolute_url }}"><img src="{{ student.profile.get_small_picture }}" alt="{{ student.display_name }}" width="25" height="25"></a></div>
-    {% endfor %}
-</div>
-{% endif %}
 
 {% if university.school_admins %}
 <div>
@@ -94,16 +131,6 @@
     {% endfor %}
 </div>
 {% endif %}
-
-{% if university.course_set.count > 0 %}
-<div>
-    <h3>Courses</h3>
-    {% for course in university.course_set.all %}
-    <div><a href="{{ course.get_absolute_url }}">{{ course.name }}</a> -- Professor: {{course.professor.display_name}}</div>
-    {% endfor %}
-</div>
-{% endif %}
-
 
 {% endblock %}
 
@@ -122,9 +149,16 @@
         <li><a href="{% url 'academy:university_create_course'  university.slug %}">Create new courses</a></li>
     </ul>
     {% endif %}
-    <ul class="nav nav-list">
-        <li class="nav-header">Students menu</li>
-        <li><a href=""></a></li>
-    </ul>
 </div>
+{% endblock %}
+
+{% block extrajs %}
+<script type="text/javascript">
+$(function() {
+    $("a.comments-list").click(function() {
+        $(this).parents('.timeline-info').siblings('.comments').toggle();
+        return false;
+    });
+});
+</script>
 {% endblock %}
