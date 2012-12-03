@@ -20,6 +20,15 @@
 <div class="user_info">
     <h3><img src="{{ user_profile.profile.get_small_picture }}" width="25" height="25" alt="{{ user_profile.display_name }}"> {{ user_profile.display_name }}</h3>
 </div>
+
+<hr>
+<h2>My Courses</h2>
+{% for course in user.active_courses %}
+<li><a href="{{ course.get_absolute_url}}">{{ course.name }}</a></li>
+{% empty %}
+<li>You are not registered to any courses yet</li>
+{% endfor %}
+
 {% if user_profile == request.user %}
 <div class="tabbable" style="background: #f7f7f7; padding: 10px;border-radius: 8px; width: 450px; margin: 20px 0;">
     <h5>share your status:</h5>

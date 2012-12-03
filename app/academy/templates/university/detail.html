@@ -99,7 +99,7 @@
 <div>
     <h3>Courses</h3>
     {% for course in university.course_set.all %}
-    <div><a href="{{ course.get_absolute_url }}">{{ course.name }}</a></div>
+    <div><a href="{{ course.get_absolute_url }}">{{ course.name }}</a> -- Professor: {{course.professor.display_name}}</div>
     {% endfor %}
 </div>
 {% endif %}
