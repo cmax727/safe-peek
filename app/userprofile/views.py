@@ -18,30 +18,6 @@ from app.timelines.forms import *
 from datetime import datetime
 
 
-@login_required
-def usergroup(request, template='userprofile/usergroup.html'):
-    if request.user.is_superuser:
-        param = 3
-    else:
-        param = 2
-    list_user = Profile.objects.filter(user_type=param)
-    #list_user = User.objects.filter(pk__in=userprofile.user)
-    if request.method == 'POST':
-        form = UserListForm(request.POST or None)
-        if form.is_valid():
-            user = User.objects.get(id=request.POST.get('username'))
-            Profile.objects.filter(user=user).update(user_type=param)
-            #profile.save()
-    else:
-        form = UserListForm()
-
-    variables = RequestContext(request, {
-        'form': form,
-        'list_user': list_user
-    })
-    return render(request, template, variables)
-
-
 def main(request, template='userprofile/index.html'):
 
     if request.user.is_authenticated():

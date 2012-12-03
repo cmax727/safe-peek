@@ -11,29 +11,19 @@
 
 <div class="tabbable">
     <ul class="nav nav-tabs">
-        <li class="active"><a href="#students_content" data-toggle="tab">Info</a></li>
+        <li class="active"><a href="#info_content" data-toggle="tab">Info</a></li>
         <li><a href="#timeline_content" data-toggle="tab">Timeline</a></li>
+        <li><a href="#students_content" data-toggle="tab">Students</a></li>
         <li><a href="#syllabus_content" data-toggle="tab">Syllabus</a></li>
         <li><a href="#assignments_content" data-toggle="tab">Assignments</a></li>
         <li><a href="#files_content" data-toggle="tab">Resources</a></li>
     </ul>
 
     <div class="tab-content">
-        <div id="students_content" class="tab-pane active">
+        <div id="info_content" class="tab-pane active">
             <h4>Professor:</h4>
             <p><a href="{{ course.professor.get_absolute_url }}"><img src="{{ course.professor.profile.get_small_picture }}"></a></p>
-            <ul>
-                {% for member in members %}
-                <li><a href="{{ member.user.get_aboslute_url }}">{{ member.user.display_name }}</a>
-                    {% if course.professor == member.user %}(owner){% endif %}
-                    {% if member.status != 1 %} - {{ member.get_status_display|lower }}{% endif %}
-                    {% if member.status == 2 and course.professor == user %}
-                        <a href="{% url 'academy:accept_course' course.university.slug course.pk member.user.id %}" class="btn btn-primary">Accept</a> 
-                        <a href="{% url 'academy:leave_course' course.university.slug course.pk member.user.id %}" class="btn">Reject</a>
-                    {% endif %}
-                </li>
-                {% endfor %}
-            </ul>
+
             {% with membership_status=user|membership_status:course  %}
             {% if user != course.professor %}
                 {% if not membership_status %}
@@ -73,6 +63,23 @@
 
             {% endfor %}
         </div>
+
+        <div id="students_content" class="tab-pane">
+            <h4>Students:</h4>
+            <ul>
+                {% for member in members %}
+                <li><a href="{{ member.user.get_absolute_url }}">{{ member.user.display_name }}</a>
+                    {% if course.professor == member.user %}(owner){% endif %}
+                    {% if member.status != 1 %} - {{ member.get_status_display|lower }}{% endif %}
+                    {% if member.status == 2 and course.professor == user %}
+                        <a href="{% url 'academy:accept_course' course.university.slug course.pk member.user.id %}" class="btn btn-primary">Accept</a> 
+                        <a href="{% url 'academy:leave_course' course.university.slug course.pk member.user.id %}" class="btn">Reject</a>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
         <div id="syllabus_content" class="tab-pane">
             <div class="row">
                 <div class="span6">
