@@ -118,14 +118,14 @@ class Assignment(models.Model):
 
 
 class AssignmentSubmit(models.Model):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, related_name='assignments')
     assignment = models.ForeignKey(Assignment)
     attachment = models.FileField(upload_to='assignment/', blank=True, default='')
     grade = models.CharField(max_length=5)
     comment = models.TextField()
 
     def __unicode__(self):
-        return 'Grade: <b>%s</b><br>Professor Comment: <b>%s</b>' % (self.grade, self.comment)
+        return 'Grade: %s, Professor Comment: %s' % (self.grade, self.comment)
 
 
 def auto_add_users_into_university(sender, instance, created, **kwargs):

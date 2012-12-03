@@ -27,6 +27,15 @@ def main(request, template='userprofile/index.html'):
     return render(request, template, variables)
 
 
+@login_required
+def my_grades(request, template='userprofile/grades.html'):
+    assignments = request.user.assignments.order_by('assignment__course')
+    variables = RequestContext(request, {
+        'assignments': assignments
+    })
+    return render(request, template, variables)
+
+
 def setread(request, template='postman/base_folder.html'):
     pks = request.POST.getlist('pks', '')
     tpks = request.POST.getlist('tpks', '')
@@ -43,12 +52,7 @@ def setunread(request, template='postman/base_folder.html'):
     pks = request.POST.getlist('pks', '')
     tpks = request.POST.getlist('tpks', '')
     filter = Q(pk__in=pks) | Q(pk__in=tpks)
-    #idm = request.POST.getlist('tpks', '')
-    #msg = Message.objects.get(id=idm)
     Message.objects.filter(filter).update(read_at=None)
-    #update.save()
-    #print idm
-    #print msg.id
     previous_url = request.META.get('HTTP_REFERER', reverse('postman_inbox'))
     return HttpResponseRedirect(previous_url)
 

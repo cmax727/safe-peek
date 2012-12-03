@@ -107,6 +107,7 @@
                <div class="dropdown-menu">
                     <ul>
                         <li><a href="{% url userprofile:detail request.user %}">My profile</a></li> 
+                        <li><a href="{% url userprofile:my_grades %}">My grades</a></li> 
                         <li><a href="{% url userprofile:edit request.user %}">Edit Profile</a></li> 
                         <li><a href="{% url account_change_password %}">Change Password</a></li>
                         <li><a href="{% url socialaccount_connections %}">Link account</a></li> 
