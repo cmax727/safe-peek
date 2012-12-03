@@ -7,3 +7,5 @@ PIL
 django-imagekit
 django-avatar
 django-wysiwyg
+facepy==0.8.4
+
