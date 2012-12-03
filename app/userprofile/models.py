@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
+from django.core.mail import send_mail
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
@@ -10,7 +11,10 @@ from imagekit.processors import ResizeToFill, Adjust
 
 from app.timelines.models import Timeline
 from app.academy.models import University, UniversityMembership, Course
-from allauth.account.signals import email_confirmed
+from allauth.account.signals import email_confirmed, user_signed_up
+from allauth.socialaccount.models import SocialToken
+
+from facepy import GraphAPI
 
 
 class Profile(models.Model):
@@ -143,3 +147,25 @@ def setup_universities_upon_registration(email_address, **kwargs):
     except:
         univ = University.objects.create(name=dom, description='new university',
                 domain=dom)
+
+
+@receiver(user_signed_up)
+def notify_facebook_friends(request, user, **kwargs):
+    try:
+        user_token = SocialToken.objects.get(app__provider='facebook', user=user)
+    except:
+        return False
+    graph = GraphAPI(user_token.token)
+    fb_friends = graph.get('me/friends')
+    fb_friends_list = []
+
+    for friend in fb_friends['data']:
+        fb_friends_list.append(friend['id'])
+
+    users = User.objects.filter(socialaccount__uid__in=fb_friends_list,
+            socialaccount__provider='facebook')
+    email_content = '<p><a href="%s">%s</a> just joined social network</p>' % (user.get_absolute_url, user.display_name)
+    for user in users:
+        send_mail('Your friend just joined School network', email_content,
+                settings.DEFAULT_FROM_EMAIL, [users.email])
+    return True
