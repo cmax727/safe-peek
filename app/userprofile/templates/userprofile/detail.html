@@ -16,102 +16,122 @@
 
 
 {% block content %}
-
 <div class="user_info">
     <h3><img src="{{ user_profile.profile.get_small_picture }}" width="25" height="25" alt="{{ user_profile.display_name }}"> {{ user_profile.display_name }}</h3>
 </div>
 
-<hr>
-<h2>My Courses</h2>
-{% for course in user.active_courses %}
-<li><a href="{{ course.get_absolute_url}}">{{ course.name }}</a></li>
-{% empty %}
-<li>You are not registered to any courses yet</li>
-{% endfor %}
-
-{% if user_profile == request.user %}
-<div class="tabbable" style="background: #f7f7f7; padding: 10px;border-radius: 8px; width: 450px; margin: 20px 0;">
-    <h5>share your status:</h5>
-    <ul class="nav nav-pills">
-      <li><a href="#upload_text_wrapper" data-toggle="tab">Text</a></li>
-      <li><a href="#upload_image_wrapper" data-toggle="tab">Image</a></li>
-      <li><a href="#upload_youtube_wrapper" data-toggle="tab">Youtube</a></li>
-      <li><a href="#upload_file_wrapper" data-toggle="tab">File</a></li>
+<div class="tabbable" style="margin: 20px 0">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#user-timeline" data-toggle="tab">Timeline</a></li>
+        <li><a href="#user-courses" data-toggle="tab">Courses</a></li>
     </ul>
 
     <div class="tab-content">
-        <div id="upload_text_wrapper" class="tab-pane">
-            <form action="{% url 'userprofile:upload_text' %}" method="POST">{% csrf_token %}
-                {{ text_form.as_p }}
-                <button type="submit" class="btn btn-primary">Share</button>
-            </form>
+        <div id="user-timeline" class="active tab-pane">
+            <div class="row">
+                <div class="span6">
+                    {% for timeline in timelines %}
+                    <div class="margin-bottom: 20px;">
+
+                        {% if timeline.get_type == 'text' %}
+                            {% include 'userprofile/timelines_text.html' %}
+                        {% endif %}
+
+                        {% if timeline.get_type == 'image' %}
+                            {% include 'userprofile/timelines_image.html' %}
+                        {% endif %}
+
+                        {% if timeline.get_type = 'youtube' %}
+                            {% include 'userprofile/timelines_youtube.html' %}
+                        {% endif %}
+                        {% if timeline.get_type = 'file' %}
+                            {% include 'userprofile/timelines_file.html' %}
+                        {% endif %}
+
+                    </div>
+
+                    {% endfor %}
+
+                    {% if timelines.paginator.num_pages > 1 %}
+                    <div class="pagination pagination-small pagination-left">
+                        <ul>
+                            {% if timelines.has_previous %}
+                            <li><a href="?page={{ timelines.previous_page_number }}">Newer</a></li>
+                            {% else %}
+                            <li class="disabled"><a href="?page={{ timelines.number }}">Newer</a></li>
+                            {% endif %}
+                            {% for pagenum in timelines.paginator.page_range %}
+                            <li {% if pagenum == timelines.number %}class="active"{% endif %}><a href="?page={{ pagenum }}">{{ pagenum }}</a></li>
+                            {% endfor %}
+                            {% if timelines.has_next %}
+                            <li><a href="?page={{ timelines.next_page_number }}">Older</a></li>
+                            {% else %}
+                            <li class="disabled"><a href="?page={{ timelines.number }}">Older</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="span3">
+                    {% if user_profile == request.user %}
+                    <div class="tabbable" style="background: #f7f7f7; padding: 10px;border-radius: 8px; margin: 20px 0;">
+                        <h5>share your status:</h5>
+
+                        <ul class="nav nav-pills">
+                          <li><a href="#upload_text_wrapper" data-toggle="tab">Text</a></li>
+                          <li><a href="#upload_image_wrapper" data-toggle="tab">Image</a></li>
+                          <li><a href="#upload_youtube_wrapper" data-toggle="tab">Youtube</a></li>
+                          <li><a href="#upload_file_wrapper" data-toggle="tab">File</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <div id="upload_text_wrapper" class="tab-pane">
+                                <form action="{% url 'userprofile:upload_text' %}" method="POST">{% csrf_token %}
+                                    {{ text_form.as_p }}
+                                    <button type="submit" class="btn btn-primary">Share</button>
+                                </form>
+                            </div>
+                            
+                            <div id="upload_image_wrapper" class="tab-pane">
+                                <form action="{% url 'userprofile:upload_picture' %}" method="POST" enctype="multipart/form-data">{% csrf_token %}
+                                    {{ image_form.as_p }}
+                                    <button type="submit" class="btn btn-primary">Upload image</button>
+                                </form>
+                            </div>
+                            
+                            <div id="upload_youtube_wrapper" class="tab-pane">
+                                <form action="{% url 'userprofile:upload_youtube' %}" method="POST">{% csrf_token %}
+                                    {{ youtube_form.as_p }}
+                                    <button type="submit" class="btn btn-primary">Share YouTube video</button>
+                                </form>
+                            </div>
+                            
+                            <div id="upload_file_wrapper" class="tab-pane">
+                                <form action="{% url 'userprofile:upload_file' %}" method="POST" enctype="multipart/form-data">{% csrf_token %}
+                                    {{ file_form.as_p }}
+                                    <button type="submit" class="btn btn-primary">Upload file</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
         </div>
-        
-        <div id="upload_image_wrapper" class="tab-pane">
-            <form action="{% url 'userprofile:upload_picture' %}" method="POST" enctype="multipart/form-data">{% csrf_token %}
-                {{ image_form.as_p }}
-                <button type="submit" class="btn btn-primary">Upload image</button>
-            </form>
-        </div>
-        
-        <div id="upload_youtube_wrapper" class="tab-pane">
-            <form action="{% url 'userprofile:upload_youtube' %}" method="POST">{% csrf_token %}
-                {{ youtube_form.as_p }}
-                <button type="submit" class="btn btn-primary">Share YouTube video</button>
-            </form>
-        </div>
-        
-        <div id="upload_file_wrapper" class="tab-pane">
-            <form action="{% url 'userprofile:upload_file' %}" method="POST" enctype="multipart/form-data">{% csrf_token %}
-                {{ file_form.as_p }}
-                <button type="submit" class="btn btn-primary">Upload file</button>
-            </form>
+
+        <div id="user-courses" class="tab-pane">
+            <h3>Registered Courses</h3>
+            {% for course in user.active_courses %}
+            <li><a href="{{ course.get_absolute_url}}">{{ course.name }}</a></li>
+            {% empty %}
+            <li>{{ user.display_name }} is not registered to any courses</li>
+            {% endfor %}
+
         </div>
     </div>
 </div>
-{% endif %}
 
-{% for timeline in timelines %}
-<div class="margin-bottom: 20px;">
-
-    {% if timeline.get_type == 'text' %}
-        {% include 'userprofile/timelines_text.html' %}
-    {% endif %}
-
-    {% if timeline.get_type == 'image' %}
-        {% include 'userprofile/timelines_image.html' %}
-    {% endif %}
-
-    {% if timeline.get_type = 'youtube' %}
-        {% include 'userprofile/timelines_youtube.html' %}
-    {% endif %}
-    {% if timeline.get_type = 'file' %}
-        {% include 'userprofile/timelines_file.html' %}
-    {% endif %}
-
-</div>
-
-{% endfor %}
-
-{% if timelines.paginator.num_pages > 1 %}
-<div class="pagination pagination-small pagination-left">
-    <ul>
-        {% if timelines.has_previous %}
-        <li><a href="?page={{ timelines.previous_page_number }}">Newer</a></li>
-        {% else %}
-        <li class="disabled"><a href="?page={{ timelines.number }}">Newer</a></li>
-        {% endif %}
-        {% for pagenum in timelines.paginator.page_range %}
-        <li {% if pagenum == timelines.number %}class="active"{% endif %}><a href="?page={{ pagenum }}">{{ pagenum }}</a></li>
-        {% endfor %}
-        {% if timelines.has_next %}
-        <li><a href="?page={{ timelines.next_page_number }}">Older</a></li>
-        {% else %}
-        <li class="disabled"><a href="?page={{ timelines.number }}">Older</a></li>
-        {% endif %}
-    </ul>
-</div>
-{% endif %}
 {% endblock %}
 
 {% block extrajs %}
