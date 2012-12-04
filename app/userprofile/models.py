@@ -152,7 +152,7 @@ def setup_universities_upon_registration(email_address, **kwargs):
 @receiver(user_signed_up)
 def notify_facebook_friends(request, user, **kwargs):
     try:
-        user_token = SocialToken.objects.get(app__provider='facebook', user=user)
+        user_token = SocialToken.objects.get(app__provider='facebook', account__user=user)
     except:
         return False
     graph = GraphAPI(user_token.token)
@@ -161,11 +161,11 @@ def notify_facebook_friends(request, user, **kwargs):
 
     for friend in fb_friends['data']:
         fb_friends_list.append(friend['id'])
-
     users = User.objects.filter(socialaccount__uid__in=fb_friends_list,
             socialaccount__provider='facebook')
+
     email_content = '<p><a href="%s">%s</a> just joined social network</p>' % (user.get_absolute_url, user.display_name)
     for user in users:
         send_mail('Your friend just joined School network', email_content,
-                settings.DEFAULT_FROM_EMAIL, [users.email])
+                settings.DEFAULT_FROM_EMAIL, [user.email])
     return True

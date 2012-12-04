@@ -155,7 +155,8 @@ INSTALLED_APPS = (
     'postman',
     'pagination',
     'friendship',
-    'django_wysiwyg',
+    'facepy',
+    #'django_wysiwyg',
     'app.timelines',
     'app.userprofile',
     'app.academy',
@@ -211,6 +212,14 @@ ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 
+SOCIALACCOUNT_PROVIDERS = \
+    {'facebook':
+        {
+            'SCOPE': ['email', 'publish_stream', 'read_stream'],
+            'METHOD': 'oauth2',
+        }
+    }
+
 LOGIN_REDIRECT_URL = '/'
 ABSOLUTE_URL_OVERRIDES = {
     'auth.user': lambda u: "/%s/" % u.username,
@@ -218,6 +227,7 @@ ABSOLUTE_URL_OVERRIDES = {
 ACCOUNT_ACTIVATION_DAYS = 7
 DEFAULT_FROM_EMAIL = 'SCHOOL NETWORK <schoolnetwork@sixceed.com>'
 DEFAULT_CONTENT_EMAIL = "Thank you for your submitted questions. Our staff has received your questions and will be replied shortly"
+FACEBOOK_APPS_ID = '500336159997765'
 
 try:
     from local_settings import *
