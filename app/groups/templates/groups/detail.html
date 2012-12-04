@@ -73,7 +73,7 @@
 <h3>Members:</h3>
 <ul>
     {% for member in members %}
-    <li><a href="{{ member.user.get_aboslute_url }}">{{ member.user.display_name }}</a>
+    <li><a href="{{ member.user.get_absolute_url }}">{{ member.user.display_name }}</a>
         {% if group.created_by == member.user %}(owner){% endif %}
         {% if member.status != 1 %} - {{ member.get_status_display|lower }}{% endif %}
     </li>
