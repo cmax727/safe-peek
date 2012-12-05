@@ -59,16 +59,15 @@ def add(request, username):
     added_user = get_object_or_404(User, username=username, is_active=True)
 
     friends = Friend.objects.are_friends(request_user, added_user)
-    #print friends
-    #print "*****"
+
     if friends:
         Friend.objects.remove_friend(request_user, added_user)
+
     else:
         try:
             Friend.objects.add_friend(request_user, added_user)
         except:
-            print "already requested"
-        #print ""
+            pass
 
     previous_url = request.META.get('HTTP_REFERER', reverse('connections:search'))
     return HttpResponseRedirect(previous_url)
