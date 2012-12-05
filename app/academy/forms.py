@@ -65,7 +65,7 @@ class UniversityProfessorForm(forms.Form):
 
 class UniversityCourseForm(forms.ModelForm):
     university = forms.ModelChoiceField(queryset=University.objects.all(), widget=forms.HiddenInput())
-    professors = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
+    #professors = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
     students = forms.ModelMultipleChoiceField(queryset=User.objects.all(), required=False)
 
     class Meta:
