@@ -122,10 +122,10 @@
 
         <div id="user-courses" class="tab-pane">
             <h3>Registered Courses</h3>
-            {% for course in user.active_courses %}
+            {% for course in user_profile.active_courses %}
                 <p><a href="{{ course.get_absolute_url }}">{{ course.name }}</a> <small>{{ course.total_students }} student(s)</small></p>
             {% empty %}
-            <p>{{ user.display_name }} is not registered to any courses</p>
+            <p>{{ user_profile.display_name }} is not registered to any courses</p>
             {% endfor %}
 
         </div>
