@@ -471,7 +471,7 @@ def files(request, slug, id, template='course/upload.html'):
 
 
 def event(request, slug, id, template='course/create_event.html'):
-    course = get_object_or_404(Course, pk=id)
+    course = get_object_or_404(Course, university__slug=slug, pk=id)
 
     if request.method == 'POST':
         form = EventForm(request.POST, request.FILES)
