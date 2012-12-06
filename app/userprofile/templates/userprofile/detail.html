@@ -121,12 +121,33 @@
         </div>
 
         <div id="user-courses" class="tab-pane">
+            <table class="table table-hover">
             <h3>Registered Courses</h3>
-            {% for course in user_profile.active_courses %}
-                <p><a href="{{ course.get_absolute_url }}">{{ course.name }}</a> <small>{{ course.total_students }} student(s)</small></p>
+            <thead>
+                <tr>
+                    <th colspan="2">Course name</th>
+                    <th>Students</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for course in user_profile.active_courses %}
+                <tr>
+                    <td colspan="2">
+                        <p><a href="{{ course.get_absolute_url }}">{{ course.name }}</a> <small>{{ course.total_students }} student(s)</small></p>
+                    </td>
+                    <td>{% for member in course.coursemembership_set.all %}
+                        <p><a href="{{ member.user.get_absolute_url }}">
+                            <p>{{member.user.display_name}}</p>
+                        {% endfor %}
+                    </td>
+                </tr>
             {% empty %}
+            <tr>
             <p>{{ user_profile.display_name }} is not registered to any courses</p>
+            </tr>
             {% endfor %}
+            </tbody>
+            </table>
 
         </div>
     </div>

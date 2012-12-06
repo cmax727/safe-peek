@@ -243,6 +243,13 @@ def detailcourse(request, slug, id, template='course/detail.html'):
     except EmptyPage:
         syllabuses = paginator2.page(paginator.num_pages)
 
+    ctype = ContentType.objects.get_for_model(course)
+    timeline = '%s_%s' % (ctype.pk, course.pk)
+    text_form = AcademyTextTimelineForm(user=request.user, initial={'timeline': timeline})
+    image_form = AcademyImageTimelineForm(user=request.user, initial={'timeline': timeline})
+    youtube_form = AcademyYoutubeTimelineForm(user=request.user, initial={'timeline': timeline})
+    file_form = AcademyFileTimelineForm(user=request.user, initial={'timeline': timeline})
+
     variables = RequestContext(request, {
         'course': course,
         'members': members,
@@ -251,6 +258,10 @@ def detailcourse(request, slug, id, template='course/detail.html'):
         'assignments': assignments,
         'files': files,
         'events': events,
+        'text_form': text_form,
+        'image_form': image_form,
+        'youtube_form': youtube_form,
+        'file_form': file_form
     })
     return render(request, template, variables)
 
