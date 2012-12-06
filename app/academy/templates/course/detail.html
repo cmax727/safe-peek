@@ -35,6 +35,50 @@
         </div>
 
         <div id="timeline_content" class="tab-pane">
+
+            <div>
+                    <div class="tabbable" style="background: #f7f7f7; padding: 10px;border-radius: 8px; margin: 20px 0;">
+                        <h5>share your status to {{ course.name }}:</h5>
+                        <ul class="nav nav-pills">
+                          <li><a href="#upload_text_wrapper" data-toggle="tab">Text</a></li>
+                          <li><a href="#upload_image_wrapper" data-toggle="tab">Image</a></li>
+                          <li><a href="#upload_youtube_wrapper" data-toggle="tab">Youtube</a></li>
+                          <li><a href="#upload_file_wrapper" data-toggle="tab">File</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <div id="upload_text_wrapper" class="tab-pane">
+                                <form action="{% url 'academy:upload_text' course.university.id %}" method="POST">{% csrf_token %}
+                                    {{ text_form.as_p }}
+                                    <button type="submit" class="btn btn-primary">Share</button>
+                                </form>
+                            </div>
+                            
+                            <div id="upload_image_wrapper" class="tab-pane">
+                                <form action="{% url 'academy:upload_picture' course.university.id %}" method="POST" enctype="multipart/form-data">{% csrf_token %}
+                                    {{ image_form.as_p }}
+                                    <button type="submit" class="btn btn-primary">Upload image</button>
+                                </form>
+                            </div>
+                            
+                            <div id="upload_youtube_wrapper" class="tab-pane">
+                                <form action="{% url 'academy:upload_youtube' course.university.id %}" method="POST">{% csrf_token %}
+                                    {{ youtube_form.as_p }}
+                                    <button type="submit" class="btn btn-primary">Share YouTube video</button>
+                                </form>
+                            </div>
+                            
+                            <div id="upload_file_wrapper" class="tab-pane">
+                                <form action="{% url 'academy:upload_file' course.university.id %}" method="POST" enctype="multipart/form-data">{% csrf_token %}
+                                    {{ file_form.as_p }}
+                                    <button type="submit" class="btn btn-primary">Upload file</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            <hr>
             {% for timeline in timelines %}
             <div>
                 <br>
