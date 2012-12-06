@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 
-from .models import Course, CourseFiles, University, Syllabus, Assignment, AssignmentSubmit
+from .models import Course, CourseFiles, University, Syllabus, Assignment, AssignmentSubmit, Event
 from app.timelines.forms import TextTimelineForm, ImageTimelineForm, YoutubeTimelineForm, FileTimelineForm
 import re
 
@@ -104,6 +104,14 @@ class CourseFilesForm(forms.ModelForm):
 
     class Meta:
         model = CourseFiles
+        exclude = ('created_at')
+
+
+class EventForm(forms.ModelForm):
+    course = forms.ModelChoiceField(queryset=Course.objects.all(), widget=forms.HiddenInput())
+
+    class Meta:
+        model = Event
         exclude = ('created_at')
 
 
