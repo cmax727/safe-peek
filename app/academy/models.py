@@ -117,6 +117,21 @@ class Assignment(models.Model):
         return self.name
 
 
+class Event(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+    course = models.ForeignKey(Course)
+    event_date = models.DateField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    #@models.permalink
+    #def get_absolute_url(self):
+    #    return ('academy:detail_assignment', [self.course.university.slug, str(self.course.pk), str(self.pk)])
+
+    def __unicode__(self):
+        return self.name
+
+
 class AssignmentSubmit(models.Model):
     user = models.ForeignKey(User, related_name='assignments')
     assignment = models.ForeignKey(Assignment)

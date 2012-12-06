@@ -11,11 +11,12 @@ from django.utils.timezone import utc
 
 from .forms import (CourseForm, CourseFilesForm, UniversityForm, CourseProfessorForm,
         SyllabusForm, UniversityAdminForm, UniversityProfessorForm,
-        UniversityCourseForm, AssignmentForm, SubmitAssignmentForm, SubmitAssignmentUserForm, TextTimelineForm)
+        UniversityCourseForm, AssignmentForm, SubmitAssignmentForm,
+        SubmitAssignmentUserForm, TextTimelineForm, EventForm)
 
 from .forms import AcademyTextTimelineForm, AcademyImageTimelineForm, AcademyYoutubeTimelineForm, AcademyFileTimelineForm
 
-from .models import Course, CourseMembership, CourseFiles, Syllabus, University, Assignment, AssignmentSubmit
+from .models import Course, CourseMembership, CourseFiles, Syllabus, University, Assignment, AssignmentSubmit, Event
 
 from .templatetags.university_tags import *
 
@@ -218,6 +219,7 @@ def detailcourse(request, slug, id, template='course/detail.html'):
     members = course.coursemembership_set.all()
     assignments = course.assignment_set.all()
     files = course.coursefiles_set.all()
+    events = course.event_set.all()
 
     timeline_list = course.timelines.all()
     paginator = Paginator(timeline_list, 10)
@@ -255,6 +257,7 @@ def detailcourse(request, slug, id, template='course/detail.html'):
         'syllabuses': syllabuses,
         'assignments': assignments,
         'files': files,
+        'events': events,
         'text_form': text_form,
         'image_form': image_form,
         'youtube_form': youtube_form,
@@ -460,6 +463,24 @@ def files(request, slug, id, template='course/upload.html'):
             return HttpResponseRedirect(course.get_absolute_url())
     else:
         form = CourseFilesForm(initial={'course': course})
+
+    variables = RequestContext(request, {
+        'form': form,
+    })
+    return render(request, template, variables)
+
+
+def event(request, slug, id, template='course/create_event.html'):
+    course = get_object_or_404(Course, pk=id)
+
+    if request.method == 'POST':
+        form = EventForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(course.get_absolute_url())
+    else:
+        form = EventForm(initial={'course': course})
 
     variables = RequestContext(request, {
         'form': form,
