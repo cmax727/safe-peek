@@ -15,9 +15,8 @@ from .forms import (CourseForm, CourseFilesForm, UniversityForm, CourseProfessor
         SubmitAssignmentUserForm, TextTimelineForm, EventForm)
 
 from .forms import AcademyTextTimelineForm, AcademyImageTimelineForm, AcademyYoutubeTimelineForm, AcademyFileTimelineForm
-
 from .models import Course, CourseMembership, CourseFiles, Syllabus, University, Assignment, AssignmentSubmit, Event
-
+from .decorators import school_members_only
 from .templatetags.university_tags import *
 
 
@@ -94,6 +93,7 @@ def createuniversity(request, template='university/create.html'):
     return render(request, template, variables)
 
 
+@school_members_only('slug')
 @login_required
 def university_admins(request, slug, template='university/choose_users.html'):
 
@@ -120,6 +120,7 @@ def university_admins(request, slug, template='university/choose_users.html'):
     return render(request, template, variables)
 
 
+@school_members_only('slug')
 @login_required
 def university_professors(request, slug, template='university/choose_users.html'):
     university = get_object_or_404(University, slug=slug)
@@ -143,6 +144,7 @@ def university_professors(request, slug, template='university/choose_users.html'
     return render(request, template, variables)
 
 
+@school_members_only('slug')
 @login_required
 def university_create_course(request, slug, template='university/create_course.html'):
     university = get_object_or_404(University, slug=slug)
@@ -170,40 +172,7 @@ def university_create_course(request, slug, template='university/create_course.h
     return render(request, template, variables)
 
 
-@login_required
-def createcourse(request, template='course/create.html'):
-    if request.method == 'POST':
-        if request.user.is_professor():
-            form = CourseProfessorForm(request.POST or None)
-        else:
-            form = CourseForm(request.POST or None)
-
-        if form.is_valid():
-            data = form.cleaned_data
-            users = data.get('members')
-            course = form.save(commit=False)
-            if data.get('professor') is None:
-                course.professor = request.user
-            course.save()
-            for user in users:
-                membership, new = CourseMembership.objects.get_or_create(
-                    user=user, course=course)
-                membership.status = 3
-                membership.save()
-            return HttpResponseRedirect(reverse('academy:course'))
-
-    else:
-        if request.user.is_professor():
-            form = CourseProfessorForm()
-        else:
-            form = CourseForm()
-        #form = CourseForm()
-    variables = RequestContext(request, {
-        'form': form
-    })
-    return render(request, template, variables)
-
-
+@school_members_only('slug')
 @login_required
 def course(request, slug):
     courses = Course.objects.all()
@@ -266,6 +235,7 @@ def detailcourse(request, slug, id, template='course/detail.html'):
     return render(request, template, variables)
 
 
+@school_members_only('slug')
 @login_required
 def joincourse(request, slug, id, template='course/joined.html'):
     course = get_object_or_404(Course, pk=id)
@@ -291,6 +261,7 @@ def joincourse(request, slug, id, template='course/joined.html'):
     return render(request, template, variables)
 
 
+@school_members_only('slug')
 @login_required
 def leavecourse(request, slug, id, uid, template='course/joined.html'):
     course = get_object_or_404(Course, pk=id)
@@ -307,6 +278,7 @@ def leavecourse(request, slug, id, uid, template='course/joined.html'):
     return HttpResponseRedirect(course.get_absolute_url())
 
 
+@school_members_only('slug')
 @login_required
 def acceptcourse(request, slug, id, uid):
     course = get_object_or_404(Course, professor=request.user, pk=id)
@@ -317,6 +289,7 @@ def acceptcourse(request, slug, id, uid):
     return HttpResponseRedirect(course.get_absolute_url())
 
 
+@school_members_only('slug')
 @login_required
 def write_timeline(request, id, timeline_type='text'):
     university = get_object_or_404(University, id=id)
@@ -351,6 +324,7 @@ def write_timeline(request, id, timeline_type='text'):
     return render(request, template, variables)
 
 
+@school_members_only('slug')
 @login_required
 def update_timeline(request, id, timeline_type='text'):
     course = get_object_or_404(Course, id=id)
@@ -384,6 +358,8 @@ def update_timeline(request, id, timeline_type='text'):
     return render(request, template, variables)
 
 
+@school_members_only('slug')
+@login_required
 def syllabus(request, slug, id, template='course/create_syllabus.html'):
     if request.method == 'POST':
         form = SyllabusForm(request.POST or None, request.FILES)
@@ -405,6 +381,8 @@ def syllabus(request, slug, id, template='course/create_syllabus.html'):
     return render(request, template, variables)
 
 
+@school_members_only('slug')
+@login_required
 def createassignment(request, slug, id, template='course/create_assignment.html'):
     course = get_object_or_404(Course, pk=id)
 
@@ -423,6 +401,8 @@ def createassignment(request, slug, id, template='course/create_assignment.html'
     return render(request, template, variables)
 
 
+@school_members_only('slug')
+@login_required
 def report_assignment(request, slug, id, template='course/report_assignment.html'):
     course = get_object_or_404(Course, pk=id)
     assignment = Assignment.objects.filter(course=course)
@@ -452,6 +432,8 @@ def report_assignment(request, slug, id, template='course/report_assignment.html
     return render(request, template, variables)
 
 
+@school_members_only('slug')
+@login_required
 def files(request, slug, id, template='course/upload.html'):
     course = get_object_or_404(Course, pk=id)
 
@@ -470,6 +452,8 @@ def files(request, slug, id, template='course/upload.html'):
     return render(request, template, variables)
 
 
+@school_members_only('slug')
+@login_required
 def event(request, slug, id, template='course/create_event.html'):
     course = get_object_or_404(Course, university__slug=slug, pk=id)
 
@@ -488,6 +472,7 @@ def event(request, slug, id, template='course/create_event.html'):
     return render(request, template, variables)
 
 
+@school_members_only('slug')
 @login_required
 def detailassignment(request, slug, aid, id, template='course/detailassignment.html'):
     assignment = get_object_or_404(Assignment, pk=id, course__pk=aid, course__university__slug=slug)
@@ -512,6 +497,7 @@ def detailassignment(request, slug, aid, id, template='course/detailassignment.h
     return render(request, template, variables)
 
 
+@school_members_only('slug')
 @login_required
 def detail_assignment_user(request, slug, aid, id, uname, template='course/detailassignmentuser.html'):
     assignment = get_object_or_404(Assignment, pk=id)

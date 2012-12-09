@@ -16,3 +16,8 @@ def is_professor_for(user, university):
 @register.filter
 def is_student_of(user, university):
     return user.academy_roles.filter(university=university, role=1).exists()
+
+
+@register.filter
+def is_members_of(user, university):
+    return user.academy_roles.filter(university=university).exists()

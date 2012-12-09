@@ -23,3 +23,10 @@ def membership_status(user, course):
 @register.filter
 def is_manager_of(user, course):
     return user == course.professor
+
+
+@register.filter
+def is_enrolled_in(user, course):
+    professor = user == course.professor
+    active_students = user.coursemembership_set.filter(course=course, status=1).exists()
+    return professor or active_students

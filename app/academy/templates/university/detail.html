@@ -36,6 +36,7 @@
                     {% endfor %}
                 </div>
                 <div class="span3">
+                    {% if user|is_members_of:university %}
                     <div class="tabbable" style="background: #f7f7f7; padding: 10px;border-radius: 8px; margin: 20px 0;">
                         <h5>share your status to {{ university.name }}:</h5>
                         <ul class="nav nav-pills">
@@ -75,6 +76,7 @@
                             </div>
                         </div>
                     </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
