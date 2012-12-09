@@ -1,6 +1,10 @@
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
 from django.db import models
+from django.core.mail import send_mail
+from django.db.models.signals import post_save
+
 
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill, Adjust
@@ -84,3 +88,12 @@ class GroupCommentStatus(models.Model):
 
     def __unicode__(self):
         return self.comment
+
+
+def send_email_group_invitation(sender, instance, created, **kwargs):
+    if created:
+        print kwargs
+        send_mail('Group Invitation', settings.DEFAULT_CONTENT_EMAIL_GROUP, settings.DEFAULT_FROM_EMAIL, [instance.user.email])
+    return True
+
+post_save.connect(send_email_group_invitation, sender=GroupMembership, dispatch_uid='app.group.models.send_email_group_invitation')

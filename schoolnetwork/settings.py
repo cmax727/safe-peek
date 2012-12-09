@@ -226,6 +226,10 @@ ABSOLUTE_URL_OVERRIDES = {
 ACCOUNT_ACTIVATION_DAYS = 7
 DEFAULT_FROM_EMAIL = 'SCHOOL NETWORK <schoolnetwork@sixceed.com>'
 DEFAULT_CONTENT_EMAIL = "Thank you for your submitted questions. Our staff has received your questions and will be replied shortly"
+DEFAULT_CONTENT_EMAIL_COURSE = "You have been invited to a new Course"
+DEFAULT_CONTENT_EMAIL_GROUP = "You have been invited to a new Group"
+DEFAULT_CONTENT_EMAIL_ASSIGNMENT = "Attention to all Students : the Professor has made a new Assignment"
+
 FACEBOOK_APPS_ID = '500336159997765'
 
 try:
