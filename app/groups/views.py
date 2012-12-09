@@ -8,6 +8,7 @@ from django.template import RequestContext
 from django.utils.timezone import utc
 from django.contrib.auth.models import User
 
+from .decorators import group_members_only
 from .forms import GroupForm, ChangeOwnershipForm
 from .models import Group, GroupMembership
 
@@ -86,6 +87,7 @@ def detail(request, id, template='groups/detail.html'):
     return render(request, template, variables)
 
 
+@group_members_only(id)
 @login_required
 def delete(request, id, template='groups/delete.html'):
     group = get_object_or_404(Group, pk=id, created_by=request.user)
@@ -126,6 +128,7 @@ def join(request, id, template='groups/joined.html'):
     return render(request, template, variables)
 
 
+@group_members_only(id)
 @login_required
 def leave(request, id, template='groups/joined.html'):
     group = get_object_or_404(Group, pk=id)
@@ -141,6 +144,7 @@ def leave(request, id, template='groups/joined.html'):
     return HttpResponseRedirect(group.get_absolute_url())
 
 
+@group_members_only(id)
 @login_required
 def manage(request, id, template='groups/manage.html'):
     group = get_object_or_404(Group, created_by=request.user, pk=id)
@@ -153,6 +157,7 @@ def manage(request, id, template='groups/manage.html'):
     return render(request, template, variables)
 
 
+@group_members_only(id)
 @login_required
 def invite(request, id, template='groups/invite.html'):
     group = get_object_or_404(Group, created_by=request.user, pk=id)
@@ -182,6 +187,7 @@ def invite(request, id, template='groups/invite.html'):
     return render(request, template, variables)
 
 
+@group_members_only(id)
 @login_required
 def change_ownership(request, id, template='groups/change_ownership.html'):
     group = get_object_or_404(Group, created_by=request.user, pk=id)
@@ -205,6 +211,7 @@ def change_ownership(request, id, template='groups/change_ownership.html'):
     return render(request, template, variables)
 
 
+@group_members_only(id)
 @login_required
 def accept_membership(request, id, user_id):
     group = get_object_or_404(Group, created_by=request.user, pk=id)
@@ -215,6 +222,7 @@ def accept_membership(request, id, user_id):
     return HttpResponseRedirect(reverse('groups:manage', args=[group.pk]))
 
 
+@group_members_only(id)
 @login_required
 def remove_membership(request, id, user_id):
     group = get_object_or_404(Group, created_by=request.user, pk=id)

@@ -8,12 +8,6 @@ def notify_facebook_friends(sender, instance, created, **kwargs):
     if created:
         subject = '%s add you as a friend' % instance.from_user.username
         content = '%s add you as a friend' % instance.from_user.username
-        print "#############################"
-        print subject
-        print content
-        print instance.to_user.email
-        print settings.DEFAULT_FROM_EMAIL
-        print "#############################"
         send_mail(subject, content, settings.DEFAULT_FROM_EMAIL, [instance.to_user.email])
     return True
 
