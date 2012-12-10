@@ -157,6 +157,7 @@ INSTALLED_APPS = (
     'friendship',
     'django_wysiwyg',
     'app.timelines',
+    'app.events',
     'app.userprofile',
     'app.academy',
     'app.connections',

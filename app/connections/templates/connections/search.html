@@ -21,6 +21,20 @@
             $(event.target.form).submit();
         }
         });
+
+        $( "#id_find_location" ).autocomplete({
+            source: "/users/findlocation/",
+            selectFirst:true,
+            minLength: 2,
+            select: function(event, ui) {
+            //assign value back to the form element
+            if(ui.item){
+                $(event.target).val(ui.item.value);
+            }
+            //submit the form
+            $(event.target.form).submit();
+        }
+        });
     });
     </script>
 <form action="." method="GET">
@@ -28,12 +42,17 @@
     <label for="id_find_username">Find by username: </label>
     <input id="id_find_username" style="margin-top: 8px" type="text" placeholder="Type you looking for" name="q" value="{{query}}" />
 </p>
+<p>
+    <label for="id_find_location">Find by Location: </label>
+    <input id="id_find_location" style="margin-top: 8px" type="text" placeholder="Type you looking for" name="l" value="{{qlocation}}" />
+</p>
 </form>
 
 <div>
     {% for user in users %}
     <div>
         <p><a href="{{ user.get_absolute_url }}">{% if user.profile.small_picture %}<img src="{{ user.profile.small_picture.url }}" alt="{{ user.display_name }}"> {% endif %}{{ user.display_name }}</a> 
+            -- {{user.profile.location|title}}
         {% if user not in friends %}
             {% if request.user.is_authenticated %}
                 {% if not request.user|is_friend_with:user %}<span><a href="{% url 'connections:add' user %}" class="btn btn-small">Add as your friend</a></span>{% endif %}

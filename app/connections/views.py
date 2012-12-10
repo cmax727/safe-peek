@@ -27,17 +27,36 @@ def finduser(request):
 
 
 @login_required
+def findlocation(request):
+    users = User.objects.filter(is_active=True)
+    if request.is_ajax():
+        q = request.GET.get('term', '')
+        list_users = users.filter(profile__location__icontains=q)
+        results = []
+        for user in list_users:
+            loc_dict = user.profile.location
+            results.append(loc_dict)
+        output = simplejson.dumps(results)
+        #print output
+    else:
+        output = 'fail'
+    return HttpResponse(output, mimetype='application/json')
+
+
+@login_required
 def search(request, template='connections/search.html'):
     query = request.GET.get('q', '')
+    qlocation = request.GET.get('l', '')
     users = User.objects.filter(is_active=True)
     all_friends = Friend.objects.friends(request.user)
 
-    if query:
-        users = users.filter(username__icontains=query)
+    if query or qlocation:
+        users = users.filter(username__icontains=query, profile__location__icontains=qlocation)
 
     variables = RequestContext(request, {
         'users': users,
         'query': query,
+        'qlocation': qlocation,
         'friends': all_friends
     })
     return render(request, template, variables)

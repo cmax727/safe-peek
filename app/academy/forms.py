@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 
 from .models import Course, CourseFiles, University, Syllabus, Assignment, AssignmentSubmit, Event
 from app.timelines.forms import TextTimelineForm, ImageTimelineForm, YoutubeTimelineForm, FileTimelineForm
+from app.events.forms import EventForm
 import re
 
 
@@ -107,12 +108,12 @@ class CourseFilesForm(forms.ModelForm):
         exclude = ('created_at')
 
 
-class EventForm(forms.ModelForm):
-    course = forms.ModelChoiceField(queryset=Course.objects.all(), widget=forms.HiddenInput())
+# class EventForm(forms.ModelForm):
+#     course = forms.ModelChoiceField(queryset=Course.objects.all(), widget=forms.HiddenInput())
 
-    class Meta:
-        model = Event
-        exclude = ('created_at')
+#     class Meta:
+#         model = Event
+#         exclude = ('created_at')
 
 
 class CourseProfessorForm(forms.ModelForm):
@@ -169,3 +170,7 @@ class AcademyYoutubeTimelineForm(YoutubeTimelineForm):
 
 class AcademyFileTimelineForm(FileTimelineForm):
     timeline = forms.ChoiceField(widget=forms.HiddenInput())
+
+
+class AcademyEventForm(EventForm):
+    event = forms.ChoiceField(widget=forms.HiddenInput())
