@@ -133,15 +133,15 @@
                 <h4>List of syllabus</h4>
 
                 {% for syllabus in syllabuses %}
-                    <p><i class="icon icon-file"></i><a href="{{ syllabus.attachment }}"> {{ syllabus.name }}</a></p>
-                    {{syllabus.description}}
+                    <p><i class="icon icon-file"></i><a href="{{ syllabus.attachment.url }}"> {{ syllabus.name }}</a></p>
+                    {{syllabus.description|safe}}
                 {% endfor %}
                 {% endif %}
                 {% endif %}
                 </div>
 
                 <div class="span3">
-                    {% if user|is_member_of:course or user|is_manager_of:course %}
+                    {% if user|is_manager_of:course %}
                     <div style="pull-right">
                         <p><i class="icon icon-plus"></i> <a href="{% url 'academy:create_syllabus' course.university.slug course.pk %}">Create New Syllabus</a></p>
                     </div>
