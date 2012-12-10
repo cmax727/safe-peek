@@ -188,7 +188,7 @@ def detailcourse(request, slug, id, template='course/detail.html'):
     members = course.coursemembership_set.all()
     assignments = course.assignment_set.all()
     files = course.coursefiles_set.all()
-    events = course.event_set.all()
+    events = course.events.all()
 
     timeline_list = course.timelines.all()
     paginator = Paginator(timeline_list, 10)

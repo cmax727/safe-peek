@@ -7,6 +7,7 @@ from django.template.defaultfilters import slugify
 from django.core.mail import send_mail
 
 from app.timelines.models import Timeline
+from app.events.models import Event
 
 
 class University(models.Model):
@@ -60,7 +61,7 @@ class Course(models.Model):
     members = models.ManyToManyField(User, through='CourseMembership', related_name='user_course', blank=True, null=True)
 
     timelines = generic.GenericRelation(Timeline)
-    objects = University()
+    events = generic.GenericRelation(Event)
 
     @models.permalink
     def get_absolute_url(self):
@@ -114,21 +115,6 @@ class Assignment(models.Model):
     @models.permalink
     def get_absolute_url(self):
         return ('academy:detail_assignment', [self.course.university.slug, str(self.course.pk), str(self.pk)])
-
-    def __unicode__(self):
-        return self.name
-
-
-class Event(models.Model):
-    name = models.CharField(max_length=255)
-    description = models.TextField()
-    course = models.ForeignKey(Course)
-    event_date = models.DateField()
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    #@models.permalink
-    #def get_absolute_url(self):
-    #    return ('academy:detail_assignment', [self.course.university.slug, str(self.course.pk), str(self.pk)])
 
     def __unicode__(self):
         return self.name
