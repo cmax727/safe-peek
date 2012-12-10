@@ -291,8 +291,8 @@ def acceptcourse(request, slug, id, uid):
 
 @school_members_only('slug')
 @login_required
-def write_timeline(request, id, timeline_type='text'):
-    university = get_object_or_404(University, id=id)
+def write_timeline(request, slug, timeline_type='text'):
+    university = get_object_or_404(University, slug=slug)
 
     form_class = None
 

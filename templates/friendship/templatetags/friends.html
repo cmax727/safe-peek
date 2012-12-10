@@ -1,6 +1,6 @@
 <ul>
 {% for f in friends %}
-   <li>{% if f.profile.small_picture %}<img src="{{ f.profile.small_picture.url }}" alt="{{ f.display_name }}"> {% endif %}{{ f.display_name }}
+   <li><a href="{{ user.get_absolute_url }}">{% if user.profile.small_picture %}<img src="{{ user.profile.small_picture.url }}" alt="{{ user.display_name }}"> {% endif %}{{ user.display_name }}</a> 
     <a href="{% url connections:remove f.username %}">remove as friend</a></li>
 {% endfor %}
 </ul>

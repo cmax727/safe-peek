@@ -6,7 +6,7 @@ register = template.Library()
 @register.filter
 def is_member_of(user, course):
     try:
-        return course.coursemembership_set.get(user=user).status == 1
+        return user.coursemembership_set.get(user=user).status == 1
     except:
         False
 
@@ -14,7 +14,7 @@ def is_member_of(user, course):
 @register.filter
 def membership_status(user, course):
     try:
-        return course.coursemembership_set.get(user=user).status
+        return user.coursemembership_set.get(user=user).status
 
     except:
         return 0
