@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from friendship.models import Friend
 
 from .models import Group, GroupStatus, GroupCommentStatus
+from app.timelines.forms import TextTimelineForm, ImageTimelineForm, YoutubeTimelineForm, FileTimelineForm
 
 
 class GroupForm(forms.ModelForm):
@@ -93,3 +94,19 @@ class GroupCommentStatusForm(forms.ModelForm):
     class Meta:
         model = GroupCommentStatus
         exclude = ('status', 'created_by', 'created_at')
+
+
+class GroupTextTimelineForm(TextTimelineForm):
+    timeline = forms.ChoiceField(widget=forms.HiddenInput())
+
+
+class GroupImageTimelineForm(ImageTimelineForm):
+    timeline = forms.ChoiceField(widget=forms.HiddenInput())
+
+
+class GroupYoutubeTimelineForm(YoutubeTimelineForm):
+    timeline = forms.ChoiceField(widget=forms.HiddenInput())
+
+
+class GroupFileTimelineForm(FileTimelineForm):
+    timeline = forms.ChoiceField(widget=forms.HiddenInput())

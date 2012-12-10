@@ -129,6 +129,16 @@ class CommentStatus(models.Model):
         return self.comment
 
 
+class PersonalEvent(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+    event_date = models.DateField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return self.name
+
+
 @receiver(email_confirmed)
 def setup_universities_upon_registration(email_address, **kwargs):
     user = email_address.user

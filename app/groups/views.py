@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 
 from .decorators import group_members_only
 from .forms import GroupForm, ChangeOwnershipForm
+from .forms import GroupTextTimelineForm, GroupImageTimelineForm, GroupYoutubeTimelineForm, GroupFileTimelineForm
 from .models import Group, GroupMembership
 
 from app.timelines.forms import *
@@ -79,10 +80,21 @@ def detail(request, id, template='groups/detail.html'):
     except EmptyPage:
         timelines = paginator.page(paginator.num_pages)
 
+    ctype = ContentType.objects.get_for_model(group)
+    timeline = '%s_%s' % (ctype.pk, group.pk)
+    text_form = GroupTextTimelineForm(user=request.user, initial={'timeline': timeline})
+    image_form = GroupImageTimelineForm(user=request.user, initial={'timeline': timeline})
+    youtube_form = GroupYoutubeTimelineForm(user=request.user, initial={'timeline': timeline})
+    file_form = GroupFileTimelineForm(user=request.user, initial={'timeline': timeline})
+
     variables = RequestContext(request, {
         'group': group,
         'members': members,
         'timelines': timelines,
+        'text_form': text_form,
+        'image_form': image_form,
+        'youtube_form': youtube_form,
+        'file_form': file_form
     })
     return render(request, template, variables)
 
@@ -260,31 +272,30 @@ def write_groups(request, id):
 @login_required
 def update_timeline(request, id, timeline_type='text'):
     group = get_object_or_404(Group, id=id)
-    user = get_object_or_404(User, is_active=True, username=request.user.username, user_groups=group)
 
     form_class = None
 
     if timeline_type == 'picture':
-        form_class = ImageTimelineForm
+        form_class = GroupImageTimelineForm
     elif timeline_type == 'youtube':
-        form_class = YoutubeTimelineForm
+        form_class = GroupYoutubeTimelineForm
     elif timeline_type == 'file':
-        form_class = FileTimelineForm
+        form_class = GroupFileTimelineForm
     else:
-        form_class = TextTimelineForm
+        form_class = GroupTextTimelineForm
 
     if request.method == 'POST':
-        form = form_class(request.POST, request.FILES, content_object=group)
+        form = form_class(request.POST, request.FILES, user=request.user)
 
         if form.is_valid():
             t = form.save(commit=False)
-            t.created_by = user
+            t.created_by = request.user
             t.save()
-            return HttpResponseRedirect(user.get_absolute_url())
+            return HttpResponseRedirect(group.get_absolute_url())
     else:
         form = form_class(content_object=group)
     variables = RequestContext(request, {
         'form': form
     })
-    template = 'userprofile/upload_%s.html' % timeline_type
+    template = 'groups/upload_%s.html' % timeline_type
     return render(request, template, variables)

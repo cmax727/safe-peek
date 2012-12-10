@@ -26,6 +26,50 @@
 {% endif %}
 {% endwith %}
 
+
+                    {% if user|is_member_of:group %}
+                    <div class="tabbable" style="background: #f7f7f7; padding: 10px;border-radius: 8px; margin: 20px 0;">
+                        <h5>share your status:</h5>
+                        <ul class="nav nav-pills">
+                          <li><a href="#upload_text_wrapper" data-toggle="tab">Text</a></li>
+                          <li><a href="#upload_image_wrapper" data-toggle="tab">Image</a></li>
+                          <li><a href="#upload_youtube_wrapper" data-toggle="tab">Youtube</a></li>
+                          <li><a href="#upload_file_wrapper" data-toggle="tab">File</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <div id="upload_text_wrapper" class="tab-pane">
+                                <form action="{% url 'groups:upload_text' group.pk %}" method="POST">{% csrf_token %}
+                                    {{ text_form.as_p }}
+                                    <button type="submit" class="btn btn-primary">Share</button>
+                                </form>
+                            </div>
+                            
+                            <div id="upload_image_wrapper" class="tab-pane">
+                                <form action="{% url 'groups:upload_picture' group.pk %}" method="POST" enctype="multipart/form-data">{% csrf_token %}
+                                    {{ image_form.as_p }}
+                                    <button type="submit" class="btn btn-primary">Upload image</button>
+                                </form>
+                            </div>
+                            
+                            <div id="upload_youtube_wrapper" class="tab-pane">
+                                <form action="{% url 'groups:upload_youtube' group.pk %}" method="POST">{% csrf_token %}
+                                    {{ youtube_form.as_p }}
+                                    <button type="submit" class="btn btn-primary">Share YouTube video</button>
+                                </form>
+                            </div>
+                            
+                            <div id="upload_file_wrapper" class="tab-pane">
+                                <form action="{% url 'groups:upload_file' group.pk %}" method="POST" enctype="multipart/form-data">{% csrf_token %}
+                                    {{ file_form.as_p }}
+                                    <button type="submit" class="btn btn-primary">Upload file</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                
+
 <hr>
 {% if user|is_member_of:group or group.privacy == 1 %}
 {% for timeline in timelines %}

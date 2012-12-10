@@ -4,6 +4,7 @@ from django.conf.urls import patterns, url
 
 urlpatterns = patterns('app.userprofile.views',
     url(r'^$', 'main', name='main_page'),
+    url(r'^(?P<id>(\d)+)/create_event/$', 'personal_event', name='create_events'),
     url(r'^my-grades/$', 'my_grades', name='my_grades'),
     url(r'^(?P<username>[-\.\w]+)/$', 'profile_detail', name='detail'),
     url(r'^(?P<username>[-\.\w]+)/edit/$', 'edit', name='edit'),

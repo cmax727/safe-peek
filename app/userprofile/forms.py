@@ -1,7 +1,8 @@
 from django import forms
-from .models import Profile, Status, CommentStatus
+from .models import Profile, Status, CommentStatus, PersonalEvent
 from django.contrib.auth.models import User
 from app.academy.models import University
+#from app.academy.forms import EventForm
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -35,3 +36,9 @@ class CommentStatusForm(forms.ModelForm):
     class Meta:
         model = CommentStatus
         exclude = ('status', 'created_by', 'created_at')
+
+
+class PersonalEventForm(forms.ModelForm):
+    class Meta:
+        model = PersonalEvent
+        exclude = ('created_at')

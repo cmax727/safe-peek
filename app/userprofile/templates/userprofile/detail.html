@@ -24,6 +24,7 @@
     <ul class="nav nav-tabs">
         <li class="active"><a href="#user-timeline" data-toggle="tab">Timeline</a></li>
         <li><a href="#user-courses" data-toggle="tab">Courses</a></li>
+        <li><a href="#user-events" data-toggle="tab">Events</a></li>
     </ul>
 
     <div class="tab-content">
@@ -150,7 +151,42 @@
             </table>
 
         </div>
+        <div id="user-events" class="tab-pane">
+            <table class="table table-hover">
+            <h3>Events</h3>
+            
+            <tbody>
+                {% for event in events %}
+                <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Event</th>
+                                <th>Description</th>
+                                <th>Event Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        {% for event in events %}
+                        <tr>
+                            <td>{{ event.name }}</td>
+                            <td>{{ event.description }}</td>
+                            <td>{{ event.event_date }}</td>
+                        </tr>
+                        {% endfor %}
+                        {% endfor %}
+                        </tbody>
+                    </table>            
+            </tbody>
+            </table>
+            
+         {% comment %}  <p><i class="icon icon-plus"></i><a href="{% url 'userprofile:create_event' userprofile.pk %}">Create New Event</a></p>   {% endcomment %}
+                    
+
+        </div>
     </div>
+
+
 </div>
 
 {% endblock %}

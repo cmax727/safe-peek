@@ -7,11 +7,11 @@ from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404, render
 from django.template import RequestContext
 
-from friendship.models import  Friend
+from friendship.models import Friend
 from postman.models import Message
 
-from .forms import EditProfileForm, UserListForm
-from .models import Profile
+from .forms import EditProfileForm, UserListForm, PersonalEventForm
+from .models import Profile, PersonalEvent
 
 from app.timelines.forms import *
 
@@ -62,6 +62,7 @@ def profile_detail(request, username, template='userprofile/detail.html'):
     friends = Friend.objects.friends(user)
     timeline_list = user.profile.timelines.all()
     paginator = Paginator(timeline_list, 10)
+    events = PersonalEvent.objects.all()
 
     page = request.GET.get('page')
     try:
@@ -75,10 +76,30 @@ def profile_detail(request, username, template='userprofile/detail.html'):
         'user_profile': user,
         'friends': friends,
         'timelines': timelines,
+        'events': events,
         'text_form': TextTimelineForm(user=user),
         'image_form': ImageTimelineForm(user=user),
         'youtube_form': YoutubeTimelineForm(user=user),
         'file_form': FileTimelineForm(user=user),
+    })
+    return render(request, template, variables)
+
+
+@login_required
+def personal_event(request, id, template='userprofile/create_events.html'):
+    events = get_object_or_404(PersonalEvent, pk=id)
+
+    if request.method == 'POST':
+        form = PersonalEventForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(user.get_absolute_url())
+    else:
+        form = PersonalEventForm
+
+    variables = RequestContext(request, {
+        'events': events,
     })
     return render(request, template, variables)
 
