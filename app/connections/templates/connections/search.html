@@ -52,7 +52,7 @@
     {% for user in users %}
     <div>
         <p><a href="{{ user.get_absolute_url }}">{% if user.profile.small_picture %}<img src="{{ user.profile.small_picture.url }}" alt="{{ user.display_name }}"> {% endif %}{{ user.display_name }}</a> 
-            -- {{user.profile.location|title}}
+            <small>Location: {{user.profile.location|title|default:"Unknown"}}</small>
         {% if user not in friends %}
             {% if request.user.is_authenticated %}
                 {% if not request.user|is_friend_with:user %}<span><a href="{% url 'connections:add' user %}" class="btn btn-small">Add as your friend</a></span>{% endif %}
