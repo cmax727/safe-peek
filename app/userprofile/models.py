@@ -25,6 +25,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User)
     gender = models.IntegerField(choices=GENDER_CHOICES, default=1)
     picture = models.ImageField(upload_to='profiles', blank=True, null=True)
+    location = models.CharField(blank=True, null=True, max_length=200)
 
     thumbnail_picture = ImageSpecField([ResizeToFill(100, 100)],
             image_field='picture',
