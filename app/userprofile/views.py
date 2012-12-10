@@ -103,6 +103,7 @@ def edit(request, username, template='userprofile/edit.html'):
             profile.user.username = cleaned_data.get('username')
             profile.user.first_name = cleaned_data.get('first_name')
             profile.user.last_name = cleaned_data.get('last_name')
+            profile.user.location = cleaned_data.get('location')
             profile.user.save()
             return HttpResponseRedirect(reverse('userprofile:detail', args=[profile.user.username]))
 

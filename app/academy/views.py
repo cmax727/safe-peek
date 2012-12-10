@@ -14,7 +14,7 @@ from .forms import (CourseForm, CourseFilesForm, UniversityForm, CourseProfessor
         UniversityCourseForm, AssignmentForm, SubmitAssignmentForm,
         SubmitAssignmentUserForm, TextTimelineForm, EventForm)
 
-from .forms import AcademyTextTimelineForm, AcademyImageTimelineForm, AcademyYoutubeTimelineForm, AcademyFileTimelineForm
+from .forms import AcademyEventForm, AcademyTextTimelineForm, AcademyImageTimelineForm, AcademyYoutubeTimelineForm, AcademyFileTimelineForm
 from .models import Course, CourseMembership, CourseFiles, Syllabus, University, Assignment, AssignmentSubmit, Event
 from .decorators import school_members_only
 from .templatetags.university_tags import *
@@ -455,16 +455,21 @@ def files(request, slug, id, template='course/upload.html'):
 @school_members_only('slug')
 @login_required
 def event(request, slug, id, template='course/create_event.html'):
+    #university = get_object_or_404(University, id=id)
     course = get_object_or_404(Course, university__slug=slug, pk=id)
 
     if request.method == 'POST':
-        form = EventForm(request.POST, request.FILES)
+        form = AcademyEventForm(request.POST, request.FILES, user=request.user)
 
         if form.is_valid():
-            form.save()
+            t = form.save(commit=False)
+            t.created_by = request.user
+            t.save()
             return HttpResponseRedirect(course.get_absolute_url())
     else:
-        form = EventForm(initial={'course': course})
+        ctype = ContentType.objects.get_for_model(course)
+        event = '%s_%s' % (ctype.pk, course.pk)
+        form = AcademyEventForm(user=request.user, initial={'event': event})
 
     variables = RequestContext(request, {
         'form': form,
