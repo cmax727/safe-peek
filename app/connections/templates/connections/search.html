@@ -38,6 +38,9 @@
         $( "#id_with_photo" ).click(function() {
             $(event.target.form).submit();
          });
+        $( "#id_same_school" ).click(function() {
+            $(event.target.form).submit();
+         });
     });
     </script>
 <form action="." method="GET">
@@ -52,6 +55,10 @@
 <p>
     <label for="id_with_photo">With Photo: </label>
     <input type="checkbox" name="p" id="id_with_photo" value="y"{{photocheck}}> Yes
+</p>
+<p>
+    <label for="id_same_school">Same School: </label>
+    <input type="checkbox" name="s" id="id_same_school" value="y"{{schoolcheck}}> Yes
 </p>
 </form>
 

@@ -49,7 +49,9 @@ def search(request, template='connections/search.html'):
     query = request.GET.get('q', '')
     qlocation = request.GET.get('l', '')
     qphoto = request.GET.get('p', '')
+    qschool = request.GET.get('s', '')
     photocheck = ''
+    schoolcheck = ''
     users = User.objects.filter(is_active=True)
     all_friends = Friend.objects.friends(request.user)
     filters = Q(is_active=True)
@@ -61,11 +63,18 @@ def search(request, template='connections/search.html'):
         users = users.filter(username__icontains=query, profile__location__icontains=qlocation, profile__picture__isnull=True)
 
     users = users.filter(filters)
+    if qschool:
+        print request.user.university_set.get()
+        filters = Q(university=request.user.university_set.get())
+        users = users.filter(filters)
+        schoolcheck = ' checked'
+
     variables = RequestContext(request, {
         'users': users,
         'query': query,
         'qlocation': qlocation,
         'photocheck': photocheck,
+        'schoolcheck': schoolcheck,
         'friends': all_friends
     })
     return render(request, template, variables)
