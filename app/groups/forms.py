@@ -4,6 +4,7 @@ from friendship.models import Friend
 
 from .models import Group, GroupStatus, GroupCommentStatus
 from app.timelines.forms import TextTimelineForm, ImageTimelineForm, YoutubeTimelineForm, FileTimelineForm
+from app.events.forms import EventForm
 
 
 class GroupForm(forms.ModelForm):
@@ -110,3 +111,7 @@ class GroupYoutubeTimelineForm(YoutubeTimelineForm):
 
 class GroupFileTimelineForm(FileTimelineForm):
     timeline = forms.ChoiceField(widget=forms.HiddenInput())
+
+
+class GroupEventForm(EventForm):
+    event = forms.ChoiceField(widget=forms.HiddenInput())

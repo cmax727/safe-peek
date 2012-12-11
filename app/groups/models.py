@@ -10,6 +10,7 @@ from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill, Adjust
 
 from app.timelines.models import Timeline
+from app.events.models import Event
 
 
 class GroupManager(models.Manager):
@@ -31,6 +32,7 @@ class Group(models.Model):
     members = models.ManyToManyField(User, through='GroupMembership', related_name='user_groups', blank=True, null=True)
 
     timelines = generic.GenericRelation(Timeline)
+    events = generic.GenericRelation(Event)
     objects = GroupManager()
 
     def __unicode__(self):
