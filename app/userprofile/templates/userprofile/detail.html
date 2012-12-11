@@ -24,7 +24,7 @@
     <ul class="nav nav-tabs">
         <li class="active"><a href="#user-timeline" data-toggle="tab">Timeline</a></li>
         <li><a href="#user-courses" data-toggle="tab">Courses</a></li>
-        <li><a href="#user-events" data-toggle="tab">Events</a></li>
+        {% if request.user == user_profile %}<li><a href="#user-events" data-toggle="tab">Events</a></li>{% endif %}
     </ul>
 
     <div class="tab-content">
@@ -151,6 +151,8 @@
             </table>
 
         </div>
+
+        {% if request.user == user_profile %}
         <div id="user-events" class="tab-pane">
             <p><i class="icon icon-plus"></i><a href="{% url 'userprofile:create_events' %}">Create New Event</a></p>
             <table class="table table-hover">
@@ -162,11 +164,13 @@
                     <td>{{ event.title }} {% if event.content_object != user_profile.profile %}<small>(on <a href="{{ event.content_object.get_absolute_url }}">{{ event.content_object }}</a>)</small>{% endif %}</td>
                     <td>{{ event.content }}</td>
                     <td>{{ event.event_date }}</td>
+                    <td>{% if event.created_by.profile.small_picture %}<a href="{{ event.created_by.get_absolute_url }}"><img src="{{ event.created_by.profile.small_picture.url }}" alt=""></a>{% endif %} <a href="{{ event.created_by.get_absolute_url }}">{{ event.created_by.display_name }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
             </table>
         </div>
+        {% endif %}
     </div>
 
 

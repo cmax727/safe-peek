@@ -209,6 +209,7 @@
                                 <th>Event</th>
                                 <th>Description</th>
                                 <th>Event Date</th>
+                                <th>Created by</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -218,6 +219,7 @@
                             <td>{{ event.title }}</td>
                             <td>{{ event.content }}</td>
                             <td>{{ event.event_date }}</td>
+                            <td>{% if event.created_by.profile.small_picture %}<a href="{{ event.created_by.get_absolute_url }}"><img src="{{ event.created_by.profile.small_picture.url }}" alt=""></a>{% endif %} <a href="{{ event.created_by.get_absolute_url }}">{{ event.created_by.display_name }}</td>
                         </tr>
                         {% endfor %}
                         </tbody>
