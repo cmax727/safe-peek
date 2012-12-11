@@ -13,6 +13,7 @@ from postman.models import Message
 from .forms import EditProfileForm, UserListForm, PersonalEventForm
 from .models import Profile
 
+from app.academy.models import Course
 from app.timelines.forms import *
 from app.events.models import Event
 
@@ -61,11 +62,25 @@ def setunread(request, template='postman/base_folder.html'):
 def profile_detail(request, username, template='userprofile/detail.html'):
     user = get_object_or_404(User, username=username, is_active=True)
     friends = Friend.objects.friends(user)
+    groups = user.user_groups.all()
+    courses = Course.objects.filter(coursemembership__user=user)
     timeline_list = user.profile.timelines.all()
-    paginator = Paginator(timeline_list, 10)
-    events = Event.objects.all()
+    events = user.profile.events.all()
 
+    for group in groups:
+        events = events | group.events.all()
+        timeline_list = timeline_list | group.timelines.filter(created_by=user)
+
+    for course in courses:
+        events = events | course.events.all()
+        timeline_list = timeline_list | course.timelines.filter(created_by=user)
+
+    events = events.order_by('event_date')
+    timeline_list = timeline_list.order_by('-created_at')
+
+    paginator = Paginator(timeline_list, 10)
     page = request.GET.get('page')
+
     try:
         timelines = paginator.page(page)
     except PageNotAnInteger:
@@ -88,8 +103,6 @@ def profile_detail(request, username, template='userprofile/detail.html'):
 
 @login_required
 def personal_event(request, template='userprofile/create_events.html'):
-    #university = get_object_or_404(University, id=id)
-    #course = get_object_or_404(User, )
 
     if request.method == 'POST':
         form = PersonalEventForm(request.POST, request.FILES, user=request.user)

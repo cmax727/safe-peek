@@ -157,22 +157,15 @@
             <h3>Events</h3>
         
             <tbody>
-                        {% for event in events %}
-                        <tr>
-                            <td>{{ event.title }}</td>
-                            <td>{{ event.content }}</td>
-                            <td>{{ event.event_date }}</td>
-                        </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>            
+                {% for event in events %}
+                <tr>
+                    <td>{{ event.title }} {% if event.content_object != user_profile.profile %}<small>(on <a href="{{ event.content_object.get_absolute_url }}">{{ event.content_object }}</a>)</small>{% endif %}</td>
+                    <td>{{ event.content }}</td>
+                    <td>{{ event.event_date }}</td>
+                </tr>
+                {% endfor %}
             </tbody>
             </table>
-        
-
-         
-                    
-
         </div>
     </div>
 

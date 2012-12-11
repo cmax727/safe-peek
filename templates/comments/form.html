@@ -14,5 +14,5 @@
     <input type="hidden" name="next" value="{{ timeline.content_object.get_absolute_url }}" /><button type="submit" value="Add comment" id="id_submit" class="btn btn-primary add_comment_button">Add comment</button>
     </form>
 {% else %}
-    <p>Please <a href="{% url 'auth_login' %}">log in</a> to leave a comment.</p>
+    <p>Please <a href="{% url 'account_login' %}">log in</a> to leave a comment.</p>
 {% endif %}

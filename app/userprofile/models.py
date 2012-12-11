@@ -9,6 +9,7 @@ from django.dispatch import receiver
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill, Adjust
 
+from app.events.models import Event
 from app.timelines.models import Timeline
 from app.academy.models import University, UniversityMembership, Course
 from allauth.account.signals import email_confirmed, user_signed_up
@@ -37,6 +38,7 @@ class Profile(models.Model):
             options={'quality': 90})
 
     timelines = generic.GenericRelation(Timeline)
+    events = generic.GenericRelation(Event)
 
     def __unicode__(self):
         return self.user.username
