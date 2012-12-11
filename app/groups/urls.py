@@ -5,6 +5,7 @@ from django.conf.urls import patterns, url
 urlpatterns = patterns('app.groups.views',
     url(r'^$', 'index', name='index'),
     url(r'^(?P<id>(\d)+)/$', 'detail', name='detail'),
+    url(r'^(?P<id>(\d)+)/create_event/$', 'create_event', name='create_event'),
     url(r'^create/$', 'create', name='create'),
     url(r'^delete/(?P<id>(\d)+)/$', 'delete', name='delete'),
     url(r'^join/(?P<id>(\d)+)/$', 'join', name='join'),

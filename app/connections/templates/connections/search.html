@@ -35,6 +35,25 @@
             $(event.target.form).submit();
         }
         });
+        $( "#id_find_course" ).autocomplete({
+            source: "/users/findcourse/",
+            selectFirst:true,
+            minLength: 2,
+            select: function(event, ui) {
+            //assign value back to the form element
+            if(ui.item){
+                $(event.target).val(ui.item.value);
+            }
+            //submit the form
+            $(event.target.form).submit();
+        }
+        });
+        $( "#id_with_photo" ).click(function() {
+            $(event.target.form).submit();
+         });
+        $( "#id_same_school" ).click(function() {
+            $(event.target.form).submit();
+         });
     });
     </script>
 <form action="." method="GET">
@@ -46,8 +65,20 @@
     <label for="id_find_location">Find by Location: </label>
     <input id="id_find_location" style="margin-top: 8px" type="text" placeholder="Type you looking for" name="l" value="{{qlocation}}" />
 </p>
+<p>
+    <label for="id_find_course">Find by Course: </label>
+    <input id="id_find_course" style="margin-top: 8px" type="text" placeholder="Type you looking for" name="c" value="{{qcourse}}" />
+</p>
+<p>
+    <label for="id_with_photo">With Photo: </label>
+    <input type="checkbox" name="p" id="id_with_photo" value="y"{{photocheck}}> Yes
+</p>
+<p>
+    <label for="id_same_school">Same School: </label>
+    <input type="checkbox" name="s" id="id_same_school" value="y"{{schoolcheck}}> Yes
+</p>
 </form>
-
+<hr>
 <div>
     {% for user in users %}
     <div>

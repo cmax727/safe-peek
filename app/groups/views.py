@@ -9,7 +9,7 @@ from django.utils.timezone import utc
 from django.contrib.auth.models import User
 
 from .decorators import group_members_only
-from .forms import GroupForm, ChangeOwnershipForm
+from .forms import GroupForm, ChangeOwnershipForm, GroupEventForm
 from .forms import GroupTextTimelineForm, GroupImageTimelineForm, GroupYoutubeTimelineForm, GroupFileTimelineForm
 from .models import Group, GroupMembership
 
@@ -71,7 +71,7 @@ def detail(request, id, template='groups/detail.html'):
 
     timeline_list = group.timelines.all()
     paginator = Paginator(timeline_list, 10)
-
+    events = group.events.all().order_by('event_date')
     page = request.GET.get('page')
     try:
         timelines = paginator.page(page)
@@ -93,6 +93,7 @@ def detail(request, id, template='groups/detail.html'):
         'timelines': timelines,
         'text_form': text_form,
         'image_form': image_form,
+        'events': events,
         'youtube_form': youtube_form,
         'file_form': file_form
     })
@@ -298,4 +299,28 @@ def update_timeline(request, id, timeline_type='text'):
         'form': form
     })
     template = 'groups/upload_%s.html' % timeline_type
+    return render(request, template, variables)
+
+
+@login_required
+def create_event(request, id, template='groups/create_event.html'):
+    #university = get_object_or_404(University, id=id)
+    group = get_object_or_404(Group, pk=id)
+
+    if request.method == 'POST':
+        form = GroupEventForm(request.POST, request.FILES, user=request.user)
+
+        if form.is_valid():
+            t = form.save(commit=False)
+            t.created_by = request.user
+            t.save()
+            return HttpResponseRedirect(group.get_absolute_url())
+    else:
+        ctype = ContentType.objects.get_for_model(group)
+        event = '%s_%s' % (ctype.pk, group.pk)
+        form = GroupEventForm(user=request.user, initial={'event': event})
+
+    variables = RequestContext(request, {
+        'form': form,
+    })
     return render(request, template, variables)

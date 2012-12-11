@@ -5,8 +5,10 @@ from django.http import HttpResponseRedirect
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.template import RequestContext
+from django.db.models import Q
 from friendship.models import Friend, FriendshipRequest
 from django.utils import simplejson
+from app.academy.models import Course, CourseMembership
 
 
 @login_required
@@ -20,7 +22,6 @@ def finduser(request):
             user_dict = user.username
             results.append(user_dict)
         output = simplejson.dumps(results)
-        #print output
     else:
         output = 'fail'
     return HttpResponse(output, mimetype='application/json')
@@ -37,7 +38,22 @@ def findlocation(request):
             loc_dict = user.profile.location
             results.append(loc_dict)
         output = simplejson.dumps(results)
-        #print output
+    else:
+        output = 'fail'
+    return HttpResponse(output, mimetype='application/json')
+
+
+@login_required
+def findcourse(request):
+    courses = Course.objects.filter(name__in=request.user.active_courses())
+    if request.is_ajax():
+        q = request.GET.get('term', '')
+        list_course = courses.filter(name__icontains=q)
+        results = []
+        for course in list_course:
+            loc_dict = course.name
+            results.append(loc_dict)
+        output = simplejson.dumps(results)
     else:
         output = 'fail'
     return HttpResponse(output, mimetype='application/json')
@@ -47,16 +63,39 @@ def findlocation(request):
 def search(request, template='connections/search.html'):
     query = request.GET.get('q', '')
     qlocation = request.GET.get('l', '')
+    qphoto = request.GET.get('p', '')
+    qschool = request.GET.get('s', '')
+    qcourse = request.GET.get('c', '')
+    photocheck = ''
+    schoolcheck = ''
     users = User.objects.filter(is_active=True)
     all_friends = Friend.objects.friends(request.user)
+    filters = Q(is_active=True)
+    if qphoto:
+        filters = ~Q(profile__picture='')
+        photocheck = ' checked'
 
     if query or qlocation:
-        users = users.filter(username__icontains=query, profile__location__icontains=qlocation)
+        users = users.filter(username__icontains=query, profile__location__icontains=qlocation, profile__picture__isnull=True)
+
+    users = users.filter(filters)
+
+    if qcourse:
+        course = Course.objects.get(name=qcourse)
+        users = course.members.all()
+
+    if qschool:
+        filters = Q(university=request.user.university_set.get())
+        users = users.filter(filters)
+        schoolcheck = ' checked'
 
     variables = RequestContext(request, {
         'users': users,
         'query': query,
         'qlocation': qlocation,
+        'qcourse': qcourse,
+        'photocheck': photocheck,
+        'schoolcheck': schoolcheck,
         'friends': all_friends
     })
     return render(request, template, variables)
