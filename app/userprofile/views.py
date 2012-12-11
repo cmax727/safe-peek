@@ -63,7 +63,7 @@ def profile_detail(request, username, template='userprofile/detail.html'):
     friends = Friend.objects.friends(user)
     timeline_list = user.profile.timelines.all()
     paginator = Paginator(timeline_list, 10)
-    #events = get_object_or_404(Event, id=id)
+    events = Event.objects.all()
 
     page = request.GET.get('page')
     try:
@@ -77,7 +77,7 @@ def profile_detail(request, username, template='userprofile/detail.html'):
         'user_profile': user,
         'friends': friends,
         'timelines': timelines,
-        #'events': events,
+        'events': events,
         'text_form': TextTimelineForm(user=user),
         'image_form': ImageTimelineForm(user=user),
         'youtube_form': YoutubeTimelineForm(user=user),

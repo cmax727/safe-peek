@@ -152,28 +152,17 @@
 
         </div>
         <div id="user-events" class="tab-pane">
+            <p><i class="icon icon-plus"></i><a href="{% url 'userprofile:create_events' %}">Create New Event</a></p>
             <table class="table table-hover">
             <h3>Events</h3>
-            
+        
             <tbody>
-                {% for event in events %}
-                <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Event</th>
-                                <th>Description</th>
-                                <th>Event Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-
                         {% for event in events %}
                         <tr>
-                            <td>{{ event.name }}</td>
-                            <td>{{ event.description }}</td>
+                            <td>{{ event.title }}</td>
+                            <td>{{ event.content }}</td>
                             <td>{{ event.event_date }}</td>
                         </tr>
-                        {% endfor %}
                         {% endfor %}
                         </tbody>
                     </table>            
@@ -181,11 +170,12 @@
             </table>
         
 
-         <p><i class="icon icon-plus"></i><a href="{% url 'userprofile:create_events' %}">Create New Event</a></p>
+         
                     
 
         </div>
     </div>
+
 
 </div>
 
