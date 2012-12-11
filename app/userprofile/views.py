@@ -10,8 +10,8 @@ from django.template import RequestContext
 from friendship.models import Friend
 from postman.models import Message
 
-from .forms import EditProfileForm, UserListForm, PersonalEventForm
-from .models import Profile, PersonalEvent
+from .forms import EditProfileForm, UserListForm
+from .models import Profile
 
 from app.timelines.forms import *
 
@@ -62,7 +62,6 @@ def profile_detail(request, username, template='userprofile/detail.html'):
     friends = Friend.objects.friends(user)
     timeline_list = user.profile.timelines.all()
     paginator = Paginator(timeline_list, 10)
-    events = PersonalEvent.objects.all()
 
     page = request.GET.get('page')
     try:
@@ -76,7 +75,6 @@ def profile_detail(request, username, template='userprofile/detail.html'):
         'user_profile': user,
         'friends': friends,
         'timelines': timelines,
-        'events': events,
         'text_form': TextTimelineForm(user=user),
         'image_form': ImageTimelineForm(user=user),
         'youtube_form': YoutubeTimelineForm(user=user),

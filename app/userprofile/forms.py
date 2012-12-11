@@ -1,5 +1,5 @@
 from django import forms
-from .models import Profile, Status, CommentStatus, PersonalEvent
+from .models import Profile, Status, CommentStatus
 from django.contrib.auth.models import User
 from app.academy.models import University
 #from app.academy.forms import EventForm
@@ -37,9 +37,3 @@ class CommentStatusForm(forms.ModelForm):
     class Meta:
         model = CommentStatus
         exclude = ('status', 'created_by', 'created_at')
-
-
-class PersonalEventForm(forms.ModelForm):
-    class Meta:
-        model = PersonalEvent
-        exclude = ('created_at')
