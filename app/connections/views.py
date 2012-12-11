@@ -5,6 +5,7 @@ from django.http import HttpResponseRedirect
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.template import RequestContext
+from django.db.models import Q
 from friendship.models import Friend, FriendshipRequest
 from django.utils import simplejson
 
@@ -47,16 +48,24 @@ def findlocation(request):
 def search(request, template='connections/search.html'):
     query = request.GET.get('q', '')
     qlocation = request.GET.get('l', '')
+    qphoto = request.GET.get('p', '')
+    photocheck = ''
     users = User.objects.filter(is_active=True)
     all_friends = Friend.objects.friends(request.user)
+    filters = Q(is_active=True)
+    if qphoto:
+        filters = ~Q(profile__picture='')
+        photocheck = ' checked'
 
     if query or qlocation:
-        users = users.filter(username__icontains=query, profile__location__icontains=qlocation)
+        users = users.filter(username__icontains=query, profile__location__icontains=qlocation, profile__picture__isnull=True)
 
+    users = users.filter(filters)
     variables = RequestContext(request, {
         'users': users,
         'query': query,
         'qlocation': qlocation,
+        'photocheck': photocheck,
         'friends': all_friends
     })
     return render(request, template, variables)
