@@ -167,9 +167,9 @@ INSTALLED_APPS = (
 SOCIALACCOUNT_AVATAR_SUPPORT = 'avatar'
 
 POSTMAN_DISALLOW_ANONYMOUS = True  # default is False
-# POSTMAN_DISALLOW_MULTIRECIPIENTS = True # default is False
-# POSTMAN_DISALLOW_COPIES_ON_REPLY = True # default is False
-# POSTMAN_DISABLE_USER_EMAILING = True # default is False
+#POSTMAN_DISALLOW_MULTIRECIPIENTS = True # default is False
+#POSTMAN_DISALLOW_COPIES_ON_REPLY = True # default is False
+#POSTMAN_DISABLE_USER_EMAILING = True # default is False
 POSTMAN_AUTO_MODERATE_AS = True  # default is None
 POSTMAN_NOTIFIER_APP = 'notification'  # default is 'notification'
 POSTMAN_MAILER_APP = 'mailer'  # default is 'mailer'
@@ -230,6 +230,7 @@ DEFAULT_CONTENT_EMAIL = "Thank you for your submitted questions. Our staff has r
 DEFAULT_CONTENT_EMAIL_COURSE = "You have been invited to a new Course"
 DEFAULT_CONTENT_EMAIL_GROUP = "You have been invited to a new Group"
 DEFAULT_CONTENT_EMAIL_ASSIGNMENT = "Attention to all Students : the Professor has made a new Assignment"
+DEFAULT_CONTENT_EMAIL_INBOX_NOTIFICATION = "Someone sents you a message, please login to School Network"
 
 FACEBOOK_APPS_ID = '500336159997765'
 
