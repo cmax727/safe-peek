@@ -25,4 +25,8 @@ urlpatterns = patterns('app.academy.views',
     url(r'^(?P<slug>[-\.\w]+)/write/picture/$', 'write_timeline', {'timeline_type': 'picture'}, name='upload_picture'),
     url(r'^(?P<slug>[-\.\w]+)/write/youtube/$', 'write_timeline', {'timeline_type': 'youtube'}, name='upload_youtube'),
     url(r'^(?P<slug>[-\.\w]+)/write/file/$', 'write_timeline', {'timeline_type': 'file'}, name='upload_file'),
+    url(r'^(?P<slug>[-\.\w]+)/course/(?P<id>(\d)+)/write/text/$', 'write_timeline_course', {'timeline_type': 'text'}, name='upload_text_course'),
+    url(r'^(?P<slug>[-\.\w]+)/course/(?P<id>(\d)+)/write/picture/$', 'write_timeline_course', {'timeline_type': 'picture'}, name='upload_picture_course'),
+    url(r'^(?P<slug>[-\.\w]+)/course/(?P<id>(\d)+)/write/youtube/$', 'write_timeline_course', {'timeline_type': 'youtube'}, name='upload_youtube_course'),
+    url(r'^(?P<slug>[-\.\w]+)/course/(?P<id>(\d)+)/write/file/$', 'write_timeline_course', {'timeline_type': 'file'}, name='upload_file_course'),
 )

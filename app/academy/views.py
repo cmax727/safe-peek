@@ -326,6 +326,42 @@ def write_timeline(request, slug, timeline_type='text'):
 
 @school_members_only('slug')
 @login_required
+def write_timeline_course(request, slug, id, timeline_type='text'):
+    university = get_object_or_404(University, slug=slug)
+    course = get_object_or_404(Course, university=university, id=id)
+
+    form_class = None
+
+    if timeline_type == 'picture':
+        form_class = AcademyImageTimelineForm
+    elif timeline_type == 'youtube':
+        form_class = AcademyYoutubeTimelineForm
+    elif timeline_type == 'file':
+        form_class = AcademyFileTimelineForm
+    else:
+        form_class = AcademyTextTimelineForm
+
+    if request.method == 'POST':
+        form = form_class(request.POST, request.FILES, user=request.user)
+
+        if form.is_valid():
+            t = form.save(commit=False)
+            t.created_by = request.user
+            t.save()
+            return HttpResponseRedirect(course.get_absolute_url())
+    else:
+        ctype = ContentType.objects.get_for_model(course)
+        timeline = '%s_%s' % (ctype.pk, course.pk)
+        form = form_class(user=request.user, initial={'timeline': timeline})
+    variables = RequestContext(request, {
+        'form': form
+    })
+    template = 'university/upload_%s.html' % timeline_type
+    return render(request, template, variables)
+
+
+@school_members_only('slug')
+@login_required
 def update_timeline(request, id, timeline_type='text'):
     course = get_object_or_404(Course, id=id)
     user = get_object_or_404(User, is_active=True, username=request.user.username, user_course=course)

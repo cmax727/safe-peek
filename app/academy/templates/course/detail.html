@@ -76,28 +76,28 @@
 
                         <div class="tab-content">
                             <div id="upload_text_wrapper" class="tab-pane">
-                                <form action="{% url 'academy:upload_text' course.university.id %}" method="POST">{% csrf_token %}
+                                <form action="{% url 'academy:upload_text_course' course.university.slug course.pk %}" method="POST">{% csrf_token %}
                                     {{ text_form.as_p }}
                                     <button type="submit" class="btn btn-primary">Share</button>
                                 </form>
                             </div>
                             
                             <div id="upload_image_wrapper" class="tab-pane">
-                                <form action="{% url 'academy:upload_picture' course.university.id %}" method="POST" enctype="multipart/form-data">{% csrf_token %}
+                                <form action="{% url 'academy:upload_picture_course' course.university.slug course.pk %}" method="POST" enctype="multipart/form-data">{% csrf_token %}
                                     {{ image_form.as_p }}
                                     <button type="submit" class="btn btn-primary">Upload image</button>
                                 </form>
                             </div>
                             
                             <div id="upload_youtube_wrapper" class="tab-pane">
-                                <form action="{% url 'academy:upload_youtube' course.university.id %}" method="POST">{% csrf_token %}
+                                <form action="{% url 'academy:upload_youtube_course' course.university.slug course.pk %}" method="POST">{% csrf_token %}
                                     {{ youtube_form.as_p }}
                                     <button type="submit" class="btn btn-primary">Share YouTube video</button>
                                 </form>
                             </div>
                             
                             <div id="upload_file_wrapper" class="tab-pane">
-                                <form action="{% url 'academy:upload_file' course.university.id %}" method="POST" enctype="multipart/form-data">{% csrf_token %}
+                                <form action="{% url 'academy:upload_file_course' course.university.slug course.pk %}" method="POST" enctype="multipart/form-data">{% csrf_token %}
                                     {{ file_form.as_p }}
                                     <button type="submit" class="btn btn-primary">Upload file</button>
                                 </form>
