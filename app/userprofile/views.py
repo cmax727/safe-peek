@@ -63,7 +63,7 @@ def profile_detail(request, username, template='userprofile/detail.html'):
     user = get_object_or_404(User, username=username, is_active=True)
     friends = Friend.objects.friends(user)
     groups = user.user_groups.all()
-    courses = Course.objects.filter(coursemembership__user=user)
+    courses = Course.objects.filter(Q(coursemembership__user=user) | Q(professor=user))
     timeline_list = user.profile.timelines.all()
     events = user.profile.events.all()
 
