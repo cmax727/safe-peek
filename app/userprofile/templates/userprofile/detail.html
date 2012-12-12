@@ -3,6 +3,33 @@
 {% load friendshiptags comments %}
 
 {% block sidebar %}
+<script>
+    $(function() {
+        $("#id_profile").click(function() {
+            //alert($('#id_personal').is(':checked'));
+            if ($('#id_profile').is(':checked')) {
+                $('tr.tr_profile').show();
+            } else {
+                $('tr.tr_profile').hide();
+            } 
+            // $('tr.tr_personal').hide();
+         });
+        $("#id_group").click(function() {
+            if ($('#id_group').is(':checked')) {
+                $('tr.tr_group').show();
+            } else {
+                $('tr.tr_group').hide();
+            } 
+         });
+        $("#id_course").click(function() {
+            if ($('#id_course').is(':checked')) {
+                $('tr.tr_course').show();
+            } else {
+                $('tr.tr_course').hide();
+            } 
+         });
+    });
+</script>
 <div class="friends">
     <h3>Friends</h3>
     <ul class="nav nav-list">
@@ -157,12 +184,16 @@
             <p><i class="icon icon-plus"></i><a href="{% url 'userprofile:create_events' %}">Create New Event</a></p>
             <table class="table table-hover">
             <h3>Events</h3>
-        
+            <p><label for="id_same_school">Same School: </label>
+                <input type="checkbox" name="profile" id="id_profile" value="y" checked> Profile
+                <input type="checkbox" name="group" id="id_group" value="y" checked> Group
+                <input type="checkbox" name="course" id="id_course" value="y" checked> Course
+            </p>
             <tbody>
                 {% for event in events %}
-                <tr>
+                <tr class="tr_{{event.content_type}}">
                     <td>{{ event.title }} {% if event.content_object != user_profile.profile %}<small>(on <a href="{{ event.content_object.get_absolute_url }}">{{ event.content_object }}</a>)</small>{% endif %}</td>
-                    <td>{{ event.content }}</td>
+                    <td>{{ event.content }}-- {{event.content_type}}</td>
                     <td>{{ event.event_date }}</td>
                     <td>{% if event.created_by.profile.small_picture %}<a href="{{ event.created_by.get_absolute_url }}"><img src="{{ event.created_by.profile.small_picture.url }}" alt=""></a>{% endif %} <a href="{{ event.created_by.get_absolute_url }}">{{ event.created_by.display_name }}</td>
                 </tr>

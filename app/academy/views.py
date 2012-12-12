@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
@@ -549,6 +551,7 @@ def detail_assignment_user(request, slug, aid, id, uname, template='course/detai
         grade = request.POST.get('grade', '')
         comment = request.POST.get('comment', '')
         AssignmentSubmit.objects.filter(pk=ids).update(grade=grade, comment=comment)
+        send_mail('New Grade Notification', settings.DEFAULT_CONTENT_EMAIL_GRADE, settings.DEFAULT_FROM_EMAIL, [user.email])
         return HttpResponseRedirect(assignment.get_absolute_url())
 
     submit = assignment.assignmentsubmit_set.get(user=user)
