@@ -230,7 +230,8 @@ DEFAULT_CONTENT_EMAIL = "Thank you for your submitted questions. Our staff has r
 DEFAULT_CONTENT_EMAIL_COURSE = "You have been invited to a new Course"
 DEFAULT_CONTENT_EMAIL_GROUP = "You have been invited to a new Group"
 DEFAULT_CONTENT_EMAIL_ASSIGNMENT = "Attention to all Students : the Professor has made a new Assignment"
-DEFAULT_CONTENT_EMAIL_ASSIGNMENT = "The Professor has gave grade"
+DEFAULT_CONTENT_EMAIL_GRADE = "The Professor has gave grade"
+DEFAULT_CONTENT_EMAIL_COMMENT = "You have a new comment on you post"
 
 FACEBOOK_APPS_ID = '500336159997765'
 

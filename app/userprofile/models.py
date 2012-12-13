@@ -5,6 +5,7 @@ from django.contrib.contenttypes import generic
 from django.core.mail import send_mail
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.contrib.comments.signals import comment_was_posted
 
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill, Adjust
@@ -166,3 +167,10 @@ def notify_facebook_friends(request, user, **kwargs):
         send_mail('Your friend just joined School network', email_content,
                 settings.DEFAULT_FROM_EMAIL, [user.email])
     return True
+
+
+@receiver(comment_was_posted)
+def send_email_comment(sender, comment, request, **kwargs):
+    #tmp = kwargs, instance
+    #print comment.content_object.created_by.email
+    send_mail('New Comment Notification', settings.DEFAULT_CONTENT_EMAIL_COMMENT, settings.DEFAULT_FROM_EMAIL, [comment.content_object.created_by.email])
