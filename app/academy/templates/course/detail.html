@@ -6,7 +6,32 @@
 {% block title %}{{course.name}} Course{% endblock %}
 
 {% block content %}
+{% for event in events %}
+   {"date":"{{event.event_date.date}}","title":"{{event.title}}"},
+{% endfor %}
+<script type="text/javascript">
+$(document).ready(function(){
 
+          var evnts = function(){
+              return {
+                      "event":
+                          [
+                            {% for event in events %}
+                               {"date":"{{event.event_date.date}}","title":"{{event.title}}"},
+                            {% endfor %}
+
+                          ]
+                      }
+          };
+
+         $('#calendar').Calendar({ 'events': evnts, 'weekStart': 1 })
+         .on('changeDay', function(event){  })
+         .on('onEvent', function(event){  })
+         .on('onNext', function(event){  })
+         .on('onPrev', function(event){  })
+         .on('onCurrent', function(event){  });
+      });
+</script>
 <h2>"{{course}}" Course</h2>
 
 <div class="tabbable">
@@ -18,6 +43,7 @@
         <li><a href="#assignments_content" data-toggle="tab">Assignments</a></li>
         <li><a href="#files_content" data-toggle="tab">Resources</a></li>
         <li><a href="#events_content" data-toggle="tab">Events</a></li>
+        <li><a href="#calendar_content" data-toggle="tab">calendar</a></li>
     </ul>
 
     <div class="tab-content">
@@ -236,6 +262,27 @@
                 
             </div>
         </div>
+
+        <div id="calendar_content" class="tab-pane" style="padding-top:20px;">
+            <div class="row">
+                <div class="span4" id="calendar"></div>
+            </div>
+
+            <script type="text/javascript">
+
+                var _gaq = _gaq || [];
+                _gaq.push(['_setAccount', 'UA-30362552-1']);
+                _gaq.push(['_trackPageview']);
+
+                (function() {
+                  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+                })();
+
+            </script>
+        </div>
+
     </div>
 </div>
 {% endblock %}
