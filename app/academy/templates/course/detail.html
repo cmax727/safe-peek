@@ -6,9 +6,6 @@
 {% block title %}{{course.name}} Course{% endblock %}
 
 {% block content %}
-{% for event in events %}
-   {"date":"{{event.event_date.date}}","title":"{{event.title}}"},
-{% endfor %}
 <script type="text/javascript">
 $(document).ready(function(){
 
@@ -17,7 +14,7 @@ $(document).ready(function(){
                       "event":
                           [
                             {% for event in events %}
-                               {"date":"{{event.event_date.date}}","title":"{{event.title}}"},
+                               {"date":'{{event.event_date.date|date:"Y-m-d"}}',"title":"{{event.title}}"},
                             {% endfor %}
 
                           ]
@@ -26,7 +23,7 @@ $(document).ready(function(){
 
          $('#calendar').Calendar({ 'events': evnts, 'weekStart': 1 })
          .on('changeDay', function(event){  })
-         .on('onEvent', function(event){  })
+         .on('onEvent', function(event){ })
          .on('onNext', function(event){  })
          .on('onPrev', function(event){  })
          .on('onCurrent', function(event){  });
