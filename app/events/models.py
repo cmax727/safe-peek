@@ -21,6 +21,9 @@ class Event(models.Model):
     def __unicode__(self):
         return self.title
 
+    def event_type(self):
+        return self.content_type.__unicode__()
+
     @models.permalink
     def get_absolute_url(self):
         return ('events:detail', [str(self.pk)])

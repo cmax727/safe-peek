@@ -30,6 +30,7 @@
         <li class="active"><a href="#info_content" data-toggle="tab">Info</a></li>
         <li><a href="#timeline_content" data-toggle="tab">Timeline</a></li>
         <li><a href="#events_content" data-toggle="tab">Events</a></li>
+        <li><a href="#calendar_content" data-toggle="tab">Calendar</a></li>
     </ul>
 
     <div class="tab-content">
@@ -51,7 +52,6 @@
     {% endfor %}
 </ul>
 {% endif %}
-
         </div>
 
         <div id="timeline_content" class="tab-pane">
@@ -184,6 +184,10 @@
                 
             </div>
         </div>
+
+        <div id="calendar_content" class="tab-pane">
+            <div id="calendar"></div>
+        </div>
     </div>
 </div>
 
@@ -196,6 +200,23 @@ $(function() {
     $("a.comments-list").click(function() {
         $(this).parents('.timeline-info').siblings('.comments').toggle();
         return false;
+    });
+
+    var events = [
+    {% for event in events %}
+        {
+            "date":'{{event.event_date.date|date:"Y-m-d"}}',
+            "title":"{{event.title|safe}}",
+            "color": "#F89406"
+        },
+    {% endfor %}
+    ]
+    $('a[data-toggle="tab"]').on('shown', function(e) {
+        var tab_element = $(e.target).attr('href');
+        
+        if (tab_element == '#calendar_content') {
+            $('#calendar').fullCalendar({events: events, editable: false}).render();
+        }
     });
 });
 </script>

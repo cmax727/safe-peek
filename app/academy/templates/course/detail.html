@@ -5,30 +5,28 @@
 
 {% block title %}{{course.name}} Course{% endblock %}
 
-{% block content %}
+{% block extrajs %}
 <script type="text/javascript">
 $(document).ready(function(){
 
-          var evnts = function(){
-              return {
-                      "event":
-                          [
-                            {% for event in events %}
-                               {"date":'{{event.event_date.date|date:"Y-m-d"}}',"title":"{{event.title}}"},
-                            {% endfor %}
+    var events = [
+    {% for event in events %}
+        {"date":'{{event.event_date.date|date:"Y-m-d"}}',
+        "title":"{{event.title|safe}}"},
+    {% endfor %}
+    ];
 
-                          ]
-                      }
-          };
-
-         $('#calendar').Calendar({ 'events': evnts, 'weekStart': 1 })
-         .on('changeDay', function(event){  })
-         .on('onEvent', function(event){ })
-         .on('onNext', function(event){  })
-         .on('onPrev', function(event){  })
-         .on('onCurrent', function(event){  });
-      });
+    $('a[data-toggle="tab"]').on('shown', function(e) {
+        var tab_element = $(e.target).attr('href');
+        
+        if (tab_element == '#calendar_content') {
+            $('#calendar').fullCalendar({events: events, editable: false}).render();
+        }
+    });
+});
 </script>
+{% endblock %}
+{% block content %}
 <h2>"{{course}}" Course</h2>
 
 <div class="tabbable">
@@ -262,22 +260,8 @@ $(document).ready(function(){
 
         <div id="calendar_content" class="tab-pane" style="padding-top:20px;">
             <div class="row">
-                <div class="span4" id="calendar"></div>
+                <div class="span9" id="calendar"></div>
             </div>
-
-            <script type="text/javascript">
-
-                var _gaq = _gaq || [];
-                _gaq.push(['_setAccount', 'UA-30362552-1']);
-                _gaq.push(['_trackPageview']);
-
-                (function() {
-                  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-                  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-                  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-                })();
-
-            </script>
         </div>
 
     </div>
