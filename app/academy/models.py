@@ -132,6 +132,17 @@ class AssignmentSubmit(models.Model):
         return 'Grade: %s, Professor Comment: %s' % (self.grade, self.comment)
 
 
+class StudyGroup(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+    course = models.ForeignKey(Course)
+    created_by = models.ForeignKey(User)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return self.name
+
+
 def auto_add_users_into_university(sender, instance, created, **kwargs):
 
     if created:
