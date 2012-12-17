@@ -1,6 +1,10 @@
 # Django settings for schoolnetwork project.
 import os
 import sys
+import djcelery
+
+djcelery.setup_loader()
+BROKER_URL = 'redis://localhost:6379/0'
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -156,6 +160,7 @@ INSTALLED_APPS = (
     'pagination',
     'friendship',
     'django_wysiwyg',
+    'djcelery',
     'app.timelines',
     'app.events',
     'app.userprofile',
@@ -234,6 +239,15 @@ DEFAULT_CONTENT_EMAIL_GRADE = "The Professor has gave grade"
 DEFAULT_CONTENT_EMAIL_COMMENT = "You have a new comment on you post"
 
 FACEBOOK_APPS_ID = '500336159997765'
+
+CELERY_RESULT_BACKEND = "redis"
+CELERY_REDIS_HOST = "localhost"
+CELERY_REDIS_PORT = 6379
+CELERY_REDIS_DB = 0
+CELERY_IMPORTS = ("app.events.notification", )
+CELERY_SEND_TASK_ERROR_EMAILS = True
+CELERYD_LOG_FILE='/tmp/celery.log'
+
 
 try:
     from local_settings import *

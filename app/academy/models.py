@@ -8,6 +8,7 @@ from django.core.mail import send_mail
 
 from app.timelines.models import Timeline
 from app.events.models import Event
+from app.events import notification
 
 
 class University(models.Model):
@@ -159,6 +160,7 @@ def send_email_assignment(sender, instance, created, **kwargs):
         members = instance.course.coursemembership_set.filter(status=1)
         for member in members:
             send_mail('New Assignment Notification', settings.DEFAULT_CONTENT_EMAIL_ASSIGNMENT, settings.DEFAULT_FROM_EMAIL, [member.user.email])
+            notification.notify()   # Penggunaan Celery
     return True
 
 
@@ -172,3 +174,21 @@ def send_email_grade(sender, instance, created, **kwargs):
 
 
 post_save.connect(send_email_grade, sender=AssignmentSubmit, dispatch_uid='app.academy.models.send_email_grade')
+
+
+# def tes_assignment(sender, instance, created, **kwargs):
+#     print '11111111111111111111111111111111'
+#     if created:
+#         print '2222222222222222222222222222222222'
+#         members = instance.course.coursemembership_set.filter(status=1)
+#         print '3333333333333333333333333333333333333'
+#         for member in members:
+#             send_mail('DELAYDELAYDELAYDELAYDELAY', settings.DEFAULT_CONTENT_EMAIL_ASSIGNMENT, settings.DEFAULT_FROM_EMAIL, [member.user.email])
+#             notification.notify.delay()
+#             print '5555555555555555555'
+#             print notification.notify
+#             print 'KONTOLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL'
+#     return True
+
+
+# post_save.connect(tes_assignment, sender=Assignment, dispatch_uid='app.academy.models.tes_assignment')
