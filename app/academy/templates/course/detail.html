@@ -39,6 +39,7 @@ $(document).ready(function(){
         <li><a href="#files_content" data-toggle="tab">Resources</a></li>
         <li><a href="#events_content" data-toggle="tab">Events</a></li>
         <li><a href="#calendar_content" data-toggle="tab">calendar</a></li>
+        <li><a href="#study_content" data-toggle="tab">Study Group</a></li>
     </ul>
 
     <div class="tab-content">
@@ -261,6 +262,20 @@ $(document).ready(function(){
         <div id="calendar_content" class="tab-pane" style="padding-top:20px;">
             <div class="row">
                 <div class="span9" id="calendar"></div>
+            </div>
+        </div>
+        <div id="study_content" class="tab-pane" style="padding-top:20px;">
+            <div class="row">
+                <div class="span6">
+                    {% if user|is_enrolled_in:course %}
+                        <p><i class="icon icon-plus"></i><a href="{% url 'academy:create_study_group'  course.university.slug course.pk %}">Create New Study Group</a></p>
+                        <hr>
+                        <h2>Study Groups</h2>
+                        {% for study_group in study_groups %}
+                        <p><i class="icon icon-file"></i>{{ study_group.name }}</p>
+                    {% endfor %}
+                    {% endif %}
+                </div>
             </div>
         </div>
 

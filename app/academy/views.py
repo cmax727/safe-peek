@@ -14,10 +14,10 @@ from django.utils.timezone import utc
 from .forms import (CourseForm, CourseFilesForm, UniversityForm, CourseProfessorForm,
         SyllabusForm, UniversityAdminForm, UniversityProfessorForm,
         UniversityCourseForm, AssignmentForm, SubmitAssignmentForm,
-        SubmitAssignmentUserForm, TextTimelineForm, EventForm)
+        SubmitAssignmentUserForm, TextTimelineForm, EventForm, StudyGroupForm)
 
 from .forms import AcademyEventForm, AcademyTextTimelineForm, AcademyImageTimelineForm, AcademyYoutubeTimelineForm, AcademyFileTimelineForm
-from .models import Course, CourseMembership, CourseFiles, Syllabus, University, Assignment, AssignmentSubmit, Event
+from .models import Course, CourseMembership, CourseFiles, Syllabus, University, Assignment, AssignmentSubmit, Event, StudyGroup
 from .decorators import school_members_only
 from .templatetags.university_tags import *
 
@@ -186,10 +186,11 @@ def course(request, slug):
 
 @login_required
 def detailcourse(request, slug, id, template='course/detail.html'):
-    course = get_object_or_404(Course, pk=id)
+    course = get_object_or_404(Course, university__slug=slug, pk=id)
     members = course.coursemembership_set.all()
     assignments = course.assignment_set.all()
     files = course.coursefiles_set.all()
+    study_groups = course.studygroup_set.all()
     events = course.events.order_by('event_date')
 
     timeline_list = course.timelines.all()
@@ -229,6 +230,7 @@ def detailcourse(request, slug, id, template='course/detail.html'):
         'assignments': assignments,
         'files': files,
         'events': events,
+        'study_groups': study_groups,
         'text_form': text_form,
         'image_form': image_form,
         'youtube_form': youtube_form,
@@ -329,8 +331,7 @@ def write_timeline(request, slug, timeline_type='text'):
 @school_members_only('slug')
 @login_required
 def write_timeline_course(request, slug, id, timeline_type='text'):
-    university = get_object_or_404(University, slug=slug)
-    course = get_object_or_404(Course, university=university, id=id)
+    course = get_object_or_404(Course, university__slug=slug, pk=id)
 
     form_class = None
 
@@ -403,7 +404,7 @@ def syllabus(request, slug, id, template='course/create_syllabus.html'):
         form = SyllabusForm(request.POST or None, request.FILES)
         if form.is_valid():
             #print 'test'
-            course = get_object_or_404(Course, pk=id)
+            course = get_object_or_404(Course, university__slug=slug, pk=id)
             new_syllabus = form.save(commit=False)
             new_syllabus.course = course
             new_syllabus.save()
@@ -422,7 +423,7 @@ def syllabus(request, slug, id, template='course/create_syllabus.html'):
 @school_members_only('slug')
 @login_required
 def createassignment(request, slug, id, template='course/create_assignment.html'):
-    course = get_object_or_404(Course, pk=id)
+    course = get_object_or_404(Course, university__slug=slug, pk=id)
 
     if request.method == 'POST':
         form = AssignmentForm(request.POST, request.FILES)
@@ -442,7 +443,7 @@ def createassignment(request, slug, id, template='course/create_assignment.html'
 @school_members_only('slug')
 @login_required
 def report_assignment(request, slug, id, template='course/report_assignment.html'):
-    course = get_object_or_404(Course, pk=id)
+    course = get_object_or_404(Course, university__slug=slug, pk=id)
     assignment = Assignment.objects.filter(course=course)
 
     if request.method == 'POST':
@@ -473,7 +474,7 @@ def report_assignment(request, slug, id, template='course/report_assignment.html
 @school_members_only('slug')
 @login_required
 def files(request, slug, id, template='course/upload.html'):
-    course = get_object_or_404(Course, pk=id)
+    course = get_object_or_404(Course, university__slug=slug, pk=id)
 
     if request.method == 'POST':
         form = CourseFilesForm(request.POST, request.FILES)
@@ -483,6 +484,28 @@ def files(request, slug, id, template='course/upload.html'):
             return HttpResponseRedirect(course.get_absolute_url())
     else:
         form = CourseFilesForm(initial={'course': course})
+
+    variables = RequestContext(request, {
+        'form': form,
+    })
+    return render(request, template, variables)
+
+
+@school_members_only('slug')
+@login_required
+def create_study_group(request, slug, id, template='course/create_study_group.html'):
+    course = get_object_or_404(Course, university__slug=slug, pk=id)
+
+    if request.method == 'POST':
+        form = StudyGroupForm(request.POST)
+
+        if form.is_valid():
+            new_study_group = form.save(commit=False)
+            new_study_group.created_by = request.user
+            new_study_group.save()
+            return HttpResponseRedirect(course.get_absolute_url())
+    else:
+        form = StudyGroupForm(initial={'course': course, 'created_by': request.user})
 
     variables = RequestContext(request, {
         'form': form,
