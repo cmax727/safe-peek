@@ -565,6 +565,31 @@ def detailassignment(request, slug, aid, id, template='course/detailassignment.h
 
 @school_members_only('slug')
 @login_required
+def detail_study_group(request, slug, sid, id, template='course/detail_study_group.html'):
+    assignment = get_object_or_404(Assignment, pk=id, course__pk=sid, course__university__slug=slug)
+    members = assignment.course.coursemembership_set.all()
+
+    if request.method == 'POST':
+        form = SubmitAssignmentForm(request.POST, request.FILES)
+        if form.is_valid():
+            new_submit = form.save(commit=False)
+            new_submit.assignment = assignment
+            new_submit.user = request.user
+            new_submit.save()
+            print new_submit
+    else:
+        form = SubmitAssignmentForm()
+
+    variables = RequestContext(request, {
+        'assignment': assignment,
+        'members': members,
+        'form': form
+    })
+    return render(request, template, variables)
+
+
+@school_members_only('slug')
+@login_required
 def detail_assignment_user(request, slug, aid, id, uname, template='course/detailassignmentuser.html'):
     assignment = get_object_or_404(Assignment, pk=id)
     user = get_object_or_404(User, username=uname)

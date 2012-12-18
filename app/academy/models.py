@@ -139,6 +139,10 @@ class StudyGroup(models.Model):
     created_by = models.ForeignKey(User)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    @models.permalink
+    def get_absolute_url(self):
+        return ('academy:detail_study_group', [self.course.university.slug, str(self.course.pk), str(self.pk)])
+
     def __unicode__(self):
         return self.name
 

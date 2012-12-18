@@ -161,6 +161,7 @@ INSTALLED_APPS = (
     'friendship',
     'django_wysiwyg',
     'djcelery',
+    'jqchat',
     'app.timelines',
     'app.events',
     'app.userprofile',
@@ -246,7 +247,7 @@ CELERY_REDIS_PORT = 6379
 CELERY_REDIS_DB = 0
 CELERY_IMPORTS = ("app.events.notification", )
 CELERY_SEND_TASK_ERROR_EMAILS = True
-CELERYD_LOG_FILE='/tmp/celery.log'
+CELERYD_LOG_FILE = '/tmp/celery.log'
 
 
 try:

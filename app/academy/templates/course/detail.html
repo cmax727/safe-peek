@@ -272,7 +272,7 @@ $(document).ready(function(){
                         <hr>
                         <h2>Study Groups</h2>
                         {% for study_group in study_groups %}
-                        <p><i class="icon icon-file"></i>{{ study_group.name }}</p>
+                        <p><i class="icon icon-file"></i><a href="{{ study_group.get_absolute_url }}">{{ study_group.name }}</a></p>
                     {% endfor %}
                     {% endif %}
                 </div>

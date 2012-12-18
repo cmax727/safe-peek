@@ -19,6 +19,7 @@ urlpatterns = patterns('',
     url(r'^events/', include('app.events.urls', namespace='events')),
     url(r'^academy/', include('app.academy.urls', namespace='academy')),
     url(r'', include('app.userprofile.urls', namespace='userprofile')),
+    url(r'^chat/', include('jqchat.urls')),
 )
 
 if settings.DEBUG:
