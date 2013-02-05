@@ -11,3 +11,4 @@ facepy==0.8.4
 django-celery-with-redis==3.0
 git+https://github.com/yomguy/django-jqchat.git
 dj-database-url
+psycopg2
