@@ -29,6 +29,9 @@ DATABASES = {
     }
 }
 
+import dj_database_url
+DATABASES['default'] =  dj_database_url.config()
+
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -254,8 +257,18 @@ CELERY_SEND_TASK_ERROR_EMAILS = True
 CELERYD_LOG_FILE = '/tmp/celery.log'
 
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_HOST_PASSWORD = 'testtest'
+SERVER_EMAIL = DEFAULT_FROM_EMAIL = EMAIL_HOST_USER = 'test@looksmi.com.ua'
+EMAIL_PORT = 25
+
+
 try:
     from local_settings import *
-
 except ImportError:
     pass
+
