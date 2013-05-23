@@ -168,7 +168,11 @@ INSTALLED_APPS = (
     'app.academy',
     'app.connections',
     'app.groups',
+    #'threadedcomments',
+    #'django.contrib.comments',
 )
+
+#COMMENTS_APP = 'threadedcomments'
 
 SOCIALACCOUNT_AVATAR_SUPPORT = 'avatar'
 

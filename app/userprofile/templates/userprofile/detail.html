@@ -49,14 +49,15 @@
 
 <div class="tabbable" style="margin: 20px 0">
     <ul class="nav nav-tabs">
-        <li class="active"><a href="#user-timeline" data-toggle="tab">Timeline</a></li>
+        <li class="active"><a href="#user-bio" data-toggle="tab" >About</a></li>
+        <li><a href="#user-timeline" data-toggle="tab">Timeline</a></li>
         <li><a href="#user-courses" data-toggle="tab">Courses</a></li>
         {% if request.user == user_profile %}<li><a href="#user-events" data-toggle="tab">Events</a></li>{% endif %}
         {% if request.user == user_profile %}<li><a href="#user-calendar" data-toggle="tab">Calendar</a></li>{% endif %}
     </ul>
 
     <div class="tab-content">
-        <div id="user-timeline" class="active tab-pane">
+        <div id="user-timeline" class="tab-pane">
             <div class="row">
                 <div class="span6">
                     {% for timeline in timelines %}
@@ -145,6 +146,146 @@
                         </div>
                     </div>
                     {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div id="user-bio" class="active tab-pane">
+            <div class="row-fluid">
+                <h3 class="span4">About Me</h3> 
+                {% if request.user == user_profile %}
+                <h4 class="offset4">
+                    <a href="{% url 'userprofile:edit' username=user_profile.username %}"><i class="icon-pencil"></i> Edit</a></h4>
+                {% endif %}
+            </div>
+            <div class="span8"><p>{{ user_profile.profile.about_me }}</p></div>
+            <table class="table table-hover span8">
+                <tr>
+                    <td><i class="icon-user"></i> Username</td>
+                    <td>{{ user_profile.username}}</td>
+                </tr>
+                <tr>
+                    <td><i class="icon-certificate"></i> Real name</td>
+                    <td>{{ user_profile.first_name }} {{ user_profile.last_name }}</td>
+                </tr>
+                <tr>
+                    <td><i class="icon-gift"></i> Birth date</td>
+                    <td>{{ user_profile.profile.birth_date|date }}</td>
+                </tr>
+                {% if user_profile.profile.relationsheep %}
+                <tr>
+                    <td><i class="icon-heart"></i> Relationsheep</td>
+                    <td>{{ user_profile.profile.get_relationsheep_display }}</td>
+                </tr>
+                {% endif %}
+                
+                <tr>
+                    <td><i class="icon-home"></i> Home town</td>
+                    <td>{{ user_profile.profile.location }}</td>
+                </tr>
+
+
+                <tr>
+                    <td><i class="icon-headphones"></i> Phone</td>
+                    <td>{{ user_profile.profile.phone }}</td>
+                </tr>
+                <tr>
+                    <td><i class="icon-envelope"></i> Email</td>
+                    <td> {{ user_profile.email }}</td>
+                </tr>
+            </table>
+
+            <script>
+                $(document).ready(function(){
+                    $("#add_interest").click(function() {
+                        if ($(this).hasClass('alr')) {
+                            var me = this;
+                            $("#interests .empty").remove();
+                            $.post(
+                                "{% url 'userprofile:new_interest' username=request.user.username %}", 
+                                {title: $("input.new_interest").val()},
+                                function(resp) {
+                                        if (resp.error) {
+                                            alert(resp.error)
+                                        } 
+                                        if (resp.text) {
+                                            $("#interests").append($("<span class='label label-info'>").text(resp.text));
+                                            $("#interests span.label:last").after("&nbsp;");
+                                        }
+                                    },
+                                'json'
+                            );
+                            $(this).parent('div').find("input").remove();
+                            //$(this).remove();
+                            $(this).removeClass("alr");
+                        } else {
+                            $(this).parent("div").append($("<input class='new_interest'>"));
+                            $(this).addClass("alr");
+                        }
+                        return false;
+                    });
+
+                    $("#add_hobby").click(function() {
+                        if ($(this).hasClass('alr')) {
+                            var me = this;
+                            $("#hobbies .empty").remove();
+                            $.post(
+                                "{% url 'userprofile:new_hobby' username=request.user.username %}", 
+                                {title: $("input.new_hobby").val()},
+                                function(resp) {
+                                        if (resp.error) {
+                                            alert(resp.error)
+                                        } 
+                                        if (resp.text) {
+                                            $("#hobbies").append($("<span class='label label-info'>").text(resp.text));
+                                            $("#hobbies span.label:last").after("&nbsp;");
+                                        }
+                                    },
+                                'json'
+                            );
+                            $(this).parent('div').find("input").remove();
+                            //$(this).remove();
+                            $(this).removeClass("alr");
+                        } else {
+                            $(this).parent("div").append($("<input class='new_hobby'>"));
+                            $(this).addClass("alr");
+                        }
+                        return false;
+                    });
+
+                });
+            </script>
+
+
+            <h3 class="span8 row">Interests:</h3>
+            <div class="row span8">
+                <div id="interests" class="">
+                    {% for i in user_profile.profile.interests.all %}
+                    <span class="label label-info">{{ i.title }}</span> &nbsp;
+                    {% empty %}
+                    <h3 class="empty">No interests were added!</h3>
+                    {% endfor %}
+                </div>
+                <div class='add_btn ' style="margin-top:0.5em;">
+                    <span class="label label-warning" id="add_interest">
+                            Add new interest <b>+</b>
+                    </span>
+                </div>
+            </div>
+
+            <h3 class="span8 row">Hobbies:</h3>
+            <div class="row span8">
+                <div id="hobbies" class="">
+                    {% for i in user_profile.profile.hobbies.all %}
+                    <span class="label label-info">{{ i.title }}</span> &nbsp;
+                    {% empty %}
+                    <h3 class="empty">No hobbies added yet!</h3>
+                    {% endfor %}
+                </div>
+                <div class='add_btn ' style="margin-top: 0.5em;">
+                    <span class="label label-warning" id="add_hobby">
+                            Add new hobby <b>+</b>
+                    </span>
                 </div>
             </div>
         </div>

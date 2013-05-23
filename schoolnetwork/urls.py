@@ -8,7 +8,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     url(r'^messages/', include('postman.urls')),
     url(r'^relationships/', include('friendship.urls')),
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin-panel/', include(admin.site.urls)),
     url(r'^comments/', include('django.contrib.comments.urls')),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^avatar/', include('avatar.urls')),

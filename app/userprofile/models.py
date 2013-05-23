@@ -24,6 +24,12 @@ class Profile(models.Model):
         (1, 'Male'),
         (2, 'Female'),
     )
+
+    RELATIONSHEEP_CHOICES = (
+        (1, 'Single',),
+        (2, 'Married'),
+    )
+
     user = models.OneToOneField(User)
     gender = models.IntegerField(choices=GENDER_CHOICES, default=1)
     picture = models.ImageField(upload_to='profiles', blank=True, null=True)
@@ -40,6 +46,16 @@ class Profile(models.Model):
 
     timelines = generic.GenericRelation(Timeline)
     events = generic.GenericRelation(Event)
+
+    about_me = models.TextField(blank=True, null=True)
+
+    birth_date = models.DateField(blank=True, null=True)
+    relationsheep = models.IntegerField(choices=RELATIONSHEEP_CHOICES, blank=True, null=True)
+    phone = models.CharField(max_length=255, blank=True)
+    contact = models.EmailField(blank=True)
+
+    interests = models.ManyToManyField('Interest')
+    hobbies = models.ManyToManyField('Hobby')
 
     def __unicode__(self):
         return self.user.username
@@ -107,6 +123,29 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 post_save.connect(create_user_profile, sender=User)
 
+
+class TrackedModel(models.Model):
+    """
+    Abstract model with creation and last edit timestamps filled automatically.
+    """
+    added   = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
+
+class Interest(TrackedModel):
+    title = models.CharField(max_length=255)
+
+    def __unicode__(self):
+        return self.title
+
+class Hobby(TrackedModel):
+    title = models.CharField(max_length=255)
+
+    def __unicode__(self):
+        return self.title
 
 class Status(models.Model):
     title = models.TextField()

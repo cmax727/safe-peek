@@ -2,6 +2,13 @@
 
 {% block content %}
 
+<script type="text/javascript">
+$(document).ready(function(){
+    $('#id_birth_date').datepicker({
+        format: 'mm-dd-yyyy'
+    });
+});
+</script>
 <h1>Edit your account information</h1>
 <div>
     <form class="signup" id="signup_form" method="post" action="" enctype="multipart/form-data">

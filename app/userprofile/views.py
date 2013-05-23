@@ -3,15 +3,16 @@ from django.contrib.auth.models import User
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.urlresolvers import reverse
 from django.db.models import Q
-from django.http import HttpResponseRedirect, Http404
+from django.http import HttpResponseRedirect, Http404, HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.template import RequestContext
+from django.views.decorators.csrf import csrf_exempt
 
 from friendship.models import Friend
 from postman.models import Message
 
-from .forms import EditProfileForm, UserListForm, PersonalEventForm
-from .models import Profile
+from .forms import EditProfileForm, UserListForm, PersonalEventForm, InterestForm, HobbyForm
+from .models import Profile, Interest, Hobby
 
 from app.academy.models import Course
 from app.timelines.forms import *
@@ -203,3 +204,26 @@ def update_timeline(request, timeline_type='text'):
     })
     template = 'userprofile/upload_%s.html' % timeline_type
     return render(request, template, variables)
+
+@csrf_exempt
+def new_interest(request, username):
+    if username == request.user.username:
+        form = InterestForm(request.POST)
+        if form.is_valid():
+            interest = form.save()
+            print interest
+            request.user.profile.interests.add(interest)
+            return HttpResponse('{"text": "'+interest.title+'"}')
+        return HttpResponse('{"error": "Errors in fields '+str(form.errors)+'"}')
+
+@csrf_exempt
+def new_hobby(request, username):
+    if username == request.user.username:
+        form = HobbyForm(request.POST)
+        if form.is_valid():
+            hobby = form.save()
+            request.user.profile.hobbies.add(hobby)
+            return HttpResponse('{"text": "'+hobby.title+'"}')
+        return HttpResponse('{"error": "Errors in fields '+str(form.errors)+'"}')
+
+
